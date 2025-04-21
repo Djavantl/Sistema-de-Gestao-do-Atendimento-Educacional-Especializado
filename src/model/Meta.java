@@ -40,11 +40,4 @@ public class Meta {
     public void atualizarStatus(String novoStatus){
         this.setStatus(novoStatus);
     }
-
-    public void exibirInfo(){
-        this.getDescricao();
-        this.getDataLimite();
-        this.getStatus();
-    }
-
 }

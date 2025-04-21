@@ -59,5 +59,12 @@ public class PlanoAEE {
         this.id = id;
     }
 
+    public void adicionarMeta(Meta meta){
+        metas.add(meta);
+    }
+
+    public void registrarSessao(SessaoAtendimento sessao){
+        sessoes.add(sessao);
+    }
 
 }

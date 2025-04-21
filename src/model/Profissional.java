@@ -1,5 +1,6 @@
 package model;
-
+import model.Aluno;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,5 +47,11 @@ public class Profissional {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public PlanoAEE criarPlano(Aluno aluno, LocalDate dataInicio, LocalDate dataFim, String estrategias){
+        PlanoAEE novoPlano = new PlanoAEE(dataInicio, dataFim, estrategias);
+        aluno.adicionarPlano(novoPlano);
+        return novoPlano;
     }
 }

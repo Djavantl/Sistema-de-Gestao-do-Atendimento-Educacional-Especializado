@@ -12,7 +12,6 @@ public class Aluno {
     private LocalDate dataNascimento;
     private Deficiencia deficiencia;
     private List<PlanoAEE> planos = new ArrayList<>();
-    private List<SessaoAtendimento> sessoes = new ArrayList<>();
 
     public Aluno(String nome, String cpf, String endereco, LocalDate dataNascimento, Deficiencia deficiencia) {
         this.endereco = endereco;
@@ -54,5 +53,7 @@ public class Aluno {
         this.endereco = endereco;
     }
 
-
+    public void adicionarPlano(PlanoAEE plano){
+        planos.add(plano);
+    }
 }
