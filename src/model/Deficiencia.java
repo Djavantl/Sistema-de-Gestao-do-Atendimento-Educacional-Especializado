@@ -1,8 +1,11 @@
 package model;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Deficiencia{
+	
+	private int id;
     private String descricao;
     private String tipoDeficiciencia;
     private List<String> adaptacoes = new ArrayList<>();
@@ -32,6 +35,5 @@ public abstract class Deficiencia{
         return adaptacoes;
     }
 
-    public void definirAdaptacoes(String adaptacao){}
-
+    public abstract void definirAdaptacoes(String adaptacao);
 }

@@ -1,6 +1,8 @@
 package model;
 
 public class DeficienciaAuditiva extends Deficiencia {
+	
+	private int id;
     private boolean usarLibras;
     private boolean usaAparelhoAuditivo;
     private boolean temOralizacao;
@@ -11,7 +13,8 @@ public class DeficienciaAuditiva extends Deficiencia {
         this.usaAparelhoAuditivo = usaAparelhoAuditivo;
         this.temOralizacao = temOralizacao;
     }
-
+    
+    //Setters e Getters 
     public boolean isUsarLibras() {
         return usarLibras;
     }
@@ -35,7 +38,8 @@ public class DeficienciaAuditiva extends Deficiencia {
     public void setTemOralizacao(boolean temOralizacao) {
         this.temOralizacao = temOralizacao;
     }
-
+    
+    //Métodos
     public void definirAdaptacoes() {
         if (usarLibras) {
             getAdaptacoes().add("Intérprete de Libras");
