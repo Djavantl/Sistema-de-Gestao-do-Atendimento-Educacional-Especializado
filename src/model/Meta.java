@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 
 public class Meta {
+    private int id;
     private String descricao;
     private LocalDate dataLimite;
     private String status;
@@ -11,6 +12,14 @@ public class Meta {
         this.descricao = descricao;
         this.dataLimite = dataLimite;
         this.status = status;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDescricao() {

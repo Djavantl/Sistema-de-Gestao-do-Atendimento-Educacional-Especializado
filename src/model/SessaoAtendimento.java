@@ -3,6 +3,7 @@ package model;
 import java.time.LocalDate;
 
 public class SessaoAtendimento {
+    private int id;
     private LocalDate data;
     private String conteudo;
     private String observacoes;
@@ -11,6 +12,19 @@ public class SessaoAtendimento {
         this.data = data;
         this.conteudo = conteudo;
         this.observacoes = observacoes;
+    }
+
+    public SessaoAtendimento(LocalDate data, String conteudo) {
+        this.data = data;
+        this.conteudo = conteudo;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LocalDate getData() {

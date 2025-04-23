@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Deficiencia{
+public class Deficiencia{
 	
 	private int id;
     private String descricao;
@@ -18,6 +18,10 @@ public abstract class Deficiencia{
     public String getDescricao() {
         return descricao;
     }
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
@@ -35,5 +39,7 @@ public abstract class Deficiencia{
         return adaptacoes;
     }
 
-    public abstract void definirAdaptacoes(String adaptacao);
+    public void definirAdaptacoes(){
+
+    };
 }
