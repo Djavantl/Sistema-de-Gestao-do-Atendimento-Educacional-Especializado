@@ -59,11 +59,11 @@ public class Pessoa {
         this.email = email;
     }
 
-    public int getTelefone() {
+    public int getNumTelefone() {
         return telefone;
     }
 
-    public void setTelefone(int nmrTelefone) {
+    public void setNumTelefone(int nmrTelefone) {
         this.telefone = nmrTelefone;
     }
 }
