@@ -19,7 +19,8 @@ public class Main {
 			System.out.println("1 - Inserir Aluno");
 			System.out.println("2 - Atualizar Aluno");
 			System.out.println("3 - Remover Aluno");
-			System.out.println("4 - Sair");
+			System.out.println("4 - Sair\n");
+			System.out.println("Digite a opção desejada:");
 			opcao = scanner.nextInt();
 			scanner.nextLine();
 			
