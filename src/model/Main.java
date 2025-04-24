@@ -40,8 +40,8 @@ public class Main {
 						System.out.println("Telefone: ");
 						int telefone = scanner.nextInt();
 						scanner.nextLine();
-						//System.out.println("Deficiencia: ");
-						//String deficiencia = scanner.nextLine();
+						System.out.println("Deficiencia: ");
+						String deficiencia = scanner.nextLine();
 						LocalDate dataNascimento = LocalDate.parse(dataNasc);	
 						
 						Aluno novo = new Aluno(nome, cpf, endereco, dataNascimento, email, telefone, null);
