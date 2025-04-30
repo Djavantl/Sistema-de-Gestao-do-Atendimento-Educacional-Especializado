@@ -10,7 +10,6 @@ public class Aluno extends Pessoa {
     public Aluno(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade,
                  String telefone,String matricula, String telResponsavel, String responsavel, String telTrabalho) {
         super(nome, dataNascimento, email, sexo, naturalidade, telefone);
-        this.setTelefone(telefone);
         this.matricula = matricula;
         this.telResponsavel = telResponsavel;
         this.responsavel = responsavel;
