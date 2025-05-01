@@ -6,6 +6,8 @@ public class Aluno extends Pessoa {
     private String responsavel;
     private String telResponsavel;
     private String telTrabalho;
+    private OrganizacaoAtendimento organizacao;
+    private PlanoAEE plano;
 
     public Aluno(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade,
                  String telefone,String matricula, String telResponsavel, String responsavel, String telTrabalho) {
@@ -16,9 +18,7 @@ public class Aluno extends Pessoa {
         this.telTrabalho = telTrabalho;
     }
 
-    public String getMatricula() {
-        return matricula;
-    }
+    public String getMatricula() { return matricula; }
 
     public void setMatricula(String matricula) {
         this.matricula = matricula;
@@ -46,5 +46,13 @@ public class Aluno extends Pessoa {
 
     public void setTelTrabalho(String telTrabalho) {
         this.telTrabalho = telTrabalho;
+    }
+
+    public void adicionarOrganizacao(OrganizacaoAtendimento org){
+        this.organizacao = org;
+    }
+
+    public void adicionarPlano(PlanoAEE plano){
+        this.plano = plano;
     }
 }
