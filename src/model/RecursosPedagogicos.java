@@ -3,6 +3,7 @@ package model;
 import java.util.Scanner;
 
 public class RecursosPedagogicos {
+    private int id;
     private boolean Atitudinal;
     private boolean conscientizacaoSobreAcessibilidade;
     private boolean auxilioOrientacaoMobilidade;
@@ -33,6 +34,10 @@ public class RecursosPedagogicos {
     private boolean tempoEmpregadoAtividadesAvaliacoes;
 
     private String outrosEspecificado;
+
+    public int getId() { return id; }
+
+    public void setId(int id) { this.id = id; }
 
     public boolean isAtitudinal() { return Atitudinal; }
 
@@ -141,10 +146,10 @@ public class RecursosPedagogicos {
     public void recursosAtitudinal (boolean Atitudinal){
         Scanner scanner = new Scanner(System.in);
         if (Atitudinal == true) {
-            System.out.println("Necessidade de conscientização sobre acessibilidade? (sim/não)");
+            System.out.println("Necessidade de conscientização sobre acessibilidade?");
             setConscientizacaoSobreAcessibilidade(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Auxílio para orientação e mobilidade? (sim/não)");
+            System.out.println("Auxílio para orientação e mobilidade?");
             setAuxilioOrientacaoMobilidade(scanner.nextLine().equalsIgnoreCase("sim"));
         } else {
             System.out.println("Certo. Sem ajuda Atitudinal.");
@@ -154,19 +159,19 @@ public class RecursosPedagogicos {
     public void recursosFisicoArquitetonico(boolean fisicoArquitetonico) {
         Scanner scanner = new Scanner(System.in);
         if (fisicoArquitetonico == true) {
-            System.out.println("Uso de cadeira de rodas? (sim/não)");
+            System.out.println("Uso de cadeira de rodas?");
             setUsoCadeiraDeRodas(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Auxílio para transcrição por dificuldade motora na escrita? (sim/não)");
+            System.out.println("Auxílio para transcrição por dificuldade motora na escrita?");
             setAuxilioTranscricaoEscrita(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Mesa adaptada para cadeira de rodas? (sim/não)");
+            System.out.println("Mesa adaptada para cadeira de rodas?");
             setMesaAdaptadaCadeiraDeRodas(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Uso de muleta? (sim/não)");
+            System.out.println("Uso de muleta?");
             setUsoDeMuleta(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Outros recursos físico-arquitetônicos? (sim/não)");
+            System.out.println("Outros recursos físico-arquitetônicos?");
             boolean outros = scanner.nextLine().equalsIgnoreCase("sim");
             setOutrosFisicoArquitetonico(outros);
 
@@ -182,34 +187,34 @@ public class RecursosPedagogicos {
     public void recursosComunicacaoEInformacao(boolean comunicacaoEInformacao) {
         Scanner scanner = new Scanner(System.in);
         if (comunicacaoEInformacao == true) {
-            System.out.println("Uso de comunicação alternativa? (sim/não)");
+            System.out.println("Uso de comunicação alternativa?");
             setComunicacaoAlternativa(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Necessidade de tradutor/intérprete de Libras? (sim/não)");
+            System.out.println("Necessidade de tradutor/intérprete de Libras?");
             setTradutorInterprete(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Leitor ou transcritor? (sim/não)");
+            System.out.println("Leitor ou transcritor?");
             setLeitorTranscritor(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Intérprete oralizador? (sim/não)");
+            System.out.println("Intérprete oralizador?");
             setInterpreteOralizador(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Guia-intérprete? (sim/não)");
+            System.out.println("Guia-intérprete?");
             setGuiaInterprete(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Material didático em Braille? (sim/não)");
+            System.out.println("Material didático em Braille?");
             setMaterialDidaticoBraille(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Material didático com texto ampliado? (sim/não)");
+            System.out.println("Material didático com texto ampliado?");
             setMaterialDidaticoTextoAmpliado(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Material didático em relevo? (sim/não)");
+            System.out.println("Material didático em relevo?");
             setMaterialDidaticoRelevo(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Uso de leitor de tela? (sim/não)");
+            System.out.println("Uso de leitor de tela?");
             setLeitorDeTela(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Fonte em tamanho específico? (sim/não)");
+            System.out.println("Fonte em tamanho específico?");
             setFonteTamanhoEspecifico(scanner.nextLine().equalsIgnoreCase("sim"));
         } else {
             System.out.println("Certo. Sem ajuda de comunicação e informação.");
@@ -219,16 +224,16 @@ public class RecursosPedagogicos {
     public void recursosPedagogicos(boolean pedagogica) {
         Scanner scanner = new Scanner(System.in);
         if (pedagogica == true) {
-            System.out.println("Adaptação didática durante aulas ou avaliações? (sim/não)");
+            System.out.println("Adaptação didática durante aulas ou avaliações?");
             setAdaptacaoDidaticaAulasAvaliacoes(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Material didático adaptado? (sim/não)");
+            System.out.println("Material didático adaptado?");
             setMaterialDidaticoAdaptado(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Uso de tecnologia assistiva durante aulas ou avaliações? (sim/não)");
+            System.out.println("Uso de tecnologia assistiva durante aulas ou avaliações?");
             setUsoTecnologiaAssistiva(scanner.nextLine().equalsIgnoreCase("sim"));
 
-            System.out.println("Tempo adicional para realização de atividades e avaliações? (sim/não)");
+            System.out.println("Tempo adicional para realização de atividades e avaliações?");
             setTempoEmpregadoAtividadesAvaliacoes(scanner.nextLine().equalsIgnoreCase("sim"));
         } else {
             System.out.println("Certo. Sem ajuda pedagógica.");
