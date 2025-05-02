@@ -47,7 +47,7 @@ public class Professor extends Pessoa {
         alunos.removeIf(aluno -> aluno.getMatricula().equals(matricula));
     }
 
-    public Aluno consultarAlunoPorMatricula(String matricula) {
+    public Aluno consultarAluno(String matricula) {
         for (Aluno aluno : alunos) {
             if (aluno.getMatricula().equals(matricula)) {
                 return aluno;
