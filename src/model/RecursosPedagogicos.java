@@ -1,5 +1,7 @@
 package model;
 
+import java.util.Scanner;
+
 public class RecursosPedagogicos {
     private boolean Atitudinal;
     private boolean conscientizacaoSobreAcessibilidade;
@@ -135,4 +137,101 @@ public class RecursosPedagogicos {
     public String getOutrosEspecificado() { return outrosEspecificado; }
 
     public void setOutrosEspecificado(String outrosEspecificado) { this.outrosEspecificado = outrosEspecificado; }
+
+    public void recursosAtitudinal (boolean Atitudinal){
+        Scanner scanner = new Scanner(System.in);
+        if (Atitudinal == true) {
+            System.out.println("Necessidade de conscientização sobre acessibilidade? (sim/não)");
+            setConscientizacaoSobreAcessibilidade(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Auxílio para orientação e mobilidade? (sim/não)");
+            setAuxilioOrientacaoMobilidade(scanner.nextLine().equalsIgnoreCase("sim"));
+        } else {
+            System.out.println("Certo. Sem ajuda Atitudinal.");
+        }
+
+    }
+    public void recursosFisicoArquitetonico(boolean fisicoArquitetonico) {
+        Scanner scanner = new Scanner(System.in);
+        if (fisicoArquitetonico == true) {
+            System.out.println("Uso de cadeira de rodas? (sim/não)");
+            setUsoCadeiraDeRodas(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Auxílio para transcrição por dificuldade motora na escrita? (sim/não)");
+            setAuxilioTranscricaoEscrita(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Mesa adaptada para cadeira de rodas? (sim/não)");
+            setMesaAdaptadaCadeiraDeRodas(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Uso de muleta? (sim/não)");
+            setUsoDeMuleta(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Outros recursos físico-arquitetônicos? (sim/não)");
+            boolean outros = scanner.nextLine().equalsIgnoreCase("sim");
+            setOutrosFisicoArquitetonico(outros);
+
+            if (outros) {
+                System.out.println("Especifique os outros recursos físico-arquitetônicos:");
+                setOutrosEspecificado(scanner.nextLine());
+            }
+        } else {
+            System.out.println("Certo. Sem ajuda físico-arquitetônica.");
+        }
+    }
+
+    public void recursosComunicacaoEInformacao(boolean comunicacaoEInformacao) {
+        Scanner scanner = new Scanner(System.in);
+        if (comunicacaoEInformacao == true) {
+            System.out.println("Uso de comunicação alternativa? (sim/não)");
+            setComunicacaoAlternativa(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Necessidade de tradutor/intérprete de Libras? (sim/não)");
+            setTradutorInterprete(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Leitor ou transcritor? (sim/não)");
+            setLeitorTranscritor(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Intérprete oralizador? (sim/não)");
+            setInterpreteOralizador(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Guia-intérprete? (sim/não)");
+            setGuiaInterprete(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Material didático em Braille? (sim/não)");
+            setMaterialDidaticoBraille(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Material didático com texto ampliado? (sim/não)");
+            setMaterialDidaticoTextoAmpliado(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Material didático em relevo? (sim/não)");
+            setMaterialDidaticoRelevo(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Uso de leitor de tela? (sim/não)");
+            setLeitorDeTela(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Fonte em tamanho específico? (sim/não)");
+            setFonteTamanhoEspecifico(scanner.nextLine().equalsIgnoreCase("sim"));
+        } else {
+            System.out.println("Certo. Sem ajuda de comunicação e informação.");
+        }
+    }
+
+    public void recursosPedagogicos(boolean pedagogica) {
+        Scanner scanner = new Scanner(System.in);
+        if (pedagogica == true) {
+            System.out.println("Adaptação didática durante aulas ou avaliações? (sim/não)");
+            setAdaptacaoDidaticaAulasAvaliacoes(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Material didático adaptado? (sim/não)");
+            setMaterialDidaticoAdaptado(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Uso de tecnologia assistiva durante aulas ou avaliações? (sim/não)");
+            setUsoTecnologiaAssistiva(scanner.nextLine().equalsIgnoreCase("sim"));
+
+            System.out.println("Tempo adicional para realização de atividades e avaliações? (sim/não)");
+            setTempoEmpregadoAtividadesAvaliacoes(scanner.nextLine().equalsIgnoreCase("sim"));
+        } else {
+            System.out.println("Certo. Sem ajuda pedagógica.");
+        }
+    }
 }
