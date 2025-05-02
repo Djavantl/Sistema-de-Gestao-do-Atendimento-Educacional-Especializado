@@ -1,8 +1,6 @@
 package model;
 
 public class DeficienciaIntelectual extends Deficiencia {
-	
-	private int id;
     private boolean necessitaApoioConstante;
     private boolean dificuldadeConcentracao;
 

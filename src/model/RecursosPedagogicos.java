@@ -3,6 +3,7 @@ package model;
 import java.util.Scanner;
 
 public class RecursosPedagogicos {
+    private int id;
     private boolean Atitudinal;
     private boolean conscientizacaoSobreAcessibilidade;
     private boolean auxilioOrientacaoMobilidade;
@@ -31,6 +32,14 @@ public class RecursosPedagogicos {
     private boolean materialDidaticoAdaptado;
     private boolean usoTecnologiaAssistiva;
     private boolean tempoEmpregadoAtividadesAvaliacoes;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     private String outrosEspecificado;
 

@@ -1,8 +1,6 @@
 package model;
 
 public class DeficienciaAuditiva extends Deficiencia {
-	
-	private int id;
     private boolean usarLibras;
     private boolean usaAparelhoAuditivo;
     private boolean temOralizacao;

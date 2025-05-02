@@ -1,6 +1,7 @@
 package model;
 
 public class OrganizacaoAtendimento {
+    private int id;
     private String periodo;
     private String duracao;
     private String frequencia;
@@ -13,6 +14,14 @@ public class OrganizacaoAtendimento {
         this.frequencia = frequencia;
         this.composicao = composicao;
         this.tipo = tipo;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getPeriodo() {

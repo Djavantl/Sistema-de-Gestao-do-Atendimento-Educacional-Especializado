@@ -1,14 +1,23 @@
 package model;
 
-public class AvalicaoFinal {
+public class AvaliacaoFinal {
+    private int id;
     private String alcancadoArea;
     private String naoAlcancadoArea;
     private String relatorioFinal;
 
-    public AvalicaoFinal(String alcancadoArea, String naoAlcancadoArea, String relatorioFinal) {
+    public AvaliacaoFinal(String alcancadoArea, String naoAlcancadoArea, String relatorioFinal) {
         this.alcancadoArea = alcancadoArea;
         this.naoAlcancadoArea = naoAlcancadoArea;
         this.relatorioFinal = relatorioFinal;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAlcancadoArea() {

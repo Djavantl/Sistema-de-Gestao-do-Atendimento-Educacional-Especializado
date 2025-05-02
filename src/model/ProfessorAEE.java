@@ -1,8 +1,11 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class ProfessorAEE extends Pessoa {
     private String siape;
@@ -43,14 +46,13 @@ public class ProfessorAEE extends Pessoa {
         alunos.add(aluno);
     }
 
-    public void marcarSessao(PlanoAEE plano,LocalDate data, String conteudo){
-        SessaoAtendimento sessao = new SessaoAtendimento(data, conteudo);
-        plano.registrarSessao(sessao);
+    public void marcarSessao(Aluno aluno, LocalDate data, LocalTime horario, String local, String participantes, Relatorio realtorio ){
+        SessaoAtendimento sessao = new SessaoAtendimento(aluno, data, horario, local, participantes);
+        realtorio.registrarSessao(sessao);
     }
 
-    public PlanoAEE criarPlano(Aluno aluno, LocalDate dataInicio, LocalDate dataFim, String estrategias){
-        PlanoAEE novoPlano = new PlanoAEE(dataInicio, dataFim, estrategias);
+    public void criarPlano(Aluno aluno, LocalDate dataInicio, AvaliacaoInicial avaliacao, String recomendacoes){
+        PlanoAEE novoPlano = new PlanoAEE(aluno, dataInicio, avaliacao, recomendacoes);
         aluno.adicionarPlano(novoPlano);
-        return novoPlano;
     }
 }

@@ -1,6 +1,7 @@
 package model;
 
 public class AvaliacaoProcessual {
+    private int id;
     private String avancosArea;
     private String dificuldadesArea;
     private String encaminhamentos;
@@ -9,6 +10,14 @@ public class AvaliacaoProcessual {
         this.avancosArea = avancosArea;
         this.dificuldadesArea = dificuldadesArea;
         this.encaminhamentos = encaminhamentos;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getAvancosArea() {

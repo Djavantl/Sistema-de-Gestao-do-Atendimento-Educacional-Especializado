@@ -13,4 +13,5 @@ public class DeficienciaMultipla extends Deficiencia{
     public void adicionarDeficiencias(Deficiencia def){
         deficienciasCombinadas.add(def);
     }
+
 }

@@ -16,6 +16,7 @@ public class DeficienciaVisual extends Deficiencia{
         this.usaBengala = usaBengala;
     }
 
+
     public boolean isUsaBraille() {
         return usaBraille;
     }

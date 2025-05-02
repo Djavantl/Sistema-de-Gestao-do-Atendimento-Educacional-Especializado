@@ -1,6 +1,7 @@
 package model;
 
 public class AvaliacaoInicial {
+    private int id;
     private String area;
     private String desempenhoVerificado;
     private String observacoes;
@@ -9,6 +10,14 @@ public class AvaliacaoInicial {
         this.area = area;
         this.desempenhoVerificado = desempenhoVerificado;
         this.observacoes = observacoes;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getArea() {
