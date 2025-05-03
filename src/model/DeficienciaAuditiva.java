@@ -1,53 +1,57 @@
 package model;
 
-public class DeficienciaAuditiva extends Deficiencia {
-    private boolean usarLibras;
-    private boolean usaAparelhoAuditivo;
-    private boolean temOralizacao;
+class DeficienciaAuditiva extends Deficiencia {
+    private boolean comunicacaoAlternativa;
+    private boolean interpreteLibras;
+    private boolean interpreteOralizador;
+    private boolean guiaInterprete;
 
-    public DeficienciaAuditiva(String descricao, boolean usarLibras, boolean usaAparelhoAuditivo, boolean temOralizacao) {
+    public DeficienciaAuditiva(String descricao,
+                               boolean comunicacaoAlternativa, boolean interpreteLibras,
+                               boolean interpreteOralizador, boolean guiaInterprete) {
         super(descricao, "Auditiva");
-        this.usarLibras = usarLibras;
-        this.usaAparelhoAuditivo = usaAparelhoAuditivo;
-        this.temOralizacao = temOralizacao;
-    }
-    
-    //Setters e Getters 
-    public boolean isUsarLibras() {
-        return usarLibras;
+        this.comunicacaoAlternativa = comunicacaoAlternativa;
+        this.interpreteLibras = interpreteLibras;
+        this.interpreteOralizador = interpreteOralizador;
+        this.guiaInterprete = guiaInterprete;
     }
 
-    public void setUsarLibras(boolean usarLibras) {
-        this.usarLibras = usarLibras;
+    public boolean isComunicacaoAlternativa() {
+        return comunicacaoAlternativa;
     }
 
-    public boolean isUsaAparelhoAuditivo() {
-        return usaAparelhoAuditivo;
+    public void setComunicacaoAlternativa(boolean comunicacaoAlternativa) {
+        this.comunicacaoAlternativa = comunicacaoAlternativa;
     }
 
-    public void setUsaAparelhoAuditivo(boolean usaAparelhoAuditivo) {
-        this.usaAparelhoAuditivo = usaAparelhoAuditivo;
+    public boolean isInterpreteLibras() {
+        return interpreteLibras;
     }
 
-    public boolean isTemOralizacao() {
-        return temOralizacao;
+    public void setInterpreteLibras(boolean interpreteLibras) {
+        this.interpreteLibras = interpreteLibras;
     }
 
-    public void setTemOralizacao(boolean temOralizacao) {
-        this.temOralizacao = temOralizacao;
+    public boolean isInterpreteOralizador() {
+        return interpreteOralizador;
     }
-    
-    //Métodos
+
+    public void setInterpreteOralizador(boolean interpreteOralizador) {
+        this.interpreteOralizador = interpreteOralizador;
+    }
+
+    public boolean isGuiaInterprete() {
+        return guiaInterprete;
+    }
+
+    public void setGuiaInterprete(boolean guiaInterprete) {
+        this.guiaInterprete = guiaInterprete;
+    }
+
     public void definirAdaptacoes() {
-        if (usarLibras) {
-            getAdaptacoes().add("Intérprete de Libras");
-        }
-        if (usaAparelhoAuditivo) {
-            getAdaptacoes().add("Uso de aparelho auditivo");
-        }
-        if (!temOralizacao) {
-            getAdaptacoes().add("Material com apoio visual");
-        }
-        getAdaptacoes().add("Vídeos legendados");
+        if (comunicacaoAlternativa) getAdaptacoes().add("Comunicação Aumentativa e Alternativa");
+        if (interpreteLibras) getAdaptacoes().add("Tradutor Intérprete de Língua de Sinais");
+        if (interpreteOralizador) getAdaptacoes().add("Intérprete oralizador");
+        if (guiaInterprete) getAdaptacoes().add("Guia intérprete");
     }
 }

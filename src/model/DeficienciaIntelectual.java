@@ -1,43 +1,57 @@
 package model;
 
-public class DeficienciaIntelectual extends Deficiencia {
-    private boolean necessitaApoioConstante;
-    private boolean dificuldadeConcentracao;
+class DeficienciaIntelectual extends Deficiencia {
+    private boolean adaptacaoDidatica;
+    private boolean materialAdaptado;
+    private boolean tecnologiaAssistiva;
+    private boolean tempoAmpliado;
 
-    public DeficienciaIntelectual(String descricao, boolean necessitaApoioConstante, boolean dificuldadeConcentracao) {
+    public DeficienciaIntelectual(String descricao,
+                                  boolean adaptacaoDidatica, boolean materialAdaptado,
+                                  boolean tecnologiaAssistiva, boolean tempoAmpliado) {
         super(descricao, "Intelectual");
-        this.necessitaApoioConstante = necessitaApoioConstante;
-        this.dificuldadeConcentracao = dificuldadeConcentracao;
+        this.adaptacaoDidatica = adaptacaoDidatica;
+        this.materialAdaptado = materialAdaptado;
+        this.tecnologiaAssistiva = tecnologiaAssistiva;
+        this.tempoAmpliado = tempoAmpliado;
     }
 
-    public boolean isNecessitaApoioConstante() {
-        return necessitaApoioConstante;
+    public boolean isAdaptacaoDidatica() {
+        return adaptacaoDidatica;
     }
 
-    public void setNecessitaApoioConstante(boolean necessitaApoioConstante) {
-        this.necessitaApoioConstante = necessitaApoioConstante;
+    public void setAdaptacaoDidatica(boolean adaptacaoDidatica) {
+        this.adaptacaoDidatica = adaptacaoDidatica;
     }
 
-    public boolean isDificuldadeConcentracao() {
-        return dificuldadeConcentracao;
+    public boolean isMaterialAdaptado() {
+        return materialAdaptado;
     }
 
-    public void setDificuldadeConcentracao(boolean dificuldadeConcentracao) {
-        this.dificuldadeConcentracao = dificuldadeConcentracao;
+    public void setMaterialAdaptado(boolean materialAdaptado) {
+        this.materialAdaptado = materialAdaptado;
+    }
+
+    public boolean isTecnologiaAssistiva() {
+        return tecnologiaAssistiva;
+    }
+
+    public void setTecnologiaAssistiva(boolean tecnologiaAssistiva) {
+        this.tecnologiaAssistiva = tecnologiaAssistiva;
+    }
+
+    public boolean isTempoAmpliado() {
+        return tempoAmpliado;
+    }
+
+    public void setTempoAmpliado(boolean tempoAmpliado) {
+        this.tempoAmpliado = tempoAmpliado;
     }
 
     public void definirAdaptacoes() {
-        if (necessitaApoioConstante) {
-            getAdaptacoes().add("Apoio constante durante as atividades");
-        }
-        if (dificuldadeConcentracao) {
-            getAdaptacoes().add("Conteúdo simplificado e com reforço constante");
-        }
-        getAdaptacoes().add("Apoio na organização das ideias");
-        getAdaptacoes().add("Material de apoio visual");
-        getAdaptacoes().add("Atividades práticas para facilitar o aprendizado");
-        getAdaptacoes().add("Quebra de tarefas complexas em etapas menores");
-        getAdaptacoes().add("Avaliações simplificadas com tempo reduzido");
-        getAdaptacoes().add("Uso de tecnologia assistiva, como softwares educativos");
+        if (adaptacaoDidatica) getAdaptacoes().add("Adaptação didática durante as aulas e avaliações");
+        if (materialAdaptado) getAdaptacoes().add("Material didático adaptado");
+        if (tecnologiaAssistiva) getAdaptacoes().add("Uso de Tecnologia Assistiva durante as aulas ou avaliações");
+        if (tempoAmpliado) getAdaptacoes().add("Tempo ampliado para realização de atividades e avaliações");
     }
 }

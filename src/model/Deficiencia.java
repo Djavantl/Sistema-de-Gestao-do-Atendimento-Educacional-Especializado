@@ -3,43 +3,48 @@ package model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Deficiencia{
-	
-	private int id;
+public class Deficiencia {
+    private int id;
     private String descricao;
-    private String tipoDeficiciencia;
+    private String tipoDeficiencia;
     private List<String> adaptacoes = new ArrayList<>();
 
-    public Deficiencia(String descricao, String tipoDeficiciencia) {
+    public Deficiencia(String descricao, String tipoDeficiencia) {
         this.descricao = descricao;
-        this.tipoDeficiciencia = tipoDeficiciencia;
+        this.tipoDeficiencia = tipoDeficiencia;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getDescricao() {
         return descricao;
     }
 
-    public int getId() { return id; }
-
-    public void setId(int id) { this.id = id; }
-
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    public String getTipoDeficiciencia() {
-        return tipoDeficiciencia;
+    public String getTipoDeficiencia() {
+        return tipoDeficiencia;
     }
 
-    public void setTipoDeficiciencia(String tipoDeficiciencia) {
-        this.tipoDeficiciencia = tipoDeficiciencia;
+    public void setTipoDeficiencia(String tipoDeficiencia) {
+        this.tipoDeficiencia = tipoDeficiencia;
     }
 
-    public List<String> getAdaptacoes() {
-        return adaptacoes;
+    public void setAdaptacoes(List<String> adaptacoes) {
+        this.adaptacoes = adaptacoes;
     }
 
-    public void definirAdaptacoes(){
+    public List<String> getAdaptacoes() { return adaptacoes; }
 
-    };
+    public void definirAdaptacoes() {
+        // Implementar nas subclasses
+    }
 }
