@@ -1,6 +1,7 @@
 package model;
 
 public class RecursosComunicacaoEInformacao {
+    private int id;
     private boolean comunicacaoAlternativa;
     private boolean tradutorInterprete;
     private boolean leitorTranscritor;
@@ -40,6 +41,9 @@ public class RecursosComunicacaoEInformacao {
         this.leitorDeTela = leitorDeTela;
         this.fonteTamanhoEspecifico = fonteTamanhoEspecifico;
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public boolean isComunicacaoAlternativa() { return comunicacaoAlternativa; }
     public void setComunicacaoAlternativa(boolean comunicacaoAlternativa) { this.comunicacaoAlternativa = comunicacaoAlternativa; }

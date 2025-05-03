@@ -1,6 +1,7 @@
 package model;
 
 public class RecursoFisicoArquitetonico {
+    private int id;
     private boolean usoCadeiraDeRodas;
     private boolean auxilioTranscricaoEscrita;
     private boolean mesaAdaptadaCadeiraDeRodas;
@@ -26,6 +27,9 @@ public class RecursoFisicoArquitetonico {
         this.outrosFisicoArquitetonico = outrosFisicoArquitetonico;
         this.outrosEspecificado = outrosEspecificado;
     }
+
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public boolean isUsoCadeiraDeRodas() { return usoCadeiraDeRodas; }
     public void setUsoCadeiraDeRodas(boolean usoCadeiraDeRodas) { this.usoCadeiraDeRodas = usoCadeiraDeRodas; }

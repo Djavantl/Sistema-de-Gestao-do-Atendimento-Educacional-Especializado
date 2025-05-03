@@ -1,7 +1,11 @@
 package dao;
 
-import model.RecursoFisicoArquitetonico;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import conexao.Conexao;
+import model.RecursoFisicoArquitetonico;
 
 public class RecursoFisicoArquitetonicoDAO {
     private Connection connection;
@@ -10,52 +14,74 @@ public class RecursoFisicoArquitetonicoDAO {
         this.connection = connection;
     }
 
-    public void inserir(RecursoFisicoArquitetonico rfa) throws SQLException {
-        String sql = "INSERT INTO recursofisicoarquitetonico (cadeira_rodas, transcricao_escrita, mesa_adaptada, muleta, outros, outros_especificado) VALUES (?, ?, ?, ?, ?, ?)";
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setBoolean(1, rfa.isUsoCadeiraDeRodas());
-        stmt.setBoolean(2, rfa.isAuxilioTranscricaoEscrita());
-        stmt.setBoolean(3, rfa.isMesaAdaptadaCadeiraDeRodas());
-        stmt.setBoolean(4, rfa.isUsoDeMuleta());
-        stmt.setBoolean(5, rfa.isOutrosFisicoArquitetonico());
-        stmt.setString(6, rfa.getOutrosEspecificado());
+    public void inserir(RecursoFisicoArquitetonico r) throws SQLException {
+        String sql = "INSERT INTO RecursoFisicoArquitetonico (usoCadeiraDeRodas, auxilioTranscricaoEscrita, mesaAdaptadaCadeiraDeRodas, usoDeMuleta, outrosFisicoArquitetonico, outrosEspecificado) VALUES (?, ?, ?, ?, ?, ?)";
+        PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        stmt.setBoolean(1, r.isUsoCadeiraDeRodas());
+        stmt.setBoolean(2, r.isAuxilioTranscricaoEscrita());
+        stmt.setBoolean(3, r.isMesaAdaptadaCadeiraDeRodas());
+        stmt.setBoolean(4, r.isUsoDeMuleta());
+        stmt.setBoolean(5, r.isOutrosFisicoArquitetonico());
+        stmt.setString(6, r.getOutrosEspecificado());
         stmt.executeUpdate();
-    }
 
-    public RecursoFisicoArquitetonico buscarPorId(int id) throws SQLException {
-        String sql = "SELECT * FROM recursofisicoarquitetonico WHERE id = ?";
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, id);
-        ResultSet rs = stmt.executeQuery();
+        ResultSet rs = stmt.getGeneratedKeys();
         if (rs.next()) {
-            RecursoFisicoArquitetonico rfa = new RecursoFisicoArquitetonico();
-            rfa.setUsoCadeiraDeRodas(rs.getBoolean("cadeira_rodas"));
-            rfa.setAuxilioTranscricaoEscrita(rs.getBoolean("transcricao_escrita"));
-            rfa.setMesaAdaptadaCadeiraDeRodas(rs.getBoolean("mesa_adaptada"));
-            rfa.setUsoDeMuleta(rs.getBoolean("muleta"));
-            rfa.setOutrosFisicoArquitetonico(rs.getBoolean("outros"));
-            rfa.setOutrosEspecificado(rs.getString("outros_especificado"));
-            return rfa;
+            r.setId(rs.getInt(1));
         }
-        return null;
     }
 
-    public void atualizar(RecursoFisicoArquitetonico rfa) throws SQLException {
-        String sql = "UPDATE recursofisicoarquitetonico SET cadeira_rodas = ?, transcricao_escrita = ?, mesa_adaptada = ?, muleta = ?, outros = ?, outros_especificado = ? WHERE id = ?";
+    public void atualizar(RecursoFisicoArquitetonico r) throws SQLException {
+        String sql = "UPDATE RecursoFisicoArquitetonico SET usoCadeiraDeRodas = ?, auxilioTranscricaoEscrita = ?, mesaAdaptadaCadeiraDeRodas = ?, usoDeMuleta = ?, outrosFisicoArquitetonico = ?, outrosEspecificado = ? WHERE id = ?";
         PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setBoolean(1, rfa.isUsoCadeiraDeRodas());
-        stmt.setBoolean(2, rfa.isAuxilioTranscricaoEscrita());
-        stmt.setBoolean(3, rfa.isMesaAdaptadaCadeiraDeRodas());
-        stmt.setBoolean(4, rfa.isUsoDeMuleta());
-        stmt.setBoolean(5, rfa.isOutrosFisicoArquitetonico());
-        stmt.setString(6, rfa.getOutrosEspecificado());
+        stmt.setBoolean(1, r.isUsoCadeiraDeRodas());
+        stmt.setBoolean(2, r.isAuxilioTranscricaoEscrita());
+        stmt.setBoolean(3, r.isMesaAdaptadaCadeiraDeRodas());
+        stmt.setBoolean(4, r.isUsoDeMuleta());
+        stmt.setBoolean(5, r.isOutrosFisicoArquitetonico());
+        stmt.setString(6, r.getOutrosEspecificado());
+        stmt.setInt(7, r.getId());
         stmt.executeUpdate();
     }
 
     public void deletar(int id) throws SQLException {
-        String sql = "DELETE FROM recursofisicoarquitetonico WHERE id = ?";
+        String sql = "DELETE FROM RecursoFisicoArquitetonico WHERE id = ?";
         PreparedStatement stmt = connection.prepareStatement(sql);
         stmt.setInt(1, id);
         stmt.executeUpdate();
+    }
+
+    public RecursoFisicoArquitetonico buscarPorId(int id) throws SQLException {
+        String sql = "SELECT * FROM RecursoFisicoArquitetonico WHERE id = ?";
+        PreparedStatement stmt = connection.prepareStatement(sql);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return construirRecurso(rs);
+        }
+        return null;
+    }
+
+    public List<RecursoFisicoArquitetonico> listarTodos() throws SQLException {
+        List<RecursoFisicoArquitetonico> lista = new ArrayList<>();
+        String sql = "SELECT * FROM RecursoFisicoArquitetonico";
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+        while (rs.next()) {
+            lista.add(construirRecurso(rs));
+        }
+        return lista;
+    }
+
+    private RecursoFisicoArquitetonico construirRecurso(ResultSet rs) throws SQLException {
+        RecursoFisicoArquitetonico r = new RecursoFisicoArquitetonico();
+        r.setId(rs.getInt("id"));
+        r.setUsoCadeiraDeRodas(rs.getBoolean("usoCadeiraDeRodas"));
+        r.setAuxilioTranscricaoEscrita(rs.getBoolean("auxilioTranscricaoEscrita"));
+        r.setMesaAdaptadaCadeiraDeRodas(rs.getBoolean("mesaAdaptadaCadeiraDeRodas"));
+        r.setUsoDeMuleta(rs.getBoolean("usoDeMuleta"));
+        r.setOutrosFisicoArquitetonico(rs.getBoolean("outrosFisicoArquitetonico"));
+        r.setOutrosEspecificado(rs.getString("outrosEspecificado"));
+        return r;
     }
 }

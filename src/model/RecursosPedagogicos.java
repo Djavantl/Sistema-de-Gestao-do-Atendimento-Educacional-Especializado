@@ -1,6 +1,7 @@
 package model;
 
 public class RecursosPedagogicos {
+    private int id;
     private boolean adaptacaoDidaticaAulasAvaliacoes;
     private boolean materialDidaticoAdaptado;
     private boolean usoTecnologiaAssistiva;
@@ -21,6 +22,9 @@ public class RecursosPedagogicos {
         this.tempoEmpregadoAtividadesAvaliacoes = tempoEmpregadoAtividadesAvaliacoes;
     }
 
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; } 
+
     public boolean isAdaptacaoDidaticaAulasAvaliacoes() { return adaptacaoDidaticaAulasAvaliacoes; }
     public void setAdaptacaoDidaticaAulasAvaliacoes(boolean adaptacaoDidaticaAulasAvaliacoes) { this.adaptacaoDidaticaAulasAvaliacoes = adaptacaoDidaticaAulasAvaliacoes; }
 
@@ -33,7 +37,7 @@ public class RecursosPedagogicos {
     public boolean isTempoEmpregadoAtividadesAvaliacoes() { return tempoEmpregadoAtividadesAvaliacoes; }
     public void setTempoEmpregadoAtividadesAvaliacoes(boolean tempoEmpregadoAtividadesAvaliacoes) { this.tempoEmpregadoAtividadesAvaliacoes = tempoEmpregadoAtividadesAvaliacoes; }
 
-    public void adicionaNaDeficiencia(Deficiencia deficiencia, RecursosPedagogicos recurso ){
-        deficiencia.setRecursosPedagogicos(recurso);
+    public void adicionaNaDeficiencia(Deficiencia deficiencia, RecursosPedagogicos recursosPedagogicos){
+        deficiencia.setRecursosPedagogicos(recursosPedagogicos);
     }
 }

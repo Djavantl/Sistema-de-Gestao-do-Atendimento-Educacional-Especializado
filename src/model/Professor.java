@@ -15,6 +15,10 @@ public class Professor extends Pessoa {
         this.especialidade = especialidade;
     }
 
+    public Professor() {
+        super("", LocalDate.now(), "", "", "", "");
+    }
+
     public String getSiape() {
         return siape;
     }

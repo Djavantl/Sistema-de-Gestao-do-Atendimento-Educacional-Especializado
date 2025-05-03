@@ -1,18 +1,17 @@
 package conexao;
 
-import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class Conexao {
 	
-	private static final String url = "jdbc:mysql://localhost:3306/aee";
+	private static final String url = "jdbc:mysql://localhost:3306/incluemais";
 	private static final String user = "root";
-	private static final String password = "javinha";
+	private static final String password = "mariemarley123";
 	
-	public static Connection getConexao() {
+	public static java.sql.Connection getConexao() {
 		
 		try {
-			Connection conn = DriverManager.getConnection(url, user, password);
+			java.sql.Connection conn = DriverManager.getConnection(url, user, password);
 			System.out.println("Conectado!\n");
 			return conn;
 		}catch(Exception e) {
