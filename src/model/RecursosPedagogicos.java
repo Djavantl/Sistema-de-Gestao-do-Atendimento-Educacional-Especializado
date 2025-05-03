@@ -32,4 +32,8 @@ public class RecursosPedagogicos {
 
     public boolean isTempoEmpregadoAtividadesAvaliacoes() { return tempoEmpregadoAtividadesAvaliacoes; }
     public void setTempoEmpregadoAtividadesAvaliacoes(boolean tempoEmpregadoAtividadesAvaliacoes) { this.tempoEmpregadoAtividadesAvaliacoes = tempoEmpregadoAtividadesAvaliacoes; }
+
+    public void adicionaNaDeficiencia(Deficiencia deficiencia, RecursosPedagogicos recurso ){
+        deficiencia.setRecursosPedagogicos(recurso);
+    }
 }
