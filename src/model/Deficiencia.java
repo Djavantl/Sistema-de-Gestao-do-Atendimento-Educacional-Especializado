@@ -7,6 +7,9 @@ public class Deficiencia {
     private int id;
     private String descricao;
     private String tipoDeficiencia;
+    private RecursoFisicoArquitetonico recursoFisicoArquitetonico;
+    private RecursosComunicacaoEInformacao comunicacaoEInformacao;
+    private RecursosPedagogicos recursosPedagogicos;
     private List<String> adaptacoes = new ArrayList<>();
 
     public Deficiencia(String descricao, String tipoDeficiencia) {
@@ -38,13 +41,36 @@ public class Deficiencia {
         this.tipoDeficiencia = tipoDeficiencia;
     }
 
+    public List<String> getAdaptacoes() {
+        return adaptacoes;
+    }
+
     public void setAdaptacoes(List<String> adaptacoes) {
         this.adaptacoes = adaptacoes;
     }
 
-    public List<String> getAdaptacoes() { return adaptacoes; }
-
-    public void definirAdaptacoes() {
-        // Implementar nas subclasses
+    public RecursoFisicoArquitetonico getRecursoFisicoArquitetonico() {
+        return recursoFisicoArquitetonico;
     }
+
+    public void setRecursoFisicoArquitetonico(RecursoFisicoArquitetonico recursoFisicoArquitetonico) {
+        this.recursoFisicoArquitetonico = recursoFisicoArquitetonico;
+    }
+
+    public RecursosComunicacaoEInformacao getComunicacaoEInformacao() {
+        return comunicacaoEInformacao;
+    }
+
+    public void setComunicacaoEInformacao(RecursosComunicacaoEInformacao comunicacaoEInformacao) {
+        this.comunicacaoEInformacao = comunicacaoEInformacao;
+    }
+
+    public RecursosPedagogicos getRecursosPedagogicos() {
+        return recursosPedagogicos;
+    }
+
+    public void setRecursosPedagogicos(RecursosPedagogicos recursosPedagogicos) {
+        this.recursosPedagogicos = recursosPedagogicos;
+    }
+
 }

@@ -138,8 +138,6 @@ public class ProfessorAEE extends Pessoa {
         return relatorio;
     }
 
-
-
     public Relatorio criarRelatorioCompleto(
             String titulo, LocalDate dataGeracao, Aluno aluno,
             AvaliacaoInicial avaliacaoInicial, AvaliacaoProcessual avaliacaoProcessual,
@@ -149,4 +147,38 @@ public class ProfessorAEE extends Pessoa {
 
         return relatorio;
     }
+
+    public RecursoFisicoArquitetonico criarRecursoFisicoArquitetonico(
+            boolean usoCadeiraDeRodas, boolean auxilioTranscricaoEscrita, boolean mesaAdaptadaCadeiraDeRodas,
+            boolean usoDeMuleta, boolean outrosFisicoArquitetonico, String outrosEspecificado) {
+        RecursoFisicoArquitetonico recursoFisicoArquitetonico = new RecursoFisicoArquitetonico(
+                usoCadeiraDeRodas, auxilioTranscricaoEscrita, mesaAdaptadaCadeiraDeRodas,
+                usoDeMuleta, outrosFisicoArquitetonico, outrosEspecificado);
+
+        return recursoFisicoArquitetonico;
+    }
+
+    public RecursosComunicacaoEInformacao criarRecursosComunicacaoEInformacao(
+            boolean comunicacaoAlternativa, boolean tradutorInterprete, boolean leitorTranscritor,
+            boolean interpreteOralizador, boolean guiaInterprete, boolean materialDidaticoBraille,
+            boolean materialDidaticoTextoAmpliado, boolean materialDidaticoRelevo, boolean leitorDeTela,
+            boolean fonteTamanhoEspecifico) {
+        RecursosComunicacaoEInformacao recursosComunicacaoEInformacao = new RecursosComunicacaoEInformacao(
+                comunicacaoAlternativa, tradutorInterprete, leitorTranscritor, interpreteOralizador,
+                guiaInterprete, materialDidaticoBraille, materialDidaticoTextoAmpliado, materialDidaticoRelevo,
+                leitorDeTela, fonteTamanhoEspecifico);
+
+        return recursosComunicacaoEInformacao;
+    }
+
+    public RecursosPedagogicos criarRecursosPedagogicos(
+            boolean adaptacaoDidaticaAulasAvaliacoes, boolean materialDidaticoAdaptado,
+            boolean usoTecnologiaAssistiva, boolean tempoEmpregadoAtividadesAvaliacoes) {
+        RecursosPedagogicos recursosPedagogicos = new RecursosPedagogicos(
+                adaptacaoDidaticaAulasAvaliacoes, materialDidaticoAdaptado, usoTecnologiaAssistiva,
+                tempoEmpregadoAtividadesAvaliacoes);
+
+        return recursosPedagogicos;
+    }
+
 }
