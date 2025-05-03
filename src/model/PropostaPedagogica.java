@@ -5,7 +5,7 @@ public class PropostaPedagogica {
     private String area;
     private String objetivos;
     private String metodologias;
-    private RecursosPedagogicos recursos;
+    private Recur recursos;
 
     public PropostaPedagogica(String area, String objetivos, String metodologias, RecursosPedagogicos recursos) {
         this.area = area;
