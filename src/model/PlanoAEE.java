@@ -77,11 +77,14 @@ public class PlanoAEE {
     }
 
     public void  adicionarProposta(PropostaPedagogica proposta){
-        propostaPedagogicas.add(proposta);
+        this.propostaPedagogicas.add(proposta);
     }
 
     public void adicionarMeta(Meta meta){
-        metas.add(meta);
+        this.metas.add(meta);
     }
 
+    public void adicionarAoAluno(Aluno aluno, PlanoAEE plano){
+        aluno.setPlano(plano);
+    }
 }

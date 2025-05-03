@@ -43,4 +43,8 @@ public class AvaliacaoFinal {
     public void setRelatorioFinal(String relatorioFinal) {
         this.relatorioFinal = relatorioFinal;
     }
+
+    public void adicionarNoRelatorio(Relatorio relatorio, AvaliacaoFinal avaliacaoFinal){
+        relatorio.setAvaliacaoFinal(avaliacaoFinal);
+    }
 }

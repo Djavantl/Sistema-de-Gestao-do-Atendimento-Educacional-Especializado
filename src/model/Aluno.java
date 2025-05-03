@@ -1,5 +1,7 @@
 package model;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Aluno extends Pessoa {
     private String matricula;
@@ -10,15 +12,16 @@ public class Aluno extends Pessoa {
     private String curso;
     private String turma;
     private PlanoAEE plano;
+    private List<Relatorio> relatorios = new ArrayList<>();
+    private List<Professor> professores = new ArrayList<>();
 
     public Aluno(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade, String telefone, String matricula, String responsavel,
-                 String telResponsavel, String telTrabalho, OrganizacaoAtendimento organizacao, String curso, String turma) {
+                 String telResponsavel, String telTrabalho, String curso, String turma) {
         super(nome, dataNascimento, email, sexo, naturalidade, telefone);
         this.matricula = matricula;
         this.responsavel = responsavel;
         this.telResponsavel = telResponsavel;
         this.telTrabalho = telTrabalho;
-        this.organizacao = organizacao;
         this.curso = curso;
         this.turma = turma;
     }
@@ -87,11 +90,35 @@ public class Aluno extends Pessoa {
         this.plano = plano;
     }
 
+    public List<Relatorio> getRelatorios() {
+        return relatorios;
+    }
+
+    public void setRelatorios(List<Relatorio> relatorios) {
+        this.relatorios = relatorios;
+    }
+
+    public List<Professor> getProfessores() {
+        return professores;
+    }
+
+    public void setProfessores(List<Professor> professores) {
+        this.professores = professores;
+    }
+
     public void adicionarOrganizacao(OrganizacaoAtendimento org){
         this.organizacao = org;
     }
 
     public void adicionarPlano(PlanoAEE plano){
         this.plano = plano;
+    }
+
+    public void adicionarRelatorio(Relatorio relatorio){
+        this.relatorios.add(relatorio);
+    }
+
+    public void adicionarProfessor(Professor professor){
+        this.professores.add(professor);
     }
 }

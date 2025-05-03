@@ -33,15 +33,37 @@ public class RecursosPedagogicos {
     private boolean usoTecnologiaAssistiva;
     private boolean tempoEmpregadoAtividadesAvaliacoes;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     private String outrosEspecificado;
+
+    public RecursosPedagogicos(int id, boolean atitudinal, boolean conscientizacaoSobreAcessibilidade, boolean auxilioOrientacaoMobilidade, boolean fisicoArquitetonico, boolean usoCadeiraDeRodas, boolean auxilioTranscricaoEscrita, boolean mesaAdaptadaCadeiraDeRodas, boolean usoDeMuleta, boolean outrosFisicoArquitetonico, boolean comunicacaoeinformacao, boolean comunicacaoAlternativa, boolean tradutorInterprete, boolean leitorTranscritor, boolean interpreteOralizador, boolean guiaInterprete, boolean materialDidaticoBraille, boolean materialDidaticoTextoAmpliado, boolean materialDidaticoRelevo, boolean leitorDeTela, boolean fonteTamanhoEspecifico, boolean pedagogica, boolean adaptacaoDidaticaAulasAvaliacoes, boolean materialDidaticoAdaptado, boolean usoTecnologiaAssistiva, boolean tempoEmpregadoAtividadesAvaliacoes, String outrosEspecificado) {
+        this.id = id;
+        Atitudinal = atitudinal;
+        this.conscientizacaoSobreAcessibilidade = conscientizacaoSobreAcessibilidade;
+        this.auxilioOrientacaoMobilidade = auxilioOrientacaoMobilidade;
+        FisicoArquitetonico = fisicoArquitetonico;
+        this.usoCadeiraDeRodas = usoCadeiraDeRodas;
+        this.auxilioTranscricaoEscrita = auxilioTranscricaoEscrita;
+        this.mesaAdaptadaCadeiraDeRodas = mesaAdaptadaCadeiraDeRodas;
+        this.usoDeMuleta = usoDeMuleta;
+        this.outrosFisicoArquitetonico = outrosFisicoArquitetonico;
+        Comunicacaoeinformacao = comunicacaoeinformacao;
+        this.comunicacaoAlternativa = comunicacaoAlternativa;
+        this.tradutorInterprete = tradutorInterprete;
+        this.leitorTranscritor = leitorTranscritor;
+        this.interpreteOralizador = interpreteOralizador;
+        this.guiaInterprete = guiaInterprete;
+        this.materialDidaticoBraille = materialDidaticoBraille;
+        this.materialDidaticoTextoAmpliado = materialDidaticoTextoAmpliado;
+        this.materialDidaticoRelevo = materialDidaticoRelevo;
+        this.leitorDeTela = leitorDeTela;
+        this.fonteTamanhoEspecifico = fonteTamanhoEspecifico;
+        Pedagogica = pedagogica;
+        this.adaptacaoDidaticaAulasAvaliacoes = adaptacaoDidaticaAulasAvaliacoes;
+        this.materialDidaticoAdaptado = materialDidaticoAdaptado;
+        this.usoTecnologiaAssistiva = usoTecnologiaAssistiva;
+        this.tempoEmpregadoAtividadesAvaliacoes = tempoEmpregadoAtividadesAvaliacoes;
+        this.outrosEspecificado = outrosEspecificado;
+    }
 
     public int getId() { return id; }
 

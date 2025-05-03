@@ -63,4 +63,8 @@ public class OrganizacaoAtendimento {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
+    public void inserirEmAluno(Aluno aluno, OrganizacaoAtendimento organizacaoAtendimento){
+        aluno.setOrganizacao(organizacaoAtendimento);
+    }
 }

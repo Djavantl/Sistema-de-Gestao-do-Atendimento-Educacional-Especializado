@@ -53,4 +53,8 @@ public class PropostaPedagogica {
     public void setRecursos(RecursosPedagogicos recursos) {
         this.recursos = recursos;
     }
+
+    public void adicionarAoPlano(PlanoAEE plano, PropostaPedagogica proposta){
+        plano.adicionarProposta(proposta);
+    }
 }

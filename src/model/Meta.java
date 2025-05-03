@@ -46,7 +46,7 @@ public class Meta {
         this.status = status;
     }
 
-    public void atualizarStatus(String novoStatus){
-        this.setStatus(novoStatus);
+    public void adicionarAoPlano(PlanoAEE plano, Meta meta){
+        plano.adicionarMeta(meta);
     }
 }

@@ -56,4 +56,8 @@ public class RegistroPresenca {
     public void setSinteseAtividades(String sinteseAtividades) {
         this.sinteseAtividades = sinteseAtividades;
     }
+
+    public void adicionarNaSessao(SessaoAtendimento sessao, RegistroPresenca presenca){
+        sessao.setPresenca(presenca);
+    }
 }

@@ -43,4 +43,8 @@ public class AvaliacaoInicial {
     public void setObservacoes(String observacoes) {
         this.observacoes = observacoes;
     }
+
+    public void adicionarNoRelatorio(Relatorio relatorio, AvaliacaoInicial avaliacaoInicial){
+        relatorio.setAvaliacaoInicial(avaliacaoInicial);
+    }
 }

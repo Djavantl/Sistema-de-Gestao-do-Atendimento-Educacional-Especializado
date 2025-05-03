@@ -84,4 +84,8 @@ public class SessaoAtendimento {
     public void setParticipantes(String participantes) {
         this.participantes = participantes;
     }
+
+    public void adionarNoRelatorio(Relatorio relatorio, SessaoAtendimento sessao){
+        relatorio.registrarSessao(sessao);
+    }
 }

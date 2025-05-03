@@ -55,4 +55,8 @@ public class Professor extends Pessoa {
         }
         return null;
     }
+
+    public void adicionarAoAluno(Aluno aluno, Professor professor){
+        aluno.adicionarProfessor(professor);
+    }
 }

@@ -56,4 +56,8 @@ public class RegistroAusencia {
     public void setEncaminhamento(String encaminhamento) {
         this.encaminhamento = encaminhamento;
     }
+
+    public void adicionarNaSessao(SessaoAtendimento sessao, RegistroAusencia ausencia){
+        sessao.setAusencia(ausencia);
+    }
 }

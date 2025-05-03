@@ -43,4 +43,8 @@ public class AvaliacaoProcessual {
     public void setEncaminhamentos(String encaminhamentos) {
         this.encaminhamentos = encaminhamentos;
     }
+
+    public void adicionarNoRelatorio(Relatorio relatorio, AvaliacaoProcessual avaliacaoProcessual){
+        relatorio.setAvaliacaoProcessual(avaliacaoProcessual);
+    }
 }

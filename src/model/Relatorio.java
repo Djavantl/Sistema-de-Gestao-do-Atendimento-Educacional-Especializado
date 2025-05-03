@@ -126,11 +126,23 @@ public class Relatorio {
         this.resumo = resumo;
     }
 
+    public List<SessaoAtendimento> getSessoes() {
+        return sessoes;
+    }
+
+    public void setSessoes(List<SessaoAtendimento> sessoes) {
+        this.sessoes = sessoes;
+    }
+
     public void registrarSessao(SessaoAtendimento sessao){
         sessoes.add(sessao);
     }
 
     public void removerSessao(SessaoAtendimento sessao){
         sessoes.remove(sessao);
+    }
+
+    public void adicionarAoAluno(Aluno aluno, Relatorio relatorio){
+        aluno.adicionarRelatorio(relatorio);
     }
 }
