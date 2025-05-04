@@ -11,12 +11,13 @@ public class Aluno extends Pessoa {
     private OrganizacaoAtendimento organizacao;
     private String curso;
     private String turma;
+    private List<Deficiencia> deficiencias = new ArrayList<>();
     private PlanoAEE plano;
     private List<Relatorio> relatorios = new ArrayList<>();
     private List<Professor> professores = new ArrayList<>();
 
-    public Aluno(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade, String telefone, String matricula, String responsavel,
-                 String telResponsavel, String telTrabalho, String curso, String turma) {
+    public Aluno(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade, String telefone,
+                 String matricula, String responsavel, String telResponsavel, String telTrabalho, String curso, String turma) {
         super(nome, dataNascimento, email, sexo, naturalidade, telefone);
         this.matricula = matricula;
         this.responsavel = responsavel;
@@ -106,8 +107,12 @@ public class Aluno extends Pessoa {
         this.professores = professores;
     }
 
-    public void adicionarOrganizacao(OrganizacaoAtendimento org){
-        this.organizacao = org;
+    public List<Deficiencia> getDeficiencias() {
+        return deficiencias;
+    }
+
+    public void setDeficiencias(List<Deficiencia> deficiencias) {
+        this.deficiencias = deficiencias;
     }
 
     public void adicionarPlano(PlanoAEE plano){
@@ -121,4 +126,6 @@ public class Aluno extends Pessoa {
     public void adicionarProfessor(Professor professor){
         this.professores.add(professor);
     }
+
+    public void adicionarDeficiencia(Deficiencia def){ this.deficiencias.add(def); }
 }

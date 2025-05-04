@@ -163,7 +163,7 @@ public class ProfessorAEE extends Pessoa {
         return registro;
     }
 
-    // **Relatório**
+
     public Relatorio criarRelatorio(String titulo, LocalDate dataGeracao, Aluno aluno, String resumo) {
         Relatorio relatorio = new Relatorio(titulo, dataGeracao, aluno, this, resumo);
 
@@ -226,5 +226,6 @@ public class ProfessorAEE extends Pessoa {
 
         return recursosPedagogicos;
     }
+
 
 }

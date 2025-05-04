@@ -1,64 +1,151 @@
 package dao;
 
+import connection.DBConnection;
+import entities.Deficiencia;
+import entities.RecursoFisicoArquitetonico;
+import entities.RecursosComunicacaoEInformacao;
+import entities.RecursosPedagogicos;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import entities.Deficiencia;
 
 public class DeficienciaDAO {
-    private Connection connection;
 
-    public DeficienciaDAO(Connection connection) {
-        this.connection = connection;
+    public int insert(Deficiencia deficiencia) throws SQLException {
+        String sql = "INSERT INTO Deficiencia (descricao, tipoDeficiencia, recursoFisico_id, " +
+                "recursoComunicacao_id, recursoPedagogico_id) VALUES (?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, deficiencia.getDescricao());
+            stmt.setString(2, deficiencia.getTipoDeficiencia());
+            setRecursoId(stmt, 3, deficiencia.getRecursoFisicoArquitetonico());
+            setRecursoId(stmt, 4, deficiencia.getComunicacaoEInformacao());
+            setRecursoId(stmt, 5, deficiencia.getRecursosPedagogicos());
+
+            stmt.executeUpdate();
+
+            try (ResultSet rs = stmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    int id = rs.getInt(1);
+                    inserirAdaptacoes(id, deficiencia.getAdaptacoes());
+                    return id;
+                }
+            }
+        }
+        return -1;
     }
 
-    public void inserir(Deficiencia def) throws SQLException {
-        String sql = "INSERT INTO Deficiencia (descricao, tipo_deficiencia) VALUES (?, ?)";
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setString(1, def.getDescricao());
-        stmt.setString(2, def.getTipoDeficiencia());
-        stmt.executeUpdate();
+    private void setRecursoId(PreparedStatement stmt, int index, Object recurso) throws SQLException {
+        if (recurso != null) {
+            stmt.setInt(index, ((RecursoFisicoArquitetonico) recurso).getId());
+        } else {
+            stmt.setNull(index, Types.INTEGER);
+        }
     }
 
-    public void atualizar(Deficiencia def) throws SQLException {
-        String sql = "UPDATE Deficiencia SET descricao = ?, tipo_deficiencia = ? WHERE id = ?";
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setString(1, def.getDescricao());
-        stmt.setString(2, def.getTipoDeficiencia());
-        stmt.setInt(3, def.getId());
-        stmt.executeUpdate();
+    private void inserirAdaptacoes(int deficienciaId, List<String> adaptacoes) throws SQLException {
+        String sql = "INSERT INTO Deficiencia_Adaptacoes (deficiencia_id, adaptacao) VALUES (?, ?)";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            for (String adaptacao : adaptacoes) {
+                stmt.setInt(1, deficienciaId);
+                stmt.setString(2, adaptacao);
+                stmt.addBatch();
+            }
+            stmt.executeBatch();
+        }
     }
 
-    public void deletar(int id) throws SQLException {
-        String sql = "DELETE FROM Deficiencia WHERE id = ?";
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, id);
-        stmt.executeUpdate();
-    }
-
-    public Deficiencia buscarPorId(int id) throws SQLException {
+    public Deficiencia getById(int id) throws SQLException {
         String sql = "SELECT * FROM Deficiencia WHERE id = ?";
-        PreparedStatement stmt = connection.prepareStatement(sql);
-        stmt.setInt(1, id);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            Deficiencia def = new Deficiencia(rs.getString("descricao"), rs.getString("tipo_deficiencia"));
-            def.setId(rs.getInt("id"));
-            return def;
+        Deficiencia deficiencia = null;
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    deficiencia = new Deficiencia(
+                            rs.getString("descricao"),
+                            rs.getString("tipoDeficiencia")
+                    );
+                    deficiencia.setId(id);
+                    deficiencia.setAdaptacoes(getAdaptacoes(id));
+                    // Carregar recursos relacionados se necessário
+                }
+            }
         }
-        return null;
+        return deficiencia;
     }
 
-    public List<Deficiencia> listarTodos() throws SQLException {
-        List<Deficiencia> lista = new ArrayList<>();
-        String sql = "SELECT * FROM Deficiencia";
-        Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
-        while (rs.next()) {
-            Deficiencia def = new Deficiencia(rs.getString("descricao"), rs.getString("tipo_deficiencia"));
-            def.setId(rs.getInt("id"));
-            lista.add(def);
+    private List<String> getAdaptacoes(int deficienciaId) throws SQLException {
+        String sql = "SELECT adaptacao FROM Deficiencia_Adaptacoes WHERE deficiencia_id = ?";
+        List<String> adaptacoes = new ArrayList<>();
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, deficienciaId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    adaptacoes.add(rs.getString("adaptacao"));
+                }
+            }
         }
-        return lista;
+        return adaptacoes;
+    }
+
+    public void update(Deficiencia deficiencia) throws SQLException {
+        String sql = "UPDATE Deficiencia SET descricao = ?, tipoDeficiencia = ?, " +
+                "recursoFisico_id = ?, recursoComunicacao_id = ?, recursoPedagogico_id = ? " +
+                "WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, deficiencia.getDescricao());
+            stmt.setString(2, deficiencia.getTipoDeficiencia());
+            setRecursoId(stmt, 3, deficiencia.getRecursoFisicoArquitetonico());
+            setRecursoId(stmt, 4, deficiencia.getComunicacaoEInformacao());
+            setRecursoId(stmt, 5, deficiencia.getRecursosPedagogicos());
+            stmt.setInt(6, deficiencia.getId());
+
+            stmt.executeUpdate();
+
+            // Atualizar adaptações
+            atualizarAdaptacoes(deficiencia);
+        }
+    }
+
+    private void atualizarAdaptacoes(Deficiencia deficiencia) throws SQLException {
+        removerAdaptacoes(deficiencia.getId());
+        inserirAdaptacoes(deficiencia.getId(), deficiencia.getAdaptacoes());
+    }
+
+    private void removerAdaptacoes(int deficienciaId) throws SQLException {
+        String sql = "DELETE FROM Deficiencia_Adaptacoes WHERE deficiencia_id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, deficienciaId);
+            stmt.executeUpdate();
+        }
+    }
+
+    public void delete(int id) throws SQLException {
+        String sql = "DELETE FROM Deficiencia WHERE id = ?";
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+        }
     }
 }

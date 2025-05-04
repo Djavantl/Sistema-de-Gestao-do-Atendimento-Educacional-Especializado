@@ -2,6 +2,7 @@ package entities;
 import java.time.LocalDate;
 
 public class Pessoa {
+    private int id;
     private String nome;
     private LocalDate dataNascimento;
     private String email;
@@ -17,6 +18,10 @@ public class Pessoa {
         this.naturalidade = naturalidade;
         this.telefone = telefone;
     }
+
+    public int getId() {return id;}
+
+    public void setId(int id) {this.id = id;}
 
     public String getNome() {
         return nome;
