@@ -5,12 +5,10 @@ import java.time.LocalDate;
 public class Meta {
     private int id;
     private String descricao;
-    private LocalDate dataLimite;
     private String status;
 
-    public Meta(String descricao, LocalDate dataLimite, String status) {
+    public Meta(String descricao, String status) {
         this.descricao = descricao;
-        this.dataLimite = dataLimite;
         this.status = status;
     }
 
@@ -28,14 +26,6 @@ public class Meta {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public LocalDate getDataLimite() {
-        return dataLimite;
-    }
-
-    public void setDataLimite(LocalDate dataLimite) {
-        this.dataLimite = dataLimite;
     }
 
     public String getStatus() {

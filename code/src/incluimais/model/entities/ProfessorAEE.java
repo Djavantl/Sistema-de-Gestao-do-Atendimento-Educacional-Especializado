@@ -79,8 +79,8 @@ public class ProfessorAEE extends Pessoa {
     }
 
 
-    public Meta criarMeta(String descricao, LocalDate dataLimite, String status) {
-        Meta meta = new Meta(descricao, dataLimite, status);
+    public Meta criarMeta(String descricao, String status) {
+        Meta meta = new Meta(descricao, status);
 
         return meta;
     }
