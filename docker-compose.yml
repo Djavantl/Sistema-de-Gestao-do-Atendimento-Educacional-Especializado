@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: cambrainha10
+      MYSQL_DATABASE: incluemais
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 15
+
+  flyway:
+    image: flyway/flyway:11.8.1-alpine
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./code/src/main/resources/db/migration:/flyway/sql
+    environment:
+      FLYWAY_URL: jdbc:mysql://db:3306/incluemais?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      FLYWAY_USER: root
+      FLYWAY_PASSWORD: cambrainha10
+      FLYWAY_BASELINE_ON_MIGRATE: "true"
+    networks:
+      - backend
+    command: migrate
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      flyway:
+        condition: service_completed_successfully
+    environment:
+      DB_URL: jdbc:mysql://db:3306/incluemais?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USER: root
+      DB_PASSWORD: cambrainha10
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:
+    driver: bridge
