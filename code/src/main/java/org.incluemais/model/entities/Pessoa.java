@@ -10,6 +10,9 @@ public class Pessoa {
     private String naturalidade;
     private String telefone;
 
+    public Pessoa() {
+    }
+
     public Pessoa(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade, String telefone) {
         this.nome = nome;
         this.dataNascimento = dataNascimento;
@@ -17,6 +20,9 @@ public class Pessoa {
         this.sexo = sexo;
         this.naturalidade = naturalidade;
         this.telefone = telefone;
+    }
+
+    public Pessoa(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade, String telefone, Object o) {
     }
 
     public int getId() {return id;}

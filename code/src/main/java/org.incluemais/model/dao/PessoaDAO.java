@@ -1,17 +1,18 @@
 package org.incluemais.model.dao;
 
+import org.incluemais.model.connection.DBConnection;
 import org.incluemais.model.entities.Pessoa;
 import java.sql.*;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PessoaDAO {
 
-    // INSERT com suporte a transação
-    public int insert(Connection conn, Pessoa pessoa) throws SQLException {
-        String sql = "INSERT INTO Pessoa (nome, dataNascimento, email, sexo, naturalidade, telefone) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    // Método para inserir uma pessoa
+    public int inserirPessoa(Pessoa pessoa) {
+        String sql = "INSERT INTO Pessoa (nome, dataNascimento, email, sexo, naturalidade, telefone) VALUES (?, ?, ?, ?, ?, ?)";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, pessoa.getNome());
             stmt.setDate(2, Date.valueOf(pessoa.getDataNascimento()));
@@ -20,67 +21,86 @@ public class PessoaDAO {
             stmt.setString(5, pessoa.getNaturalidade());
             stmt.setString(6, pessoa.getTelefone());
 
-            stmt.executeUpdate();
-
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    int id = rs.getInt(1);
-                    pessoa.setId(id); // Atualiza o ID no objeto
-                    return id;
+            int affectedRows = stmt.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        return generatedKeys.getInt(1);
+                    }
                 }
             }
+            throw new SQLException("Falha ao obter o ID gerado para a pessoa.");
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao inserir pessoa: " + e.getMessage());
         }
-        return -1; // Falha ao inserir
+        return -1;
     }
 
-    // GET BY ID
-    public Pessoa getById(Connection conn, int id) throws SQLException {
+    // Método para buscar uma pessoa pelo ID
+    public Pessoa buscarPessoaPorId(int id) {
         String sql = "SELECT * FROM Pessoa WHERE id = ?";
-        Pessoa pessoa = null;
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    pessoa = new Pessoa(
-                            rs.getString("nome"),
-                            rs.getDate("dataNascimento").toLocalDate(),
-                            rs.getString("email"),
-                            rs.getString("sexo"),
-                            rs.getString("naturalidade"),
-                            rs.getString("telefone")
-                    );
-                    pessoa.setId(id);
-                }
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new Pessoa(
+                        rs.getString("nome"),
+                        rs.getDate("dataNascimento").toLocalDate(),
+                        rs.getString("email"),
+                        rs.getString("sexo"),
+                        rs.getString("naturalidade"),
+                        rs.getString("telefone")
+                );
             }
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar pessoa por ID: " + e.getMessage());
         }
-        return pessoa;
+        return null;
     }
 
-    // UPDATE com transação
-    public void update(Connection conn, Pessoa pessoa, int id) throws SQLException {
-        String sql = "UPDATE Pessoa SET nome = ?, dataNascimento = ?, email = ?, " +
-                "sexo = ?, naturalidade = ?, telefone = ? WHERE id = ?";
+    // Método para listar todas as pessoas
+    public List<Pessoa> listarPessoas() {
+        List<Pessoa> pessoas = new ArrayList<>();
+        String sql = "SELECT * FROM Pessoa";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, pessoa.getNome());
-            stmt.setDate(2, Date.valueOf(pessoa.getDataNascimento()));
-            stmt.setString(3, pessoa.getEmail());
-            stmt.setString(4, pessoa.getSexo());
-            stmt.setString(5, pessoa.getNaturalidade());
-            stmt.setString(6, pessoa.getTelefone());
-            stmt.setInt(7, id);
+        try (Connection conn = DBConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
 
-            stmt.executeUpdate();
+            while (rs.next()) {
+                pessoas.add(new Pessoa(
+                        rs.getString("nome"),
+                        rs.getDate("dataNascimento").toLocalDate(),
+                        rs.getString("email"),
+                        rs.getString("sexo"),
+                        rs.getString("naturalidade"),
+                        rs.getString("telefone")
+                ));
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao listar pessoas: " + e.getMessage());
         }
+        return pessoas;
     }
 
-    // DELETE
-    public void delete(Connection conn, int id) throws SQLException {
+    // Método para excluir uma pessoa
+    public boolean excluirPessoa(int id) {
         String sql = "DELETE FROM Pessoa WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             stmt.setInt(1, id);
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao excluir pessoa: " + e.getMessage());
         }
+        return false;
     }
 }

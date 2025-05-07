@@ -16,6 +16,9 @@ public class Aluno extends Pessoa {
     private List<Relatorio> relatorios = new ArrayList<>();
     private List<Professor> professores = new ArrayList<>();
 
+    public Aluno() {
+    }
+
     public Aluno(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade, String telefone,
                  String matricula, String responsavel, String telResponsavel, String telTrabalho, String curso, String turma) {
         super(nome, dataNascimento, email, sexo, naturalidade, telefone);
