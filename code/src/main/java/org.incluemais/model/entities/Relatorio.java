@@ -10,48 +10,17 @@ public class Relatorio {
     private LocalDate dataGeracao;
     private Aluno aluno;
     private ProfessorAEE professorAEE;
-    private AvaliacaoInicial avaliacaoInicial;
-    private AvaliacaoProcessual avaliacaoProcessual;
-    private AvaliacaoFinal avaliacaoFinal;
+    private List<Avaliacao> avaliacoes = new ArrayList<>();
     private String resumo;
-    private List<SessaoAtendimento> sessoes = new ArrayList<>();
+    private String observacoes;
 
-    public Relatorio(String titulo, LocalDate dataGeracao, Aluno aluno, ProfessorAEE professorAEE, String resumo) {
+    public Relatorio(String titulo, LocalDate dataGeracao, Aluno aluno, ProfessorAEE professorAEE, String resumo, String observacoes) {
         this.titulo = titulo;
         this.dataGeracao = dataGeracao;
         this.aluno = aluno;
         this.professorAEE = professorAEE;
         this.resumo = resumo;
-    }
-
-    public Relatorio(String titulo, LocalDate dataGeracao, Aluno aluno, ProfessorAEE professorAEE, AvaliacaoInicial avaliacaoInicial, String resumo) {
-        this.titulo = titulo;
-        this.dataGeracao = dataGeracao;
-        this.aluno = aluno;
-        this.professorAEE = professorAEE;
-        this.avaliacaoInicial = avaliacaoInicial;
-        this.resumo = resumo;
-    }
-
-    public Relatorio(String titulo, LocalDate dataGeracao, Aluno aluno, ProfessorAEE professorAEE, AvaliacaoInicial avaliacaoInicial, AvaliacaoProcessual avaliacaoProcessual, String resumo) {
-        this.titulo = titulo;
-        this.dataGeracao = dataGeracao;
-        this.aluno = aluno;
-        this.professorAEE = professorAEE;
-        this.avaliacaoInicial = avaliacaoInicial;
-        this.avaliacaoProcessual = avaliacaoProcessual;
-        this.resumo = resumo;
-    }
-
-    public Relatorio(String titulo, LocalDate dataGeracao, Aluno aluno, ProfessorAEE professorAEE, AvaliacaoInicial avaliacaoInicial, AvaliacaoProcessual avaliacaoProcessual, AvaliacaoFinal avaliacaoFinal, String resumo) {
-        this.titulo = titulo;
-        this.dataGeracao = dataGeracao;
-        this.aluno = aluno;
-        this.professorAEE = professorAEE;
-        this.avaliacaoInicial = avaliacaoInicial;
-        this.avaliacaoProcessual = avaliacaoProcessual;
-        this.avaliacaoFinal = avaliacaoFinal;
-        this.resumo = resumo;
+        this.observacoes = observacoes;
     }
 
     public int getId() {
@@ -94,52 +63,28 @@ public class Relatorio {
         this.professorAEE = professorAEE;
     }
 
-    public AvaliacaoInicial getAvaliacaoInicial() {
-        return avaliacaoInicial;
-    }
-
-    public void setAvaliacaoInicial(AvaliacaoInicial avaliacaoInicial) {
-        this.avaliacaoInicial = avaliacaoInicial;
-    }
-
-    public AvaliacaoProcessual getAvaliacaoProcessual() {
-        return avaliacaoProcessual;
-    }
-
-    public void setAvaliacaoProcessual(AvaliacaoProcessual avaliacaoProcessual) {
-        this.avaliacaoProcessual = avaliacaoProcessual;
-    }
-
-    public AvaliacaoFinal getAvaliacaoFinal() {
-        return avaliacaoFinal;
-    }
-
-    public void setAvaliacaoFinal(AvaliacaoFinal avaliacaoFinal) {
-        this.avaliacaoFinal = avaliacaoFinal;
-    }
-
     public String getResumo() {
         return resumo;
     }
 
+    public List<Avaliacao> getAvaliacoes() {
+        return avaliacoes;
+    }
+
+    public void setAvaliacoes(List<Avaliacao> avaliacoes) {
+        this.avaliacoes = avaliacoes;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
     public void setResumo(String resumo) {
         this.resumo = resumo;
-    }
-
-    public List<SessaoAtendimento> getSessoes() {
-        return sessoes;
-    }
-
-    public void setSessoes(List<SessaoAtendimento> sessoes) {
-        this.sessoes = sessoes;
-    }
-
-    public void registrarSessao(SessaoAtendimento sessao){
-        sessoes.add(sessao);
-    }
-
-    public void removerSessao(SessaoAtendimento sessao){
-        sessoes.remove(sessao);
     }
 
     public void adicionarAoAluno(Aluno aluno, Relatorio relatorio){

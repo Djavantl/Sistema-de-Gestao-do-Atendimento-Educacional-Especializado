@@ -1,12 +1,12 @@
 package org.incluemais.model.entities;
 
-public class AvaliacaoInicial {
+public class Avaliacao {
     private int id;
     private String area;
     private String desempenhoVerificado;
     private String observacoes;
 
-    public AvaliacaoInicial(String area, String desempenhoVerificado, String observacoes) {
+    public Avaliacao(String area, String desempenhoVerificado, String observacoes) {
         this.area = area;
         this.desempenhoVerificado = desempenhoVerificado;
         this.observacoes = observacoes;
@@ -44,7 +44,7 @@ public class AvaliacaoInicial {
         this.observacoes = observacoes;
     }
 
-    public void adicionarNoRelatorio(Relatorio relatorio, AvaliacaoInicial avaliacaoInicial){
-        relatorio.setAvaliacaoInicial(avaliacaoInicial);
+    public void adicionarNoRelatorio(Relatorio relatorio, Avaliacao avaliacao){
+        relatorio.getAvaliacoes().add(avaliacao);
     }
 }

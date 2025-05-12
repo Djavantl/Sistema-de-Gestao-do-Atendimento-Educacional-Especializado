@@ -6,18 +6,20 @@ import java.util.List;
 
 public class PlanoAEE {
     private int id;
+    private ProfessorAEE professorResponsavel;
     private Aluno aluno;
     private LocalDate dataInicio;
     private List<Meta> metas = new ArrayList<>();
     private List<PropostaPedagogica> propostaPedagogicas = new ArrayList<>();
-    private AvaliacaoInicial avaliacao;
     private String recomendacoes;
+    private String observacoes;
 
-    public PlanoAEE(Aluno aluno, LocalDate dataInicio, AvaliacaoInicial avaliacao, String recomendacoes) {
+    public PlanoAEE(ProfessorAEE professor, Aluno aluno, LocalDate dataInicio, String recomendacoes, String observacoes) {
+        this.professorResponsavel = professor;
         this.aluno = aluno;
         this.dataInicio = dataInicio;
-        this.avaliacao = avaliacao;
         this.recomendacoes = recomendacoes;
+        this.observacoes = observacoes;
     }
 
     public int getId() {
@@ -27,6 +29,14 @@ public class PlanoAEE {
     public void setId(int id) {
         this.id = id;
     }
+
+    public ProfessorAEE getProfessorResponsavel() { return professorResponsavel; }
+
+    public void setProfessorResponsavel(ProfessorAEE professorResponsavel) { this.professorResponsavel = professorResponsavel; }
+
+    public String getObservacoes() {return observacoes; }
+
+    public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
 
     public Aluno getAluno() {
         return aluno;
@@ -56,17 +66,7 @@ public class PlanoAEE {
         return propostaPedagogicas;
     }
 
-    public void setPropostaPedagogicas(List<PropostaPedagogica> propostaPedagogicas) {
-        this.propostaPedagogicas = propostaPedagogicas;
-    }
-
-    public AvaliacaoInicial getAvaliacao() {
-        return avaliacao;
-    }
-
-    public void setAvaliacao(AvaliacaoInicial avaliacao) {
-        this.avaliacao = avaliacao;
-    }
+    public void setPropostaPedagogicas(List<PropostaPedagogica> propostaPedagogicas) { this.propostaPedagogicas = propostaPedagogicas; }
 
     public String getRecomendacoes() {
         return recomendacoes;

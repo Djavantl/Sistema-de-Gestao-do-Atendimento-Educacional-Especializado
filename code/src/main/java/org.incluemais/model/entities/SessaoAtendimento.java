@@ -9,16 +9,15 @@ public class SessaoAtendimento {
     private LocalDate data;
     private LocalTime horario;
     private String local;
-    private RegistroPresenca presenca;
-    private RegistroAusencia ausencia;
-    private String participantes;
+    private boolean presenca;
+    private String observacoes;
 
-    public SessaoAtendimento(Aluno aluno, LocalDate data, LocalTime horario, String local, String participantes) {
+    public SessaoAtendimento(Aluno aluno, LocalDate data, LocalTime horario, String local, String observacoes) {
         this.aluno = aluno;
         this.data = data;
         this.horario = horario;
         this.local = local;
-        this.participantes = participantes;
+        this.observacoes = observacoes;
     }
 
     public int getId() {
@@ -61,31 +60,19 @@ public class SessaoAtendimento {
         this.local = local;
     }
 
-    public RegistroPresenca getPresenca() {
+    public boolean isPresenca() {
         return presenca;
     }
 
-    public void setPresenca(RegistroPresenca presenca) {
+    public void setPresenca(boolean presenca) {
         this.presenca = presenca;
     }
 
-    public RegistroAusencia getAusencia() {
-        return ausencia;
+    public String getObservacoes() {
+        return observacoes;
     }
 
-    public void setAusencia(RegistroAusencia ausencia) {
-        this.ausencia = ausencia;
-    }
-
-    public String getParticipantes() {
-        return participantes;
-    }
-
-    public void setParticipantes(String participantes) {
-        this.participantes = participantes;
-    }
-
-    public void adionarNoRelatorio(Relatorio relatorio, SessaoAtendimento sessao){
-        relatorio.registrarSessao(sessao);
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 }
