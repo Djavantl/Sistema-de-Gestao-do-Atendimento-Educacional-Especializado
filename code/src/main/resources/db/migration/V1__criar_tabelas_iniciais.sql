@@ -8,6 +8,15 @@ CREATE TABLE Pessoa (
     telefone VARCHAR(20)
 );
 
+CREATE TABLE OrganizacaoAtendimento (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    periodo VARCHAR(100) NOT NULL,
+    duracao VARCHAR(100) NOT NULL,
+    frequencia VARCHAR(100) NOT NULL,
+    composicao TEXT,
+    tipo VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE RecursoFisicoArquitetonico (
     id INT PRIMARY KEY AUTO_INCREMENT,
     usoCadeiraDeRodas BOOLEAN,
@@ -40,132 +49,6 @@ CREATE TABLE RecursosPedagogicos (
     tempoEmpregadoAtividadesAvaliacoes BOOLEAN
 );
 
-CREATE TABLE OrganizacaoAtendimento (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    periodo VARCHAR(100) NOT NULL,
-    duracao VARCHAR(100) NOT NULL,
-    frequencia VARCHAR(100) NOT NULL,
-    composicao TEXT,
-    tipo VARCHAR(100) NOT NULL
-);
-
-
-CREATE TABLE AvaliacaoInicial (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    area VARCHAR(255) NOT NULL,
-    desempenhoVerificado TEXT,
-    observacoes TEXT
-);
-
-CREATE TABLE AvaliacaoProcessual (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    avancosArea TEXT,
-    dificuldadesArea TEXT,
-    encaminhamentos TEXT
-);
-
-CREATE TABLE AvaliacaoFinal (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    alcancadoArea TEXT,
-    naoAlcancadoArea TEXT,
-    relatorioFinal TEXT
-);
-
-
-CREATE TABLE PlanoAEE (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    dataInicio DATE NOT NULL,
-    avaliacaoInicial_id INT,
-    recomendacoes TEXT,
-    FOREIGN KEY (avaliacaoInicial_id) REFERENCES AvaliacaoInicial(id)
-);
-
-CREATE TABLE Aluno (
-    matricula CHAR(13) PRIMARY KEY,
-    pessoa_id INT NOT NULL,
-    responsavel VARCHAR(100),
-    telResponsavel VARCHAR(20),
-    telTrabalho VARCHAR(20),
-    organizacao_id INT,
-    curso VARCHAR(100),
-    turma VARCHAR(100),
-    plano_id INT,
-    FOREIGN KEY (pessoa_id) REFERENCES Pessoa(id) ON DELETE CASCADE,
-    FOREIGN KEY (organizacao_id) REFERENCES OrganizacaoAtendimento(id),
-    FOREIGN KEY (plano_id) REFERENCES PlanoAEE(id)
-);
-
-
-ALTER TABLE PlanoAEE
-ADD COLUMN aluno_matricula VARCHAR(13),
-ADD FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula);
-
-CREATE TABLE Professor (
-    siape CHAR(13) PRIMARY KEY,
-    pessoa_id INT NOT NULL,
-    especialidade VARCHAR(100),
-    FOREIGN KEY (pessoa_id) REFERENCES Pessoa(id) ON DELETE CASCADE
-);
-
-CREATE TABLE ProfessorAEE (
-    siape CHAR(13) PRIMARY KEY,
-    pessoa_id INT NOT NULL,
-    especialidade VARCHAR(100),
-    FOREIGN KEY (pessoa_id) REFERENCES Pessoa(id) ON DELETE CASCADE
-);
-
--- Tabelas de registros
-CREATE TABLE RegistroPresenca (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    aluno_matricula CHAR(13) NOT NULL,
-    data DATE NOT NULL,
-    horario TIME NOT NULL,
-    sinteseAtividades TEXT,
-    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula)
-);
-
-CREATE TABLE RegistroAusencia (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    aluno_matricula CHAR(13) NOT NULL,
-    data DATE NOT NULL,
-    motivos TEXT,
-    encaminhamento TEXT,
-    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula)
-);
-
-
-CREATE TABLE SessaoAtendimento (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    aluno_matricula CHAR(13) NOT NULL,
-    data DATE NOT NULL,
-    horario TIME NOT NULL,
-    local VARCHAR(100) NOT NULL,
-    presenca_id INT,
-    ausencia_id INT,
-    participantes TEXT,
-    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula),
-    FOREIGN KEY (presenca_id) REFERENCES RegistroPresenca(id),
-    FOREIGN KEY (ausencia_id) REFERENCES RegistroAusencia(id)
-);
-
-CREATE TABLE Relatorio (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    titulo VARCHAR(100) NOT NULL,
-    dataGeracao DATE NOT NULL,
-    aluno_matricula CHAR(13) NOT NULL,
-    professorAEE_siape CHAR(13) NOT NULL,
-    avaliacaoInicial_id INT,
-    avaliacaoProcessual_id INT,
-    avaliacaoFinal_id INT,
-    resumo TEXT,
-    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula),
-    FOREIGN KEY (professorAEE_siape) REFERENCES ProfessorAEE(siape),
-    FOREIGN KEY (avaliacaoInicial_id) REFERENCES AvaliacaoInicial(id),
-    FOREIGN KEY (avaliacaoProcessual_id) REFERENCES AvaliacaoProcessual(id),
-    FOREIGN KEY (avaliacaoFinal_id) REFERENCES AvaliacaoFinal(id)
-);
-
-
 CREATE TABLE Deficiencia (
     id INT PRIMARY KEY AUTO_INCREMENT,
     descricao VARCHAR(255) NOT NULL,
@@ -184,34 +67,60 @@ CREATE TABLE Deficiencia_Adaptacoes (
     FOREIGN KEY (deficiencia_id) REFERENCES Deficiencia(id)
 );
 
-CREATE TABLE Meta (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    descricao TEXT NOT NULL,
-    status VARCHAR(50) DEFAULT 'Pendente'
+CREATE TABLE Professor (
+    siape CHAR(16) PRIMARY KEY,
+    pessoa_id INT NOT NULL,
+    especialidade VARCHAR(100),
+    FOREIGN KEY (pessoa_id) REFERENCES Pessoa(id) ON DELETE CASCADE
 );
 
-CREATE TABLE PlanoAEE_Meta (
-    plano_id INT,
-    meta_id INT,
-    PRIMARY KEY (plano_id, meta_id),
-    FOREIGN KEY (plano_id) REFERENCES PlanoAEE(id),
-    FOREIGN KEY (meta_id) REFERENCES Meta(id)
+CREATE TABLE ProfessorAEE (
+    siape CHAR(16) PRIMARY KEY,
+    pessoa_id INT NOT NULL,
+    especialidade VARCHAR(100),
+    FOREIGN KEY (pessoa_id) REFERENCES Pessoa(id) ON DELETE CASCADE
+);
+
+CREATE TABLE Aluno (
+    matricula CHAR(16) PRIMARY KEY,
+    pessoa_id INT NOT NULL,
+    responsavel VARCHAR(100),
+    telResponsavel VARCHAR(20),
+    telTrabalho VARCHAR(20),
+    organizacao_id INT,
+    curso VARCHAR(100),
+    turma VARCHAR(100),
+    FOREIGN KEY (pessoa_id) REFERENCES Pessoa(id) ON DELETE CASCADE,
+    FOREIGN KEY (organizacao_id) REFERENCES OrganizacaoAtendimento(id)
+);
+
+CREATE TABLE Aluno_Deficiencia (
+    aluno_matricula CHAR(16),
+    deficiencia_id INT,
+    PRIMARY KEY (aluno_matricula, deficiencia_id),
+    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula),
+    FOREIGN KEY (deficiencia_id) REFERENCES Deficiencia(id)
 );
 
 CREATE TABLE Professor_Aluno (
-    professor_siape CHAR(13),
-    aluno_matricula CHAR(13),
+    professor_siape CHAR(16),
+    aluno_matricula CHAR(16),
     PRIMARY KEY (professor_siape, aluno_matricula),
     FOREIGN KEY (professor_siape) REFERENCES Professor(siape),
     FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula)
 );
 
-CREATE TABLE Relatorio_Sessao (
-    relatorio_id INT,
-    sessao_id INT,
-    PRIMARY KEY (relatorio_id, sessao_id),
-    FOREIGN KEY (relatorio_id) REFERENCES Relatorio(id),
-    FOREIGN KEY (sessao_id) REFERENCES SessaoAtendimento(id)
+CREATE TABLE Avaliacao (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    area VARCHAR(255) NOT NULL,
+    desempenhoVerificado TEXT,
+    observacoes TEXT
+);
+
+CREATE TABLE Meta (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    descricao TEXT NOT NULL,
+    status VARCHAR(50) DEFAULT 'Pendente'
 );
 
 CREATE TABLE PropostaPedagogica (
@@ -227,6 +136,25 @@ CREATE TABLE PropostaPedagogica (
     FOREIGN KEY (recursoCI_id) REFERENCES RecursosComunicacaoEInformacao(id)
 );
 
+CREATE TABLE PlanoAEE (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    professor_siape CHAR(16),
+    aluno_matricula CHAR(16),
+    dataInicio DATE NOT NULL,
+    recomendacoes TEXT,
+    observacoes TEXT,
+    FOREIGN KEY (professor_siape) REFERENCES ProfessorAEE(siape),
+    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula)
+);
+
+CREATE TABLE PlanoAEE_Meta (
+    plano_id INT,
+    meta_id INT,
+    PRIMARY KEY (plano_id, meta_id),
+    FOREIGN KEY (plano_id) REFERENCES PlanoAEE(id),
+    FOREIGN KEY (meta_id) REFERENCES Meta(id)
+);
+
 CREATE TABLE PlanoAEE_PropostaPedagogica (
     plano_id INT,
     proposta_id INT,
@@ -235,10 +163,33 @@ CREATE TABLE PlanoAEE_PropostaPedagogica (
     FOREIGN KEY (proposta_id) REFERENCES PropostaPedagogica(id)
 );
 
-CREATE TABLE Aluno_Deficiencia (
-    aluno_matricula CHAR(13),
-    deficiencia_id INT,
-    PRIMARY KEY (aluno_matricula, deficiencia_id),
+CREATE TABLE Relatorio (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    titulo VARCHAR(100) NOT NULL,
+    dataGeracao DATE NOT NULL,
+    aluno_matricula CHAR(16) NOT NULL,
+    professorAEE_siape CHAR(16) NOT NULL,
+    resumo TEXT,
+    observacoes TEXT,
     FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula),
-    FOREIGN KEY (deficiencia_id) REFERENCES Deficiencia(id)
+    FOREIGN KEY (professorAEE_siape) REFERENCES ProfessorAEE(siape)
+);
+
+CREATE TABLE SessaoAtendimento (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    aluno_matricula CHAR(16) NOT NULL,
+    data DATE NOT NULL,
+    horario TIME NOT NULL,
+    local VARCHAR(100) NOT NULL,
+    presenca BOOLEAN,
+    observacoes TEXT,
+    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula)
+);
+
+CREATE TABLE Relatorio_Avaliacao (
+    relatorio_id INT,
+    avaliacao_id INT,
+    PRIMARY KEY (relatorio_id, avaliacao_id),
+    FOREIGN KEY (relatorio_id) REFERENCES Relatorio(id),
+    FOREIGN KEY (avaliacao_id) REFERENCES Avaliacao(id)
 );
