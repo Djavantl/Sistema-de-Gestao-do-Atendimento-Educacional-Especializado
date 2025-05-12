@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProfessorDAO {
-    public void insert(Professor professor) throws SQLException {
+    public void insert(Professor professor) {
         PessoaDAO pessoaDAO = new PessoaDAO();
         String sql = "INSERT INTO Professor (siape, pessoa_id, especialidade) VALUES (?, ?, ?)";
 
@@ -19,10 +19,12 @@ public class ProfessorDAO {
             stmt.setInt(2, pessoaId);
             stmt.setString(3, professor.getEspecialidade());
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao inserir professor: " + e.getMessage(), e);
         }
     }
 
-    public Professor getBySiape(String siape) throws SQLException {
+    public Professor getBySiape(String siape) {
         String sql = "SELECT p.*, pr.especialidade FROM Pessoa p " +
                 "JOIN Professor pr ON p.id = pr.pessoa_id " +
                 "WHERE pr.siape = ?";
@@ -46,11 +48,13 @@ public class ProfessorDAO {
                     );
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar professor por SIAPE: " + e.getMessage(), e);
         }
         return professor;
     }
 
-    public List<Professor> getAll() throws SQLException {
+    public List<Professor> getAll() {
         String sql = "SELECT p.*, pr.siape, pr.especialidade FROM Pessoa p " +
                 "JOIN Professor pr ON p.id = pr.pessoa_id";
         List<Professor> professores = new ArrayList<>();
@@ -72,11 +76,13 @@ public class ProfessorDAO {
                 );
                 professores.add(professor);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao listar professores: " + e.getMessage(), e);
         }
         return professores;
     }
 
-    public void update(Professor professor) throws SQLException {
+    public void update(Professor professor) {
         String sqlPessoa = "UPDATE Pessoa SET nome = ?, dataNascimento = ?, email = ?, sexo = ?, naturalidade = ?, telefone = ? " +
                 "WHERE id = (SELECT pessoa_id FROM Professor WHERE siape = ?)";
         String sqlProfessor = "UPDATE Professor SET especialidade = ? WHERE siape = ?";
@@ -97,16 +103,20 @@ public class ProfessorDAO {
             stmtProfessor.setString(1, professor.getEspecialidade());
             stmtProfessor.setString(2, professor.getSiape());
             stmtProfessor.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar professor: " + e.getMessage(), e);
         }
     }
 
-    public void delete(String siape) throws SQLException {
+    public void delete(String siape) {
         String sql = "DELETE FROM Professor WHERE siape = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, siape);
             stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao deletar professor: " + e.getMessage(), e);
         }
     }
 }
