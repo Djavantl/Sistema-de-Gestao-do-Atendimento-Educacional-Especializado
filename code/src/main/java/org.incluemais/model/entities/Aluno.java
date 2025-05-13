@@ -30,6 +30,15 @@ public class Aluno extends Pessoa {
         this.turma = turma;
     }
 
+    public Aluno(String nome, LocalDate dataNascimento, String email, String sexo, String naturalidade, String telefone, String matricula, String responsavel, String telResponsavel, String curso, String turma) {
+        super(nome, dataNascimento, email, sexo, naturalidade, telefone);
+        this.matricula = matricula;
+        this.responsavel = responsavel;
+        this.telResponsavel = telResponsavel;
+        this.curso = curso;
+        this.turma = turma;
+    }
+
     public String getMatricula() {
         return matricula;
     }

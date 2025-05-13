@@ -12,12 +12,11 @@ public class SessaoAtendimento {
     private boolean presenca;
     private String observacoes;
 
-    public SessaoAtendimento(Aluno aluno, LocalDate data, LocalTime horario, String local, String observacoes) {
+    public SessaoAtendimento(Aluno aluno, LocalDate data, LocalTime horario, String local) {
         this.aluno = aluno;
         this.data = data;
         this.horario = horario;
         this.local = local;
-        this.observacoes = observacoes;
     }
 
     public int getId() {

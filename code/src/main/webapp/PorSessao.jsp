@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -7,7 +9,6 @@
     <title>Sessões de Atendimento</title>
     <link rel="stylesheet" href="PorSessao.css">
 </head>
-
 <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
     * {
         margin: 0;
@@ -16,7 +17,7 @@
     }
     body{
         background-color: #f9f9ff;
-        overflow-x: hidden;
+        overflow-x: hidden; /* impede rolagem horizontal */
     }
 
     .logo {
@@ -72,13 +73,13 @@
 
     .menu-btn.ativo {
         background-color: #f9f9ff;
-        color: #4D44B5;
+        color: #4D44B5; /* ou a cor desejada para o texto ativo */
     }
 
     #titulo h2 {
         color: rgb(12, 12, 97);
         font-size: 28px;
-        margin-left: 350px;
+        margin-left: 350px; /* substitui o left fixo */
         margin-top: 40px;
     }
 
@@ -91,12 +92,14 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
 
+    /* Linha do botão */
     .linha-superior {
         display: flex;
         justify-content: flex-end;
         margin-bottom: 30px;
     }
 
+    /* Botão Nova Sessão */
     .botao-nova-sessao {
         background-color: #4D44B5;
         color: #ffffff;
@@ -196,6 +199,7 @@
         height: 14px;
     }
 
+    /* Botões de ação empilhados à direita */
     .botoes-acoes {
         display: flex;
         flex-direction: column;
@@ -243,6 +247,7 @@
       z-index: 999;
     }
 
+    /* Tabela */
     .tabela-sessoes {
         width: 100%;
         border-collapse: collapse;
@@ -251,6 +256,7 @@
         overflow: hidden;
     }
 
+    /* Cabeçalho */
     .tabela-sessoes th {
         background-color: #ecf0f1;
         color: #2c3e50;
@@ -258,12 +264,14 @@
         padding: 14px;
     }
 
+    /* Células */
     .tabela-sessoes td {
         background-color: #ffffff;
         padding: 14px;
         border-bottom: 1px solid #e0e0e0;
     }
 
+    /* Filtros */
     .linha-filtro input,
     .linha-filtro select {
         width: 100%;
@@ -274,6 +282,7 @@
         background-color: #fefefe;
     }
 
+    /* Botão Filtrar */
     .botao-filtrar {
         background-color: #1abc9c;
         color: white;
@@ -309,6 +318,7 @@
         transition: transform 0.3s ease;
     }
 
+    /* Gira o ícone ao expandir */
     .botao-dropdown.ativo .icone-dropdown {
         transform: rotate(180deg);
     }
@@ -387,10 +397,9 @@
     }
 
     .conteudo-detalhes textarea::placeholder {
-        color: transparent;
+        color: transparent; /* Remove o placeholder */
     }
     </style>
-
 <body>
     <div class="sidebar">
         <div class="logo">
@@ -414,21 +423,27 @@
             <button class="botao-nova-sessao">+ Nova Sessão</button>
         </div>
 
+        <!-- Modal Nova Sessão -->
         <div class="modal-overlay" id="modalNovaSessao">
             <div class="modal-conteudo">
                 <h3>Criar Nova Sessão</h3>
-                <form id="formNovaSessao" onsubmit="handleSalvar(event)">
+                <form id="formNovaSessao" action="${pageContext.request.contextPath}/sessoes?acao=criar" method="POST">
                     <label for="aluno">Nome do Aluno:</label><br>
-                    <input type="text" id="aluno" name="aluno"><br><br>
+                    <input type="text" id="aluno" name="aluno" required list="listaAlunos">
+                    <datalist id="listaAlunos">
+                        <c:forEach items="${todosAlunos}" var="aluno">
+                            <option value="${aluno.nome}">
+                        </c:forEach>
+                    </datalist><br><br>
 
                     <label for="data">Data:</label><br>
-                    <input type="date" id="data" name="data"><br><br>
+                    <input type="date" id="data" name="data" required><br><br>
 
-                    <label for="hora">Hora:</label><br>
-                    <input type="time" id="hora" name="hora"><br><br>
+                    <label for="horario">Horário:</label><br>
+                    <input type="time" id="horario" name="horario" required><br><br>
 
                     <label for="local">Local:</label><br>
-                    <input type="text" id="local" name="local"><br><br>
+                    <input type="text" id="local" name="local" required><br><br>
 
                     <div class="botoes-modal">
                         <button type="submit">Salvar</button>
@@ -438,6 +453,7 @@
             </div>
         </div>
 
+        <!-- Tabela de Sessões -->
         <table class="tabela-sessoes">
             <thead>
                 <tr>
@@ -448,206 +464,147 @@
                     <th>Presença</th>
                 </tr>
                 <tr class="linha-filtro">
-                    <th><input type="text" name="aluno" placeholder="Nome do aluno" /></th>
-                    <th><input type="date" name="data" /></th>
-                    <th><input type="time" name="horario" /></th>
-                    <th><input type="text" name="local" placeholder="Local" /></th>
+                    <th><input type="text" name="filtroAluno" placeholder="Nome do aluno"></th>
+                    <th><input type="date" name="filtroData"></th>
+                    <th><input type="time" name="filtroHorario"></th>
+                    <th><input type="text" name="filtroLocal" placeholder="Local"></th>
                     <th>
-                        <select>
+                        <select name="filtroPresenca">
                             <option value="">Todos</option>
-                            <option value="presente">Presente</option>
-                            <option value="ausente">Ausente</option>
-                            <option value="pendente">Pendente</option>
+                            <option value="true">Presente</option>
+                            <option value="false">Ausente</option>
                         </select>
                     </th>
                 </tr>
             </thead>
 
             <tbody>
-                <tr data-id="123">
-                    <td>João Silva</td>
-                    <td>04/05/2025</td>
-                    <td>14h</td>
-                    <td>Sala 3</td>
-                    <td>
-                        <div class="sessao-status">
-                            <span class="texto-pendente">Pendente</span>
-                            <button class="botao-dropdown" onclick="toggleDetalhes(this); event.stopPropagation();">
-                                <img src="dropdown.svg" alt="seta" class="icone-dropdown">
-                            </button>
+                <c:forEach items="${sessoeslista}" var="sessao">
+                    <tr data-id="${sessao.id}">
+                        <td>${sessao.aluno.nome}</td>
+                        <td>${sessao.data}</td>
+                        <td>${sessao.horario}</td>
+                        <td>${sessao.local}</td>
+                        <td>
+                            <div class="sessao-status">
+                                <span class="${sessao.presenca ? 'texto-presente' : 'texto-ausente'}">
+                                    ${sessao.presenca ? 'Presente' : 'Ausente'}
+                                </span>
+                                <button class="botao-dropdown" onclick="toggleDetalhes(this)">
+                                    <img src="dropdown.svg" alt="seta" class="icone-dropdown">
+                                </button>
 
-                            <div class="botoes-acoes">
-                                <button class="botao-editar" onclick="editarSessao(this)">Editar</button>
-                                <button class="botao-excluir" onclick="excluirSessao(this)">Excluir</button>
+                                <div class="botoes-acoes">
+                                    <button class="botao-editar"
+                                            onclick="abrirEdicao(${sessao.id})">Editar</button>
+                                    <button class="botao-excluir"
+                                            onclick="confirmarExclusao(${sessao.id})">Excluir</button>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr class="linha-detalhes" style="display: none;">
-                      <td colspan="6">
-                         <div class="conteudo-detalhes">
-                             <label for="observacoes"><strong>Observações:</strong></label><br>
-                             <textarea id="observacoes" name="observacoes" rows="4" style="width: 100%;">
-                             </textarea>
-                         </div>
-                     </td>
-                </tr>
-
-                <tr data-id="123">
-                    <td>João Silva</td>
-                    <td>04/05/2025</td>
-                    <td>14h</td>
-                    <td>Sala 3</td>
-                    <td>
-                        <div class="sessao-status">
-                            <span class="texto-pendente">Pendente</span>
-                            <button class="botao-dropdown" onclick="toggleDetalhes(this); event.stopPropagation();">
-                                <img src="dropdown.svg" alt="seta" class="icone-dropdown">
-                            </button>
-
-                            <div class="botoes-acoes">
-                                <button class="botao-editar" onclick="editarSessao(this)">Editar</button>
-                                <button class="botao-excluir" onclick="excluirSessao(this)">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr class="linha-detalhes" style="display: none;">
+                        <td colspan="6">
+                            <div class="conteudo-detalhes">
+                                <p><strong>Observações:</strong> ${sessao.observacoes}</p>
                             </div>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr class="linha-detalhes" style="display: none;">
-                    <td colspan="6">
-                        <div class="conteudo-detalhes">
-                            <p><strong>Observações:</strong> João participou ativamente da sessão, demonstrando interesse nas atividades propostas.</p>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
+                </c:forEach>
             </tbody>
-
         </table>
-    </div>
 
-    <div class="overlay" id="modalOverlay">
-    <div class="modal-conteudo">
-        <h2>Editar Sessão</h2>
-        <form id="formEditarSessao" onsubmit="handleSalvarEditar(event)">
-            <label for="alunoEditar">Nome do Aluno:</label><br>
-            <input type="text" id="alunoEditar" name="alunoEditar"><br><br>
+        <!-- Modal Edição -->
+        <div class="modal-overlay" id="modalEditar">
+            <div class="modal-conteudo">
+                <h2>Editar Sessão</h2>
+                <form id="formEditarSessao" action="${pageContext.request.contextPath}/sessoes?acao=atualizar" method="POST">
+                    <input type="hidden" name="id" id="idEditar">
 
-            <label for="dataEditar">Data:</label><br>
-            <input type="date" id="dataEditar" name="dataEditar"><br><br>
+                    <label for="alunoEditar">Aluno:</label><br>
+                    <input type="text" id="alunoEditar" name="aluno" readonly><br><br>
 
-            <label for="horaEditar">Hora:</label><br>
-            <input type="time" id="horaEditar" name="horaEditar"><br><br>
+                    <label for="dataEditar">Data:</label><br>
+                    <input type="date" id="dataEditar" name="data" required><br><br>
 
-            <label for="presencaEditar">Presença:</label><br>
-            <select id="presencaEditar" name="presencaEditar">
-                <option value="presente">Presente</option>
-                <option value="ausente">Ausente</option>
-                <option value="pendente">Pendente</option>
-            </select><br><br>
+                    <label for="horarioEditar">Horário:</label><br>
+                    <input type="time" id="horarioEditar" name="horario" required><br><br>
 
-            <label for="localEditar">Local:</label><br>
-            <input type="text" id="localEditar" name="localEditar"><br><br>
+                    <label for="localEditar">Local:</label><br>
+                    <input type="text" id="localEditar" name="local" required><br><br>
 
-            <div class="botoes-modal">
-                <button type="submit" class="botao-nova-sessao">Salvar</button>
-                <button type="button" onclick="fecharModalEditar()" class="botao-nova-sessao">Cancelar</button>
+                    <label for="presencaEditar">Presença:</label><br>
+                    <select id="presencaEditar" name="presenca">
+                        <option value="true">Presente</option>
+                        <option value="false">Ausente</option>
+                    </select><br><br>
+
+                    <div class="botoes-modal">
+                        <button type="submit">Salvar</button>
+                        <button type="button" onclick="fecharModalEditar()">Cancelar</button>
+                    </div>
+                </form>
             </div>
-        </form>
-    </div>
-</div>
+        </div>
 
-<div class="overlay" id="modalExcluirOverlay" style="display: none;">
-    <div class="modal-conteudo">
-        <h3>Você tem certeza que deseja excluir esta sessão?</h3>
-        <div class="botoes-modal">
-            <button class="botao-confirmar" onclick="confirmarExclusao()">Confirmar</button>
-            <button class="botao-cancelar" onclick="fecharModalExcluir()">Cancelar</button>
+        <!-- Modal Confirmação Exclusão -->
+        <div class="modal-overlay" id="modalExcluir">
+            <div class="modal-conteudo">
+                <h3>Confirmar Exclusão</h3>
+                <p>Tem certeza que deseja excluir esta sessão?</p>
+                <form id="formExcluirSessao" action="${pageContext.request.contextPath}/sessoes?acao=excluir" method="POST">
+                    <input type="hidden" name="id" id="idExcluir">
+                    <div class="botoes-modal">
+                        <button type="submit">Confirmar</button>
+                        <button type="button" onclick="fecharModalExcluir()">Cancelar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
 
-    <script src="PorSessao.js"></script>
-</body>
+    <script>
+        // Controle dos Modais
+        const modais = {
+            nova: document.getElementById('modalNovaSessao'),
+            editar: document.getElementById('modalEditar'),
+            excluir: document.getElementById('modalExcluir')
+        };
 
-<script>
-    const modalNovaSessao = document.getElementById('modalNovaSessao');
-    const botaoNovaSessao = document.querySelector('.botao-nova-sessao');
-
-    botaoNovaSessao.addEventListener('click', () => {
-        modalNovaSessao.style.display = 'flex';
-    });
-
-    function fecharModalNovaSessao() {
-        modalNovaSessao.style.display = 'none';
-    }
-
-    const botoesMenu = document.querySelectorAll('.menu-btn');
-    botoesMenu.forEach(btn => {
-        btn.addEventListener('click', () => {
-            botoesMenu.forEach(b => b.classList.remove('ativo'));
-            btn.classList.add('ativo');
+        // Abrir modais
+        document.querySelector('.botao-nova-sessao').addEventListener('click', () => {
+            modais.nova.style.display = 'flex';
         });
-    });
 
-    function toggleDetalhes(botao) {
-        const linhaSessao = botao.closest('tr');
-        const linhaDetalhes = linhaSessao.nextElementSibling;
-
-        if (linhaDetalhes.style.display === "none") {
-            linhaDetalhes.style.display = "table-row";
-            botao.classList.add('ativo');
-        } else {
-            linhaDetalhes.style.display = "none";
-            botao.classList.remove('ativo');
+        function abrirEdicao(id) {
+            document.getElementById('idEditar').value = id;
+            modais.editar.style.display = 'flex';
         }
-    }
 
-    function editarSessao(btn) {
-        const linhaSessao = btn.closest('tr');
-        const aluno = linhaSessao.querySelector('td:nth-child(1)').textContent;
-        const data = linhaSessao.querySelector('td:nth-child(2)').textContent;
-        const hora = linhaSessao.querySelector('td:nth-child(3)').textContent;
-        const local = linhaSessao.querySelector('td:nth-child(4)').textContent;
-
-        document.getElementById('alunoEditar').value = aluno;
-        document.getElementById('dataEditar').value = data;
-        document.getElementById('horaEditar').value = hora;
-        document.getElementById('localEditar').value = local;
-
-        const overlay = document.getElementById('modalOverlay');
-        overlay.style.display = 'flex';
-    }
-
-    function fecharModalEditar() {
-        const overlay = document.getElementById('modalOverlay');
-        overlay.style.display = 'none';
-    }
-
-    let sessaoParaExcluir = null;
-
-    function excluirSessao(botao) {
-        const linha = botao.closest('tr');
-        const idSessao = linha.getAttribute('data-id');
-        sessaoParaExcluir = idSessao;
-
-        document.getElementById('modalExcluirOverlay').style.display = 'flex';
-    }
-
-    function confirmarExclusao() {
-        if (sessaoParaExcluir !== null) {
-            console.log("Sessão a excluir:", sessaoParaExcluir);
-
-            const linha = document.querySelector(`tr[data-id="${sessaoParaExcluir}"]`);
-            if (linha) linha.remove();
-
-            fecharModalExcluir();
-            sessaoParaExcluir = null;
+        function confirmarExclusao(id) {
+            document.getElementById('idExcluir').value = id;
+            modais.excluir.style.display = 'flex';
         }
-    }
 
-    function fecharModalExcluir() {
-        document.getElementById('modalExcluirOverlay').style.display = 'none';
-        sessaoParaExcluir = null;
-    }</script>
+        // Fechar modais
+        function fecharModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        // Fechar ao clicar fora
+        window.onclick = function(event) {
+            Object.values(modais).forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Controle dos Detalhes
+        function toggleDetalhes(botao) {
+            const linhaDetalhes = botao.closest('tr').nextElementSibling;
+            linhaDetalhes.style.display = linhaDetalhes.style.display === 'none' ? 'table-row' : 'none';
+        }
+    </script>
+</body>
 </html>

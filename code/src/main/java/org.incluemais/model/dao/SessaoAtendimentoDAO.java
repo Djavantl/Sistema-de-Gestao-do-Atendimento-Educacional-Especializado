@@ -19,15 +19,13 @@ public class SessaoAtendimentoDAO {
     }
 
     public void inserir(SessaoAtendimento s) throws SQLException {
-        String sql = "INSERT INTO SessaoAtendimento (aluno_matricula, data, horario, local, presenca, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO SessaoAtendimento (aluno_matricula, data, horario, local) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, s.getAluno().getMatricula());
             stmt.setDate(2, Date.valueOf(s.getData()));
             stmt.setTime(3, Time.valueOf(s.getHorario()));
             stmt.setString(4, s.getLocal());
-            stmt.setBoolean(5, s.isPresenca());
-            stmt.setString(6, s.getObservacoes());
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
@@ -106,13 +104,12 @@ public class SessaoAtendimentoDAO {
         LocalTime horario = rs.getTime("horario").toLocalTime();
         String local = rs.getString("local");
         boolean presenca = rs.getBoolean("presenca");
-        String observacoes = rs.getString("observacoes");
 
         Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
         if (aluno == null) {
             throw new SQLException("Aluno com matrícula " + matricula + " não encontrado.");
         }
-        SessaoAtendimento s = new SessaoAtendimento(aluno, data, horario, local, observacoes);
+        SessaoAtendimento s = new SessaoAtendimento(aluno, data, horario, local);
         s.setId(id);
         s.setPresenca(presenca);
         return s;

@@ -44,8 +44,8 @@ public class ProfessorAEE extends Pessoa {
         alunos.add(aluno);
     }
 
-    public SessaoAtendimento marcarSessao(Aluno aluno, LocalDate data, LocalTime horario, String local, String participantes, Relatorio realtorio ){
-        SessaoAtendimento sessao = new SessaoAtendimento(aluno, data, horario, local, participantes);
+    public SessaoAtendimento marcarSessao(Aluno aluno, LocalDate data, LocalTime horario, String local){
+        SessaoAtendimento sessao = new SessaoAtendimento(aluno, data, horario, local);
 
         return sessao;
     }
