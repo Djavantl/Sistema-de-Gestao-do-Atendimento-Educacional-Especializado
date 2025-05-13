@@ -36,7 +36,6 @@ public class RecursoFisicoArquitetonicoDAO {
 
     public void atualizar(RecursoFisicoArquitetonico r) throws SQLException {
         String sql = "UPDATE RecursoFisicoArquitetonico SET usoCadeiraDeRodas = ?, auxilioTranscricaoEscrita = ?, mesaAdaptadaCadeiraDeRodas = ?, usoDeMuleta = ?, outrosFisicoArquitetonico = ?, outrosEspecificado = ? WHERE id = ?";
-
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setBoolean(1, r.isUsoCadeiraDeRodas());
             stmt.setBoolean(2, r.isAuxilioTranscricaoEscrita());

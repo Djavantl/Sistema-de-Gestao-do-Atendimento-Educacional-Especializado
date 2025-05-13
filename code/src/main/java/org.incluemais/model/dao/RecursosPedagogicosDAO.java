@@ -21,7 +21,6 @@ public class RecursosPedagogicosDAO {
             stmt.setBoolean(3, r.isUsoTecnologiaAssistiva());
             stmt.setBoolean(4, r.isTempoEmpregadoAtividadesAvaliacoes());
             stmt.executeUpdate();
-
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     r.setId(rs.getInt(1));

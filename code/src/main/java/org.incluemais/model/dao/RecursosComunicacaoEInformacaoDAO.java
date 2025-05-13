@@ -31,7 +31,6 @@ public class RecursosComunicacaoEInformacaoDAO {
             stmt.setBoolean(9, r.isLeitorDeTela());
             stmt.setBoolean(10, r.isFonteTamanhoEspecifico());
             stmt.executeUpdate();
-
             try (ResultSet rs = stmt.getGeneratedKeys()) {
                 if (rs.next()) {
                     r.setId(rs.getInt(1));
