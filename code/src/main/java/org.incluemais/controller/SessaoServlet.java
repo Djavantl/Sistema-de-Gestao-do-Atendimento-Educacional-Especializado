@@ -111,7 +111,7 @@ public class SessaoServlet extends HttpServlet {
                 switch (action) {
                     case "criar" -> criarSessao(request, response);
                     case "atualizar" -> atualizarSessao(request, response);
-                    case "confirmarExclusao" -> excluirSessao(request, response);
+                    case "excluir" -> excluirSessao(request, response);
                     default -> response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
                 }
             }
@@ -165,21 +165,23 @@ public class SessaoServlet extends HttpServlet {
 
     private void confirmarExclusao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-
+        System.out.println("entrou em confirmar");
         int id = Integer.parseInt(request.getParameter("id"));
         SessaoAtendimento sessao = sessaoDAO.buscarPorId(id);
 
         if (sessao != null) {
+            System.out.println("Entrou no if");
             request.setAttribute("sessao", sessao);
             request.getRequestDispatcher("PorSessao.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            System.out.println("deu ruim");
         }
     }
 
     private void excluirSessao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-
+        System.out.println("entrou em excluir2");
         int id = Integer.parseInt(request.getParameter("id"));
         sessaoDAO.deletar(id);
         response.sendRedirect(request.getContextPath() + "/sessoes?sucesso=Sessão+excluída+com+sucesso");

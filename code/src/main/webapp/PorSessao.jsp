@@ -447,7 +447,7 @@
 
                     <div class="botoes-modal">
                         <button type="submit">Salvar</button>
-                        <button type="button" onclick="fecharModalNovaSessao()">Cancelar</button>
+                        <button type="button" onclick="fecharModal(modalNovaSessao)">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -541,7 +541,7 @@
 
                     <div class="botoes-modal">
                         <button type="submit">Salvar</button>
-                        <button type="button" onclick="fecharModalEditar()">Cancelar</button>
+                        <button type="button" onclick="fecharModal(modalEditar)">Cancelar</button>
                     </div>
                 </form>
             </div>
@@ -556,7 +556,7 @@
                     <input type="hidden" name="id" id="idExcluir">
                     <div class="botoes-modal">
                         <button type="submit">Confirmar</button>
-                        <button type="button" onclick="fecharModalExcluir()">Cancelar</button>
+                        <button type="button" onclick="fecharModal(modalExcluir)">Cancelar</button>
                     </div>
                 </form>
             </div>
