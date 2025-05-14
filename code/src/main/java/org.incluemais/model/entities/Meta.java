@@ -7,6 +7,9 @@ public class Meta {
     private String descricao;
     private String status;
 
+    public Meta(){
+    }
+
     public Meta(String descricao, String status) {
         this.descricao = descricao;
         this.status = status;
