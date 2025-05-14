@@ -1,5 +1,6 @@
 package org.incluemais.model.dao;
 
+import org.incluemais.model.connection.DBConnection;
 import org.incluemais.model.entities.Aluno;
 import org.incluemais.model.entities.OrganizacaoAtendimento;
 import org.incluemais.model.entities.PlanoAEE;
@@ -24,7 +25,7 @@ public class AlunoDAO {
     // Método único para inserção
     public boolean salvarAluno(Aluno aluno) {
         String sqlPessoa = "INSERT INTO Pessoa (nome, dataNascimento, email, sexo, naturalidade, telefone) VALUES (?, ?, ?, ?, ?, ?)";
-        String sqlAluno = "INSERT INTO Aluno (matricula, pessoa_id, responsavel, telResponsavel, telTrabalho, organizacao_id, curso, turma, plano_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlAluno = "INSERT INTO Aluno (matricula, pessoa_id, responsavel, telResponsavel, telTrabalho,  curso, turma) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
             conn.setAutoCommit(false);
@@ -70,10 +71,9 @@ public class AlunoDAO {
             stmt.setString(3, aluno.getResponsavel());
             stmt.setString(4, aluno.getTelResponsavel());
             stmt.setString(5, aluno.getTelTrabalho());
-            stmt.setObject(6, aluno.getOrganizacao() != null ? aluno.getOrganizacao().getId() : null, Types.INTEGER);
-            stmt.setString(7, aluno.getCurso());
-            stmt.setString(8, aluno.getTurma());
-            stmt.setObject(9, aluno.getPlano() != null ? aluno.getPlano().getId() : null, Types.INTEGER);
+            stmt.setString(6, aluno.getCurso());
+            stmt.setString(7, aluno.getTurma());
+
 
             return stmt.executeUpdate() > 0;
         }
@@ -81,7 +81,7 @@ public class AlunoDAO {
 
     public boolean atualizarAluno(Aluno aluno) {
         String sqlPessoa = "UPDATE Pessoa SET nome=?, dataNascimento=?, email=?, sexo=?, naturalidade=?, telefone=? WHERE id=?";
-        String sqlAluno = "UPDATE Aluno SET matricula=?, responsavel=?, telResponsavel=?, telTrabalho=?, organizacao_id=?, curso=?, turma=?, plano_id=? WHERE pessoa_id=?";
+        String sqlAluno = "UPDATE Aluno SET matricula=?, responsavel=?, telResponsavel=?, telTrabalho=?, curso=?, turma=?  WHERE pessoa_id=?";
 
         try {
             conn.setAutoCommit(false);
@@ -121,11 +121,9 @@ public class AlunoDAO {
             stmt.setString(2, aluno.getResponsavel());
             stmt.setString(3, aluno.getTelResponsavel());
             stmt.setString(4, aluno.getTelTrabalho());
-            stmt.setObject(5, aluno.getOrganizacao() != null ? aluno.getOrganizacao().getId() : null, Types.INTEGER);
-            stmt.setString(6, aluno.getCurso());
-            stmt.setString(7, aluno.getTurma());
-            stmt.setObject(8, aluno.getPlano() != null ? aluno.getPlano().getId() : null, Types.INTEGER);
-            stmt.setInt(9, aluno.getId());
+            stmt.setString(5, aluno.getCurso());
+            stmt.setString(6, aluno.getTurma());
+            stmt.setInt(7, aluno.getId());
 
             return stmt.executeUpdate() > 0;
         }
@@ -186,6 +184,26 @@ public class AlunoDAO {
         }
     }
 
+    public Aluno buscarPorId(int id) {
+        String sql = """
+        SELECT p.*, a.* 
+        FROM Aluno a
+        INNER JOIN Pessoa p ON a.pessoa_id = p.id
+        WHERE p.id = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next() ? mapearAluno(rs) : null;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Erro ao buscar aluno por ID", e);
+            return null;
+        }
+    }
+
     public List<Aluno> buscarPorNome(String nome) {
         String sql = """
             SELECT p.*, a.* 
@@ -210,30 +228,42 @@ public class AlunoDAO {
         return alunos;
     }
 
+    public List<Aluno> buscarTodos() throws SQLException {
+        String sql = """
+        SELECT p.*, a.* 
+        FROM Aluno a
+        INNER JOIN Pessoa p ON a.pessoa_id = p.id
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            List<Aluno> alunos = new ArrayList<>();
+            while (rs.next()) {
+                alunos.add(mapearAluno(rs));
+            }
+            return alunos;
+        }
+    }
+
     private Aluno mapearAluno(ResultSet rs) throws SQLException {
         Aluno aluno = new Aluno();
+
         // Mapeamento de Pessoa
-        aluno.setId(rs.getInt("id"));
-        aluno.setNome(rs.getString("nome"));
-        aluno.setDataNascimento(rs.getDate("dataNascimento").toLocalDate());
-        aluno.setEmail(rs.getString("email"));
-        aluno.setSexo(rs.getString("sexo"));
-        aluno.setNaturalidade(rs.getString("naturalidade"));
-        aluno.setTelefone(rs.getString("telefone"));
+        aluno.setId(rs.getInt("p.id"));
+        aluno.setNome(rs.getString("p.nome"));
+        aluno.setDataNascimento(rs.getDate("p.dataNascimento").toLocalDate());
+        aluno.setEmail(rs.getString("p.email"));
+        aluno.setSexo(rs.getString("p.sexo"));
+        aluno.setNaturalidade(rs.getString("p.naturalidade"));
+        aluno.setTelefone(rs.getString("p.telefone"));
 
         // Mapeamento de Aluno
-        aluno.setMatricula(rs.getString("matricula"));
-        aluno.setResponsavel(rs.getString("responsavel"));
-        aluno.setTelResponsavel(rs.getString("telResponsavel"));
-        aluno.setTelTrabalho(rs.getString("telTrabalho"));
-        aluno.setCurso(rs.getString("curso"));
-        aluno.setTurma(rs.getString("turma"));
-
-        // Relacionamentos (implementar conforme necessidade)
-        Integer organizacaoId = rs.getInt("organizacao_id");
-        if (organizacaoId != null) {
-            aluno.setOrganizacao(buscarOrganizacao(organizacaoId));
-        }
+        aluno.setMatricula(rs.getString("a.matricula"));
+        aluno.setResponsavel(rs.getString("a.responsavel"));
+        aluno.setTelResponsavel(rs.getString("a.telResponsavel"));
+        aluno.setTelTrabalho(rs.getString("a.telTrabalho"));
+        aluno.setCurso(rs.getString("a.curso"));
+        aluno.setTurma(rs.getString("a.turma"));
 
         return aluno;
     }
@@ -258,15 +288,35 @@ public class AlunoDAO {
             logger.log(Level.WARNING, "Erro ao resetar auto-commit", e);
         }
     }
+    public Aluno obterPorId(int id) {
+        Aluno aluno = null;
+        String sql = "SELECT * FROM alunos WHERE id = ?";
 
-    // Métodos para buscar relacionamentos (implementar)
-    private OrganizacaoAtendimento buscarOrganizacao(int id) {
-        // Implementar lógica de busca
-        return null;
-    }
+        try (Connection conexao = DBConnection.getConnection();
+             PreparedStatement stmt = conexao.prepareStatement(sql)) {
 
-    private PlanoAEE buscarPlano(int id) {
-        // Implementar lógica de busca
-        return null;
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                aluno = new Aluno();
+                aluno.setId(rs.getInt("id"));
+                aluno.setNome(rs.getString("nome"));
+                aluno.setDataNascimento(rs.getDate("dataNascimento").toLocalDate());
+                aluno.setEmail(rs.getString("email"));
+                aluno.setSexo(rs.getString("sexo"));
+                aluno.setNaturalidade(rs.getString("naturalidade"));
+                aluno.setTelefone(rs.getString("telefone"));
+                aluno.setMatricula(rs.getString("matricula"));
+                aluno.setCurso(rs.getString("curso"));
+                aluno.setTurma(rs.getString("turma"));
+                aluno.setResponsavel(rs.getString("responsavel"));
+                aluno.setTelResponsavel(rs.getString("telResponsavel"));
+                aluno.setTelTrabalho(rs.getString("telTrabalho"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return aluno;
     }
 }

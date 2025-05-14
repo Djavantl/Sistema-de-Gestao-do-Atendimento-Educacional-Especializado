@@ -41,18 +41,10 @@ public class SessaoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String action = request.getParameter("acao");
 
         try {
-            if (action == null) {
                 listarSessoes(request, response);
-            } else {
-                switch (action) {
-                    case "editar" -> exibirFormularioEdicao(request, response);
-                    case "excluir" -> confirmarExclusao(request, response);
-                    default -> response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
-                }
-            }
+
         } catch (SQLException e) {
             throw new ServletException("Erro de banco de dados", e);
         }
@@ -163,22 +155,6 @@ public class SessaoServlet extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/sessoes?sucesso=Sessão+atualizada+com+sucesso");
     }
 
-    private void confirmarExclusao(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, ServletException, IOException {
-        System.out.println("entrou em confirmar");
-        int id = Integer.parseInt(request.getParameter("id"));
-        SessaoAtendimento sessao = sessaoDAO.buscarPorId(id);
-
-        if (sessao != null) {
-            System.out.println("Entrou no if");
-            request.setAttribute("sessao", sessao);
-            request.getRequestDispatcher("PorSessao.jsp").forward(request, response);
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            System.out.println("deu ruim");
-        }
-    }
-
     private void excluirSessao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         System.out.println("entrou em excluir2");
@@ -186,5 +162,6 @@ public class SessaoServlet extends HttpServlet {
         sessaoDAO.deletar(id);
         response.sendRedirect(request.getContextPath() + "/sessoes?sucesso=Sessão+excluída+com+sucesso");
     }
+
 
 }
