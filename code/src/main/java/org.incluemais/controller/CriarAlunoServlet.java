@@ -41,13 +41,12 @@ public class CriarAlunoServlet extends HttpServlet {
 
         try {
             String action = request.getParameter("acao");
+            listarAlunos(request, response);
 
             if ("editar".equals(action)) {
                 exibirFormularioEdicao(request, response);
             } else if ("novo".equals(action)) {
                 exibirFormularioCriacao(request, response);
-            } else {
-                listarAlunos(request, response);
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro de banco de dados", e);

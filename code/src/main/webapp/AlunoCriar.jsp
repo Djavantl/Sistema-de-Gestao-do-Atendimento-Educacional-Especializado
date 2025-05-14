@@ -321,7 +321,7 @@ body {
         <div class="menu">
             <button class="menu-btn ativo">Estudantes</button>
             <button class="menu-btn">Professores</button>
-            <button class="menu-btn">Sessões</button>
+            <button class="menu-btn" onclick="window.location.href='/sessoes?sucesso=Sessão+criada+com+sucesso'">Sessões</button>
             <button class="menu-btn">Usuários</button>
         </div>
     </div>
