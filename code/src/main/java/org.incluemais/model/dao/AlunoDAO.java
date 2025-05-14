@@ -290,7 +290,12 @@ public class AlunoDAO {
     }
     public Aluno obterPorId(int id) {
         Aluno aluno = null;
-        String sql = "SELECT * FROM alunos WHERE id = ?";
+        String sql = """
+        SELECT p.*, a.* 
+        FROM Aluno a
+        INNER JOIN Pessoa p ON a.pessoa_id = p.id
+        WHERE p.id = ?
+        """;
 
         try (Connection conexao = DBConnection.getConnection();
              PreparedStatement stmt = conexao.prepareStatement(sql)) {

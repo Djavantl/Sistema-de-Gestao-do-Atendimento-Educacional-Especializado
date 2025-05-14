@@ -20,19 +20,7 @@
         overflow-x: hidden; /* impede rolagem horizontal */
     }
 
-    .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 30px;
-    }
-
-    .logo img {
-        width: 40px;
-        height: 40px;
-        object-fit: contain;
-    }
-
+    /* No arquivo alunos.css */
     .sidebar {
         position: fixed;
         top: 0;
@@ -45,6 +33,20 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        z-index: 1000;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .logo img {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
     }
 
     .menu {
@@ -73,7 +75,11 @@
 
     .menu-btn.ativo {
         background-color: #f9f9ff;
-        color: #4D44B5; /* ou a cor desejada para o texto ativo */
+        color: #4D44B5;
+    }
+
+    .menu-btn:hover {
+        background-color: rgba(255, 255, 255, 0.15);
     }
 
     #titulo h2 {
@@ -407,7 +413,7 @@
             <h2>Inclui+</h2>
         </div>
         <div class="menu">
-            <button class="menu-btn" onclick="window.location.href='AlunoCriar.jsp'">Estudantes</button>
+            <button class="menu-btn" onclick="window.location.href='/alunos'">Estudantes</button>
             <button class="menu-btn">Professores</button>
             <button class="menu-btn ativo">Sessões</button>
             <button class="menu-btn">Usuários</button>

@@ -433,7 +433,7 @@ body {
                             <div class="botoes-acoes">
                                 <button class="botao-editar" onclick="abrirEdicao(this)">Editar</button>
                                 <button class="botao-ver-mais"
-                                    onclick="window.location.href='DetalhesAluno.jsp?id=${aluno.id}'">Detalhes</button>
+                                    onclick="window.location.href='detalhes-aluno?id=${aluno.id}'">Detalhes</button>
                                 <button class="botao-excluir" onclick="confirmarExclusao(${aluno.id})">Excluir</button>
                             </div>
                         </td>

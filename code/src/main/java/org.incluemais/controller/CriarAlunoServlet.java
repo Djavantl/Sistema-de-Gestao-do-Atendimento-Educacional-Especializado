@@ -258,21 +258,4 @@ public class CriarAlunoServlet extends HttpServlet {
         request.setAttribute("erro", mensagem);
         request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
     }
-
-    private void exibirDetalhesAluno(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            int id = Integer.parseInt(request.getParameter("id"));
-            Aluno aluno = alunoDAO.buscarPorId(id);
-
-            if (aluno != null) {
-                request.setAttribute("aluno", aluno);
-                request.getRequestDispatcher("/detalhesAluno.jsp").forward(request, response);
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
-            }
-        } catch (NumberFormatException e) {
-            encaminharErro(request, response, "ID inválido");
-        }
-    }
 }
