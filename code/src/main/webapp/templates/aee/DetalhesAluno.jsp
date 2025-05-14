@@ -182,7 +182,7 @@ body {
 <body>
     <div class="sidebar">
             <div class="logo">
-                <img src="Group 167.svg" alt="Logo" />
+                <img src="static/images/logo.svg" alt="Logo" />
                 <h2>Inclui+</h2>
             </div>
             <div class="menu">

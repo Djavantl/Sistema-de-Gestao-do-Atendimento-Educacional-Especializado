@@ -409,7 +409,7 @@
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="Group 167.svg" alt="Logo" />
+            <img src="static/images/logo.svg" alt="Logo" />
             <h2>Inclui+</h2>
         </div>
         <div class="menu">
@@ -497,7 +497,7 @@
                                     ${sessao.presenca ? 'Presente' : 'Ausente'}
                                 </span>
                                 <button class="botao-dropdown" onclick="toggleDetalhes(this)">
-                                    <img src="dropdown.svg" alt="seta" class="icone-dropdown">
+                                    <img src="static/images/seta.svg" alt="seta" class="icone-dropdown">
                                 </button>
 
                                 <div class="botoes-acoes">
