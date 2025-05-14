@@ -480,7 +480,7 @@
 
             <tbody>
                 <c:forEach items="${sessoeslista}" var="sessao">
-                    <tr data-id="${sessao.id}">
+                    <tr data-id="${sessao.id}" id="linha-${sessao.id}">
                         <td>${sessao.aluno.nome}</td>
                         <td>${sessao.data}</td>
                         <td>${sessao.horario}</td>
@@ -577,8 +577,41 @@
         });
 
         function abrirEdicao(id) {
+            console.log("Editando sessão ID:", id);
+
+            // 1. Encontra a linha da tabela correspondente
+            const linha = document.getElementById("linha-"+id);
+            if (!linha) {
+                console.error("Sessão não encontrada");
+                return;
+            }
+
+            // 2. Extrai os dados das células
+            const celulas = linha.cells;
+            const dados = {
+                aluno: celulas[0].textContent.trim(),
+                dataBr: celulas[1].textContent.trim(),
+                horario: celulas[2].textContent.trim(),
+                local: celulas[3].textContent.trim(),
+                presenca: celulas[4].querySelector('.sessao-status span').textContent.includes("Presente")
+            };
+
+            // 3. Converte a data para o formato yyyy-MM-dd (obrigatório para input type="date")
+            const [dia, mes, ano] = dados.dataBr.split('/');
+            const dataInput = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
+            document.getElementById('dataEditar').value = dataInput.trim();
+
+
+            // 4. Preenche os campos do formulário
             document.getElementById('idEditar').value = id;
-            modais.editar.style.display = 'flex';
+            document.getElementById('alunoEditar').value = dados.aluno;
+            document.getElementById('dataEditar').value = dataInput;
+            document.getElementById('horarioEditar').value = dados.horario;
+            document.getElementById('localEditar').value = dados.local;
+            document.getElementById('presencaEditar').value = dados.presenca;
+
+            // 5. Abre o modal
+            document.getElementById('modalEditar').style.display = 'flex';
         }
 
         function confirmarExclusao(id) {
