@@ -9,7 +9,7 @@
     <title>Sessões de Atendimento</title>
     <link rel="stylesheet" href="PorSessao.css">
 </head>
-<style>@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+    <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
     * {
         margin: 0;
         padding: 0;
