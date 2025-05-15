@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(name = "DetalhesAlunoServlet", urlPatterns = {"/detalhes-aluno"})
+@WebServlet(name = "DetalhesAlunoServlet", urlPatterns = {"/templates/aee/detalhes-aluno"})
 public class DetalhesAlunoServlet extends HttpServlet {
     private AlunoDAO alunoDAO;
 
@@ -41,7 +41,7 @@ public class DetalhesAlunoServlet extends HttpServlet {
             }
 
             request.setAttribute("aluno", aluno);
-            request.getRequestDispatcher("/DetalhesAluno.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/DetalhesAluno.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");

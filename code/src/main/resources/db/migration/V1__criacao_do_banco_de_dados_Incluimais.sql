@@ -159,7 +159,7 @@ CREATE TABLE PlanoAEE_PropostaPedagogica (
     plano_id INT,
     proposta_id INT,
     PRIMARY KEY (plano_id, proposta_id),
-    FOREIGN KEY (plano_id) REFERENCES PlanoAEE(id),
+    FOREIGN KEY (plano_id) REFERE  NCES PlanoAEE(id),
     FOREIGN KEY (proposta_id) REFERENCES PropostaPedagogica(id)
 );
 

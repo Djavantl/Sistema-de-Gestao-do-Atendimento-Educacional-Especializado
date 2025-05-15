@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet(name = "AlunoServlet", urlPatterns = {"/alunos", "/alunos/*"})
+@WebServlet(name = "AlunoServlet", urlPatterns = {"/templates/aee/alunos", "/templates/aee/alunos/*"})
 public class CriarAlunoServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(CriarAlunoServlet.class.getName());
     private AlunoDAO alunoDAO;

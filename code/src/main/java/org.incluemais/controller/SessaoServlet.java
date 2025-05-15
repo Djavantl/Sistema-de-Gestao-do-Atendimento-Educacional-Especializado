@@ -17,7 +17,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.logging.Logger;
 
-@WebServlet(name = "SessaoServlet", urlPatterns = {"/sessoes", "/sessoes/*"})
+@WebServlet(name = "SessaoServlet", urlPatterns = {"/templates/aee/sessoes", "/templates/aee/sessoes/*"})
 public class SessaoServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(SessaoServlet.class.getName());
     private AlunoDAO alunoDAO;
@@ -61,7 +61,7 @@ public class SessaoServlet extends HttpServlet {
 
         if (alunos.isEmpty()) {
             request.setAttribute("erro", "Aluno não encontrado: " + nomeAluno);
-            request.getRequestDispatcher("PorSessao.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
             return;
         }
 
@@ -70,7 +70,7 @@ public class SessaoServlet extends HttpServlet {
             request.setAttribute("data", data.toString());
             request.setAttribute("horario", horario.toString());
             request.setAttribute("local", local);
-            request.getRequestDispatcher("PorSessao.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
             return;
         }
 
@@ -88,7 +88,7 @@ public class SessaoServlet extends HttpServlet {
             System.out.println(e.getMessage());
         }
 
-        response.sendRedirect(request.getContextPath() + "/sessoes?sucesso=Sessão+criada+com+sucesso");
+        response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?sucesso=Sessão+criada+com+sucesso");
     }
 
     @Override
@@ -117,7 +117,7 @@ public class SessaoServlet extends HttpServlet {
 
         List<SessaoAtendimento> sessoes = sessaoDAO.listarTodos();
         request.setAttribute("sessoeslista", sessoes);
-        request.getRequestDispatcher("PorSessao.jsp").forward(request, response);
+        request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
     }
 
     private void exibirFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
@@ -128,7 +128,7 @@ public class SessaoServlet extends HttpServlet {
 
         if (sessao != null) {
             request.setAttribute("sessao", sessao);
-            request.getRequestDispatcher("PorSessao.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sessão não encontrada");
         }
@@ -152,15 +152,15 @@ public class SessaoServlet extends HttpServlet {
         sessao.setObservacoes(observacoes);
 
         sessaoDAO.atualizar(sessao);
-        response.sendRedirect(request.getContextPath() + "/sessoes?sucesso=Sessão+atualizada+com+sucesso");
+        response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?sucesso=Sessão+atualizada+com+sucesso");
     }
 
     private void excluirSessao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        System.out.println("entrou em excluir2");
+        System.out.println("entrou em excluir");
         int id = Integer.parseInt(request.getParameter("id"));
         sessaoDAO.deletar(id);
-        response.sendRedirect(request.getContextPath() + "/sessoes?sucesso=Sessão+excluída+com+sucesso");
+        response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?sucesso=Sessão+excluída+com+sucesso");
     }
 
 

@@ -409,11 +409,11 @@
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="static/images/logo.svg" alt="Logo" />
+            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
             <h2>Inclui+</h2>
         </div>
         <div class="menu">
-            <button class="menu-btn" onclick="window.location.href='/alunos'">Estudantes</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
             <button class="menu-btn">Professores</button>
             <button class="menu-btn ativo">Sessões</button>
             <button class="menu-btn">Usuários</button>
@@ -497,7 +497,7 @@
                                     ${sessao.presenca ? 'Presente' : 'Ausente'}
                                 </span>
                                 <button class="botao-dropdown" onclick="toggleDetalhes(this)">
-                                    <img src="static/images/seta.svg" alt="seta" class="icone-dropdown">
+                                    <img src="${pageContext.request.contextPath}/static/images/seta.svg" alt="seta" class="icone-dropdown">
                                 </button>
 
                                 <div class="botoes-acoes">

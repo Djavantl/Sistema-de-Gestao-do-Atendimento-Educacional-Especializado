@@ -182,13 +182,13 @@ body {
 <body>
     <div class="sidebar">
             <div class="logo">
-                <img src="static/images/logo.svg" alt="Logo" />
+                <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
                 <h2>Inclui+</h2>
             </div>
             <div class="menu">
-                <button class="menu-btn ativo" onclick="window.location.href='/alunos'">Estudantes</button>
+                <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
                 <button class="menu-btn">Professores</button>
-                <button class="menu-btn" onclick="window.location.href='/sessoes?sucesso=Sessão+criada+com+sucesso'">Sessões</button>
+                <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes?sucesso=Sessão+criada+com+sucesso'">Sessões</button>
                 <button class="menu-btn">Usuários</button>
             </div>
     </div>
@@ -201,7 +201,7 @@ body {
     <div class="conteudo-principal">
         <div class="detalhes-header">
             <div></div>
-            <button class="botao-novo-aluno" onclick="window.location.href='alunos'">Voltar</button>
+            <button class="botao-novo-aluno" onclick="window.location.href='/templates/aee/alunos'">Voltar</button>
         </div>
 
         <div class="detalhes-content">
