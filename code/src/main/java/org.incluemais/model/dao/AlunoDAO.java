@@ -79,6 +79,8 @@ public class AlunoDAO {
         }
     }
 
+
+
     public boolean atualizarAluno(Aluno aluno) {
         String sqlPessoa = "UPDATE Pessoa SET nome=?, dataNascimento=?, email=?, sexo=?, naturalidade=?, telefone=? WHERE id=?";
         String sqlAluno = "UPDATE Aluno SET matricula=?, responsavel=?, telResponsavel=?, telTrabalho=?, curso=?, turma=?  WHERE pessoa_id=?";

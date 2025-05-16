@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-@WebServlet(name = "DetalhesAlunoServlet", urlPatterns = {"/templates/aee/detalhes-aluno"})
+@WebServlet(name = "DetalhesAlunoServlet", urlPatterns = {"/templates/aee/detalhes-aluno", "/templates/aee/detalhes-aluno/*"})
 public class DetalhesAlunoServlet extends HttpServlet {
     private AlunoDAO alunoDAO;
 

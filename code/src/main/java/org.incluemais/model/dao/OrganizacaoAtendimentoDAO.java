@@ -6,20 +6,31 @@ import org.incluemais.model.connection.DBConnection;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class OrganizacaoAtendimentoDAO {
-    public int insert(OrganizacaoAtendimento org) throws SQLException {
-        String sql = "INSERT INTO OrganizacaoAtendimento (periodo, duracao, frequencia, composicao, tipo) " +
-                "VALUES (?, ?, ?, ?, ?)";
+    private static final Logger logger = Logger.getLogger(AlunoDAO.class.getName());
+    private final Connection conn;
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+    public OrganizacaoAtendimentoDAO(Connection connection) {
+        if (connection == null) {
+            throw new IllegalArgumentException("Conexão não pode ser nula");
+        }
+        this.conn = connection;
+    }
+
+    public int insert(OrganizacaoAtendimento org) throws SQLException {
+        String sql = "INSERT INTO OrganizacaoAtendimento (periodo, duracao, frequencia, composicao, tipo, aluno_matricula) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             stmt.setString(1, org.getPeriodo());
             stmt.setString(2, org.getDuracao());
             stmt.setString(3, org.getFrequencia());
             stmt.setString(4, org.getComposicao());
             stmt.setString(5, org.getTipo());
+            stmt.setString(6, org.getAluno().getMatricula());
 
             stmt.executeUpdate();
 

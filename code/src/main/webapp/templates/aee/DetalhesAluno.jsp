@@ -276,7 +276,7 @@
 
             <div class="linha-superior">
                 <button class="botao-novo-aluno">Adicionar Plano AEE</button>
-                <button class="botao-novo-aluno" onclick="window.location.href='/templates/aee/NovaOrganizacao.jsp'">Adicionar Organização de Atendimento</button>
+                <button class="botao-novo-aluno" onclick="window.location.href='/templates/aee/organizacao?id=${aluno.id}&matricula=${aluno.matricula}'">Adicionar Organização de Atendimento</button>
             </div>
         </div>
     </div>

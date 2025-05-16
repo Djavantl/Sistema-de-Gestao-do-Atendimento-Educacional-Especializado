@@ -52,7 +52,6 @@ public class ProfessorAEE extends Pessoa {
 
     public PlanoAEE criarPlano(ProfessorAEE professor, Aluno aluno, LocalDate dataInicio, String recomendacoes, String observacoes){
         PlanoAEE novoPlano = new PlanoAEE(professor, aluno, dataInicio, recomendacoes, observacoes);
-        aluno.adicionarPlano(novoPlano);
 
         return novoPlano;
     }

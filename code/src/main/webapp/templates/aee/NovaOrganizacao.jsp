@@ -203,9 +203,13 @@
 
         </div>
 
-        <form id="formNovaOrganizacao" action="${pageContext.request.contextPath}/alunos?acao=criar" method="POST">
+        <form id="formNovaOrganizacao" action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST">
             <div class=>
                 <div class=>
+                    <input type="hidden" name="acao" value="criar">
+                    <input type="hidden" name="id" value="${param.id}">
+                    <input type="hidden" name="matricula" value="${param.matricula}">
+
                     <label for="periodo">Período:</label>
                     <input type="text" id="periodo" name="periodo" required>
 
@@ -229,7 +233,7 @@
 
             <div class="botoes-modal">
                 <button type="submit">Salvar</button>
-                <button class="botao-voltar" onclick="window.location.href='/templates/aee/alunos'">Voltar</button>
+                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.id}'">Voltar</button>
             </div>
         </form>
     </div>

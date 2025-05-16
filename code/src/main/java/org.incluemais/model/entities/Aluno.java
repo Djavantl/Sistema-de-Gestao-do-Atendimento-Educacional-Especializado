@@ -8,11 +8,9 @@ public class Aluno extends Pessoa {
     private String responsavel;
     private String telResponsavel;
     private String telTrabalho;
-    private OrganizacaoAtendimento organizacao;
     private String curso;
     private String turma;
     private List<Deficiencia> deficiencias = new ArrayList<>();
-    private PlanoAEE plano;
     private List<Relatorio> relatorios = new ArrayList<>();
     private List<Professor> professores = new ArrayList<>();
 
@@ -71,13 +69,6 @@ public class Aluno extends Pessoa {
         this.telTrabalho = telTrabalho;
     }
 
-    public OrganizacaoAtendimento getOrganizacao() {
-        return organizacao;
-    }
-
-    public void setOrganizacao(OrganizacaoAtendimento organizacao) {
-        this.organizacao = organizacao;
-    }
 
     public String getCurso() {
         return curso;
@@ -93,14 +84,6 @@ public class Aluno extends Pessoa {
 
     public void setTurma(String turma) {
         this.turma = turma;
-    }
-
-    public PlanoAEE getPlano() {
-        return plano;
-    }
-
-    public void setPlano(PlanoAEE plano) {
-        this.plano = plano;
     }
 
     public List<Relatorio> getRelatorios() {
@@ -125,10 +108,6 @@ public class Aluno extends Pessoa {
 
     public void setDeficiencias(List<Deficiencia> deficiencias) {
         this.deficiencias = deficiencias;
-    }
-
-    public void adicionarPlano(PlanoAEE plano){
-        this.plano = plano;
     }
 
     public void adicionarRelatorio(Relatorio relatorio){

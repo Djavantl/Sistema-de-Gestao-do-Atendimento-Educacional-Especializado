@@ -433,7 +433,7 @@
         <div class="modal-overlay" id="modalNovaSessao">
             <div class="modal-conteudo">
                 <h3>Criar Nova Sessão</h3>
-                <form id="formNovaSessao" action="${pageContext.request.contextPath}/sessoes?acao=criar" method="POST">
+                <form id="formNovaSessao" action="${pageContext.request.contextPath}/templates/aee/sessoes?acao=criar" method="POST">
                     <label for="aluno">Nome do Aluno:</label><br>
                     <input type="text" id="aluno" name="aluno" required list="listaAlunos">
                     <datalist id="listaAlunos">

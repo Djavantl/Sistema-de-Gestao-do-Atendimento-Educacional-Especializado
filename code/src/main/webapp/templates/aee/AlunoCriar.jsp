@@ -339,7 +339,7 @@ body {
         <div class="modal-overlay" id="modalNovoAluno">
             <div class="modal-conteudo">
                 <h3>Cadastrar Novo Aluno</h3>
-                <form id="formNovoAluno" action="${pageContext.request.contextPath}/alunos?acao=criar" method="POST">
+                <form id="formNovoAluno" action="${pageContext.request.contextPath}/templates/aee/alunos?acao=criar" method="POST">
                     <div class="form-columns">
                         <div class="form-column">
                             <label for="nome">Nome Completo:</label>

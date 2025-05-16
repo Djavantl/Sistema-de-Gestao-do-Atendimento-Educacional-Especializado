@@ -84,7 +84,4 @@ public class PlanoAEE {
         this.metas.add(meta);
     }
 
-    public void adicionarAoAluno(Aluno aluno, PlanoAEE plano){
-        aluno.setPlano(plano);
-    }
 }

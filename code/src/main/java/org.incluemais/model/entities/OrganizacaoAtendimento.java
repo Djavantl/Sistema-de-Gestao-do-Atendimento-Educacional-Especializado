@@ -2,6 +2,7 @@ package org.incluemais.model.entities;
 
 public class OrganizacaoAtendimento {
     private int id;
+    private Aluno aluno;
     private String periodo;
     private String duracao;
     private String frequencia;
@@ -9,6 +10,15 @@ public class OrganizacaoAtendimento {
     private String tipo;
 
     public OrganizacaoAtendimento(String periodo, String duracao, String frequencia, String composicao, String tipo) {
+        this.periodo = periodo;
+        this.duracao = duracao;
+        this.frequencia = frequencia;
+        this.composicao = composicao;
+        this.tipo = tipo;
+    }
+
+    public OrganizacaoAtendimento(Aluno aluno, String periodo, String duracao, String frequencia, String composicao, String tipo) {
+        this.aluno = aluno;
         this.periodo = periodo;
         this.duracao = duracao;
         this.frequencia = frequencia;
@@ -27,6 +37,10 @@ public class OrganizacaoAtendimento {
     public String getPeriodo() {
         return periodo;
     }
+
+    public Aluno getAluno() { return aluno; }
+
+    public void setAluno(Aluno aluno) { this.aluno = aluno;}
 
     public void setPeriodo(String periodo) {
         this.periodo = periodo;
@@ -64,7 +78,4 @@ public class OrganizacaoAtendimento {
         this.tipo = tipo;
     }
 
-    public void inserirEmAluno(Aluno aluno, OrganizacaoAtendimento organizacaoAtendimento){
-        aluno.setOrganizacao(organizacaoAtendimento);
-    }
 }
