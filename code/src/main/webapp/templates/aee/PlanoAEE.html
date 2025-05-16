@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device=width, initial-scale=1.0">
+    <title>Inclue+</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="logo">Inclui+</div>
+        <nav>
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i>Início</a></li>
+                <li class="active"><a href="#"><i class="fas fa-user"></i>Pacientes</a></li>
+                <li><a href="#"><i class="fas fa-user-md"></i>Profissional</a></li>
+                <li><a href="#"><i class="fas fa-calendar"></i>Sessões</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div></div>
+            <div class = user-info">
+                <span>Natalia A.</span><small>Admin</small>
+                <div class="user-avatar"></div>
+            </div>
+        </header>
+
+        <section class="section">
+            <h2>Paciente AEE</h2>
+
+            <div class="card">
+                <h3>Paciente</h3>
+                <div class="form-group">
+                    <label>Paciente</label>
+                    <input type="text" placeholder="Digite seu nome">
+                    <label>Matrícula</label>
+                    <input type="text" placeholder="Digite sua matrícula">
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Criar Plano AEE</h3>
+                <div class="from-group">
+                    <label>Data de Início</label>
+                    <input type="date" placeholder="dd/mm/aaaa">
+                    <label>Data de Fim</label>
+                    <input type="date" placeholder="dd/mm/aaaa">
+                </div>
+
+                <div class="from-group">
+                    <label>Estratégias</label>
+                    <textarea placeholder="Digite sua estratégias..."></textarea>
+
+                    <label>Avaliação</label>
+                    <textarea placeholder="Digite sua avaliação..."></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Metas</h3>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" placeholder="Descrição">
+                    <label>Data Limite</label>
+                    <input type="date" placeholder="Data limite">
+                    <label>Status</label>
+                    <input type="text" placeholder="Status">
+                    <button class="btn-confirm">Adicionar Meta</button>
+                </div>
+            </div>
+
+            <button class="btn-confirm">Confirmar</button>
+            <button class="btn-proposta">Adicionar Proposta Pedagogica</button>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Inclue+. Todos os direitos reservados.</p>
+    </footer>
+</div>
+</body>
+</html>
