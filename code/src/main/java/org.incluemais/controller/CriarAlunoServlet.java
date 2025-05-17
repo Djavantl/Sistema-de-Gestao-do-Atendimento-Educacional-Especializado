@@ -91,7 +91,7 @@ public class CriarAlunoServlet extends HttpServlet {
             }
 
             request.setAttribute("alunos", alunos);
-            request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao listar alunos", e);
@@ -103,7 +103,7 @@ public class CriarAlunoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setAttribute("modo", "criar");
-        request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
+        request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
     }
 
     private void exibirFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
@@ -115,7 +115,7 @@ public class CriarAlunoServlet extends HttpServlet {
         if (aluno != null) {
             request.setAttribute("aluno", aluno);
             request.setAttribute("modo", "editar");
-            request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
         }
@@ -130,14 +130,14 @@ public class CriarAlunoServlet extends HttpServlet {
             request.setAttribute("erros", erros);
             request.setAttribute("aluno", extrairDadosFormulario(request));
             request.setAttribute("modo", "criar");
-            request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
             return;
         }
 
         Aluno aluno = construirAluno(request);
 
         if (alunoDAO.salvarAluno(aluno)) {
-            response.sendRedirect("alunos?sucesso=Aluno+criado+com+sucesso");
+            response.sendRedirect("/templates/aee/alunos?sucesso=Aluno+criado+com+sucesso");
         } else {
             encaminharErro(request, response, "Falha ao salvar aluno no banco de dados");
         }
@@ -152,7 +152,7 @@ public class CriarAlunoServlet extends HttpServlet {
             aluno.setId(Integer.parseInt(request.getParameter("id")));
 
             if (alunoDAO.atualizarAluno(aluno)) { // Supondo que atualizarAluno agora retorna boolean
-                response.sendRedirect("alunos?sucesso=Aluno+atualizado");
+                response.sendRedirect("/templates/aee/alunos?sucesso=Aluno+atualizado");
             } else {
                 encaminharErro(request, response, "Falha na atualização");
             }
@@ -167,9 +167,9 @@ public class CriarAlunoServlet extends HttpServlet {
     private void processarExclusao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         int id = Integer.parseInt(request.getParameter("id"));
-
+        System.out.println("entrou excluir");
         if (alunoDAO.excluirAluno(id)) {
-            response.sendRedirect("alunos?sucesso=Aluno+excluído+com+sucesso");
+            response.sendRedirect("/templates/aee/alunos?sucesso=Aluno+excluído+com+sucesso");
         } else {
             encaminharErro(request, response, "Falha ao excluir aluno. Verifique se o ID é válido.");
         }
@@ -256,7 +256,7 @@ public class CriarAlunoServlet extends HttpServlet {
     private void encaminharErro(HttpServletRequest request, HttpServletResponse response, String mensagem)
             throws ServletException, IOException {
         request.setAttribute("erro", mensagem);
-        request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
+        request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
     }
     private void exibirDetalhesAluno(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -266,7 +266,7 @@ public class CriarAlunoServlet extends HttpServlet {
 
             if (aluno != null) {
                 request.setAttribute("aluno", aluno);
-                request.getRequestDispatcher("/detalhesAluno.jsp").forward(request, response);
+                request.getRequestDispatcher("/templates/aee/detalhesAluno.jsp").forward(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
             }
