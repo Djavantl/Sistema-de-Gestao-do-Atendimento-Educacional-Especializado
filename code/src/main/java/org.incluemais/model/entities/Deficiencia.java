@@ -5,16 +5,20 @@ import java.util.List;
 
 public class Deficiencia {
     private int id;
+    private String nome;
     private String descricao;
-    private String tipoDeficiencia;
-    private RecursoFisicoArquitetonico recursoFisicoArquitetonico;
-    private RecursosComunicacaoEInformacao comunicacaoEInformacao;
-    private RecursosPedagogicos recursosPedagogicos;
-    private List<String> adaptacoes = new ArrayList<>();
+    private  String grauSeveridade;
+    private String cid;
+    private Aluno aluno;
 
-    public Deficiencia(String descricao, String tipoDeficiencia) {
+
+    public Deficiencia(int id, String nome, String descricao, String grauSeveridade, String cid, Aluno aluno) {
+        this.id = id;
+        this.nome = nome;
         this.descricao = descricao;
-        this.tipoDeficiencia = tipoDeficiencia;
+        this.grauSeveridade = grauSeveridade;
+        this.cid = cid;
+        this.aluno = aluno;
     }
 
     public int getId() {
@@ -33,44 +37,35 @@ public class Deficiencia {
         this.descricao = descricao;
     }
 
-    public String getTipoDeficiencia() {
-        return tipoDeficiencia;
+    public String getNome() {
+        return nome;
     }
 
-    public void setTipoDeficiencia(String tipoDeficiencia) {
-        this.tipoDeficiencia = tipoDeficiencia;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public List<String> getAdaptacoes() {
-        return adaptacoes;
+    public String getGrauSeveridade() {
+        return grauSeveridade;
     }
 
-    public void setAdaptacoes(List<String> adaptacoes) {
-        this.adaptacoes = adaptacoes;
+    public void setGrauSeveridade(String grauSeveridade) {
+        this.grauSeveridade = grauSeveridade;
     }
 
-    public RecursoFisicoArquitetonico getRecursoFisicoArquitetonico() {
-        return recursoFisicoArquitetonico;
+    public String getCid() {
+        return cid;
     }
 
-    public void setRecursoFisicoArquitetonico(RecursoFisicoArquitetonico recursoFisicoArquitetonico) {
-        this.recursoFisicoArquitetonico = recursoFisicoArquitetonico;
+    public void setCid(String cid) {
+        this.cid = cid;
     }
 
-    public RecursosComunicacaoEInformacao getComunicacaoEInformacao() {
-        return comunicacaoEInformacao;
+    public Aluno getAluno() {
+        return aluno;
     }
 
-    public void setComunicacaoEInformacao(RecursosComunicacaoEInformacao comunicacaoEInformacao) {
-        this.comunicacaoEInformacao = comunicacaoEInformacao;
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
     }
-
-    public RecursosPedagogicos getRecursosPedagogicos() {
-        return recursosPedagogicos;
-    }
-
-    public void setRecursosPedagogicos(RecursosPedagogicos recursosPedagogicos) {
-        this.recursosPedagogicos = recursosPedagogicos;
-    }
-
 }

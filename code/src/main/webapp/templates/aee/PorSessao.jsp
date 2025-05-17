@@ -524,7 +524,7 @@
         <div class="modal-overlay" id="modalEditar">
             <div class="modal-conteudo">
                 <h2>Editar Sessão</h2>
-                <form id="formEditarSessao" action="${pageContext.request.contextPath}/sessoes?acao=atualizar" method="POST">
+                <form id="formEditarSessao" action="${pageContext.request.contextPath}/templates/aee/sessoes?acao=atualizar" method="POST">
                     <input type="hidden" name="id" id="idEditar">
 
                     <label for="alunoEditar">Aluno:</label><br>
@@ -558,7 +558,7 @@
             <div class="modal-conteudo">
                 <h3>Confirmar Exclusão</h3>
                 <p>Tem certeza que deseja excluir esta sessão?</p>
-                <form id="formExcluirSessao" action="${pageContext.request.contextPath}/sessoes?acao=excluir" method="POST">
+                <form id="formExcluirSessao" action="${pageContext.request.contextPath}/templates/aee/sessoes?acao=excluir" method="POST">
                     <input type="hidden" name="id" id="idExcluir">
                     <div class="botoes-modal">
                         <button type="submit">Confirmar</button>

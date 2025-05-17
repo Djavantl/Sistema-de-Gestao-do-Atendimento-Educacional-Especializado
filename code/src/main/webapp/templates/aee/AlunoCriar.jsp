@@ -446,7 +446,7 @@ body {
         <div class="modal-overlay" id="modalEditar">
             <div class="modal-conteudo">
                 <h3>Editar Aluno</h3>
-                <form id="formEditarAluno" action="${pageContext.request.contextPath}/alunos?acao=atualizar" method="POST">
+                <form id="formEditarAluno" action="${pageContext.request.contextPath}/templates/aee/alunos?acao=atualizar" method="POST">
                     <input type="hidden" name="id" id="editId">
                     <div class="form-columns">
                         <div class="form-column">
@@ -509,7 +509,7 @@ body {
             <div class="modal-conteudo">
                 <h3>Confirmar Exclusão</h3>
                 <p>Tem certeza que deseja excluir este aluno?</p>
-                <form id="formExcluirAluno" action="${pageContext.request.contextPath}/alunos?acao=excluir" method="POST">
+                <form id="formExcluirAluno" action="${pageContext.request.contextPath}/templates/aee/alunos?acao=excluir" method="POST">
                     <input type="hidden" name="id" id="idExcluir">
                     <div class="botoes-modal">
                         <button type="submit">Confirmar</button>

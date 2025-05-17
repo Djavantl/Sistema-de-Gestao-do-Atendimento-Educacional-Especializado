@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+
   db:
     image: mysql:8
     ports:
@@ -14,16 +15,15 @@ services:
     networks:
       - backend
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pcambrianha10"]
       interval: 5s
       timeout: 10s
       retries: 15
 
   flyway:
-    image: flyway/flyway:11.8.1-alpine # Versão corrigida
+    image: flyway/flyway:11.8.1-alpine
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     volumes:
       - ./code/src/main/resources/db/migration:/flyway/sql
     environment:
@@ -31,6 +31,9 @@ services:
       FLYWAY_USER: root
       FLYWAY_PASSWORD: cambrainha10
       FLYWAY_BASELINE_ON_MIGRATE: "true"
+      # retry settings:
+      FLYWAY_CONNECT_RETRIES: "60"         # tenta até 60 vezes
+      FLYWAY_CONNECT_RETRY_INTERVAL: "5"   # intervalo de 5 segundos entre tentativas
     networks:
       - backend
     command: migrate
@@ -40,8 +43,7 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      flyway:
-        condition: service_completed_successfully
+      - flyway
     environment:
       DB_URL: jdbc:mysql://db:3306/incluemais?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
       DB_USER: root
