@@ -63,13 +63,6 @@ public class ProfessorAEE extends Pessoa {
         return aluno;
     }
 
-    public Avaliacao criarAvaliacao(String area, String desempenhoVerificado, String observacoes) {
-        Avaliacao avaliacao = new Avaliacao(area, desempenhoVerificado, observacoes);
-
-        return avaliacao;
-    }
-
-
     public Meta criarMeta(String descricao, String status) {
         Meta meta = new Meta(descricao, status);
 
@@ -82,62 +75,6 @@ public class ProfessorAEE extends Pessoa {
         OrganizacaoAtendimento org = new OrganizacaoAtendimento(periodo, duracao, frequencia, composicao, tipo);
 
         return org;
-    }
-
-    public PropostaPedagogica criarPropostaPedagogica(
-            String area, String objetivos, String metodologias) {
-        PropostaPedagogica proposta = new PropostaPedagogica(area, objetivos, metodologias);
-
-        return proposta;
-    }
-
-    public PropostaPedagogica criarPropostaPedagogica(
-            String area, String objetivos, String metodologias, RecursosPedagogicos recursos) {
-        PropostaPedagogica proposta = new PropostaPedagogica(area, objetivos, metodologias, recursos);
-
-        return proposta;
-    }
-
-    public PropostaPedagogica criarPropostaPedagogica(
-            String area, String objetivos, String metodologias, RecursoFisicoArquitetonico recursos) {
-        PropostaPedagogica proposta = new PropostaPedagogica(area, objetivos, metodologias, recursos);
-
-        return proposta;
-    }
-
-    public PropostaPedagogica criarPropostaPedagogica(
-            String area, String objetivos, String metodologias, RecursosComunicacaoEInformacao recursos) {
-        PropostaPedagogica proposta = new PropostaPedagogica(area, objetivos, metodologias, recursos);
-
-        return proposta;
-    }
-
-    public PropostaPedagogica criarPropostaPedagogica(
-            String area, String objetivos, String metodologias, RecursosPedagogicos recursosP ,RecursosComunicacaoEInformacao recursosCI) {
-        PropostaPedagogica proposta = new PropostaPedagogica(area, objetivos, metodologias, recursosP, recursosCI);
-
-        return proposta;
-    }
-
-    public PropostaPedagogica criarPropostaPedagogica(
-            String area, String objetivos, String metodologias, RecursosPedagogicos recursosP ,RecursoFisicoArquitetonico recursosFA) {
-        PropostaPedagogica proposta = new PropostaPedagogica(area, objetivos, metodologias, recursosP, recursosFA);
-
-        return proposta;
-    }
-
-    public PropostaPedagogica criarPropostaPedagogica(
-            String area, String objetivos, String metodologias, RecursoFisicoArquitetonico recursosFA, RecursosComunicacaoEInformacao recursosCI) {
-        PropostaPedagogica proposta = new PropostaPedagogica(area, objetivos, metodologias, recursosFA, recursosCI);
-
-        return proposta;
-    }
-
-    public PropostaPedagogica criarPropostaPedagogica(
-            String area, String objetivos, String metodologias, RecursosPedagogicos recursosP, RecursoFisicoArquitetonico recursosFA, RecursosComunicacaoEInformacao recursosCI) {
-        PropostaPedagogica proposta = new PropostaPedagogica(area, objetivos, metodologias, recursosP, recursosFA, recursosCI);
-
-        return proposta;
     }
 
 

@@ -91,7 +91,7 @@ public class CriarAlunoServlet extends HttpServlet {
             }
 
             request.setAttribute("alunos", alunos);
-            request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
+            request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao listar alunos", e);
@@ -103,7 +103,7 @@ public class CriarAlunoServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setAttribute("modo", "criar");
-        request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
+        request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
     }
 
     private void exibirFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
@@ -115,7 +115,7 @@ public class CriarAlunoServlet extends HttpServlet {
         if (aluno != null) {
             request.setAttribute("aluno", aluno);
             request.setAttribute("modo", "editar");
-            request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
+            request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
         }
@@ -130,14 +130,14 @@ public class CriarAlunoServlet extends HttpServlet {
             request.setAttribute("erros", erros);
             request.setAttribute("aluno", extrairDadosFormulario(request));
             request.setAttribute("modo", "criar");
-            request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
+            request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
             return;
         }
 
         Aluno aluno = construirAluno(request);
 
         if (alunoDAO.salvarAluno(aluno)) {
-            response.sendRedirect("/templates/aee/alunos?sucesso=Aluno+criado+com+sucesso");
+            response.sendRedirect("alunos?sucesso=Aluno+criado+com+sucesso");
         } else {
             encaminharErro(request, response, "Falha ao salvar aluno no banco de dados");
         }
@@ -256,7 +256,7 @@ public class CriarAlunoServlet extends HttpServlet {
     private void encaminharErro(HttpServletRequest request, HttpServletResponse response, String mensagem)
             throws ServletException, IOException {
         request.setAttribute("erro", mensagem);
-        request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
+        request.getRequestDispatcher("AlunoCriar.jsp").forward(request, response);
     }
     private void exibirDetalhesAluno(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -266,7 +266,7 @@ public class CriarAlunoServlet extends HttpServlet {
 
             if (aluno != null) {
                 request.setAttribute("aluno", aluno);
-                request.getRequestDispatcher("/templates/aee/DetalhesAluno.jsp").forward(request, response);
+                request.getRequestDispatcher("/detalhesAluno.jsp").forward(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
             }
