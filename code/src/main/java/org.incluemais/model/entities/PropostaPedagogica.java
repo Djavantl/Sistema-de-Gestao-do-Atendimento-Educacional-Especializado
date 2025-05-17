@@ -2,7 +2,6 @@ package org.incluemais.model.entities;
 
 public class PropostaPedagogica {
     private int id;
-    private String area;
     private String objetivos;
     private String metodologias;
     private RecursosPedagogicos recursoP;
@@ -10,43 +9,37 @@ public class PropostaPedagogica {
     private RecursosComunicacaoEInformacao recursoCI;
 
 
-    public PropostaPedagogica(String area, String objetivos, String metodologias) {
-        this.area = area;
+    public PropostaPedagogica(String objetivos, String metodologias) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
     }
 
-    public PropostaPedagogica(String area, String objetivos, String metodologias, RecursosPedagogicos recursoP) {
-        this.area = area;
+    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.recursoP = recursoP;
     }
 
-    public PropostaPedagogica(String area, String objetivos, String metodologias, RecursoFisicoArquitetonico recursoFA) {
-        this.area = area;
+    public PropostaPedagogica(String objetivos, String metodologias, RecursoFisicoArquitetonico recursoFA) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.recursoFA = recursoFA;
     }
 
-    public PropostaPedagogica(String area, String objetivos, String metodologias, RecursosComunicacaoEInformacao recursoCI) {
-        this.area = area;
+    public PropostaPedagogica(String objetivos, String metodologias, RecursosComunicacaoEInformacao recursoCI) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.recursoCI = recursoCI;
     }
 
-    public PropostaPedagogica(String area, String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA) {
-        this.area = area;
+    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.recursoP = recursoP;
         this.recursoFA = recursoFA;
     }
 
-    public PropostaPedagogica(String area, String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI) {
-        this.area = area;
+    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.recursoP = recursoP;
@@ -54,16 +47,14 @@ public class PropostaPedagogica {
         this.recursoCI = recursoCI;
     }
 
-    public PropostaPedagogica(String area, String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursosComunicacaoEInformacao recursoCI) {
-        this.area = area;
+    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursosComunicacaoEInformacao recursoCI) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.recursoP = recursoP;
         this.recursoCI = recursoCI;
     }
 
-    public PropostaPedagogica(String area, String objetivos, String metodologias, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI) {
-        this.area = area;
+    public PropostaPedagogica(String objetivos, String metodologias, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.recursoFA = recursoFA;
@@ -76,14 +67,6 @@ public class PropostaPedagogica {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
     }
 
     public String getObjetivos() {
