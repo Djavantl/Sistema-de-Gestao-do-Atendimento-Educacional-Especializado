@@ -52,4 +52,10 @@ public class RecursoFisicoArquitetonico {
     public void adicionaNaDeficiencia(Deficiencia deficiencia, RecursoFisicoArquitetonico recurso ){
         deficiencia.setRecursoFisicoArquitetonico(recurso);
     }
+
+    public boolean temRecursos() {
+        return usoCadeiraDeRodas || auxilioTranscricaoEscrita
+                || mesaAdaptadaCadeiraDeRodas || usoDeMuleta || outrosFisicoArquitetonico;
+    }
+
 }

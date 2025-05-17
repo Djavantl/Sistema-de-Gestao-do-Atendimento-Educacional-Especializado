@@ -40,4 +40,10 @@ public class RecursosPedagogicos {
     public void adicionaNaDeficiencia(Deficiencia deficiencia, RecursosPedagogicos recursosPedagogicos){
         deficiencia.setRecursosPedagogicos(recursosPedagogicos);
     }
+
+    public boolean temRecursos() {
+        return adaptacaoDidaticaAulasAvaliacoes || materialDidaticoAdaptado
+                || usoTecnologiaAssistiva || tempoEmpregadoAtividadesAvaliacoes;
+    }
+
 }

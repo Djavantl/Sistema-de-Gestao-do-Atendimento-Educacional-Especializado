@@ -23,6 +23,7 @@ public class PropostaPedagogicaDAO {
 
     public boolean salvarProposta(PropostaPedagogica proposta) {
         String sql = "INSERT INTO proposta_pedagogica (objetivos, metodologias, recurso_p_id, recurso_fa_id, recurso_ci_id) VALUES (?, ?, ?, ?, ?)";
+
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, proposta.getObjetivos());
             stmt.setString(2, proposta.getMetodologias());

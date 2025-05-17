@@ -78,4 +78,12 @@ public class RecursosComunicacaoEInformacao {
     public void adicionaNaDeficiencia(Deficiencia deficiencia, RecursosComunicacaoEInformacao recursosComunicacaoEInformacao){
         deficiencia.setComunicacaoEInformacao(recursosComunicacaoEInformacao);
     }
+
+    public boolean temRecursos() {
+        return comunicacaoAlternativa || tradutorInterprete || leitorTranscritor
+                || interpreteOralizador || guiaInterprete || materialDidaticoBraille
+                || materialDidaticoTextoAmpliado || materialDidaticoRelevo
+                || leitorDeTela || fonteTamanhoEspecifico;
+    }
+
 }
