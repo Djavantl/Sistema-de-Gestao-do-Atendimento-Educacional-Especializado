@@ -9,12 +9,15 @@ CREATE TABLE Pessoa (
 );
 
 CREATE TABLE OrganizacaoAtendimento (
-    id INT PRIMARY KEY AUTO_INCREMENT,
+    id INT AUTO_INCREMENT,
+    aluno_matricula CHAR(16),
     periodo VARCHAR(100) NOT NULL,
     duracao VARCHAR(100) NOT NULL,
     frequencia VARCHAR(100) NOT NULL,
     composicao TEXT,
-    tipo VARCHAR(100) NOT NULL
+    tipo VARCHAR(100) NOT NULL,
+    PRIMARY KEY (id, aluno_matricula),
+    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula)
 );
 
 CREATE TABLE RecursoFisicoArquitetonico (
@@ -38,7 +41,7 @@ CREATE TABLE RecursosComunicacaoEInformacao (
     materialDidaticoTextoAmpliado BOOLEAN,
     materialDidaticoRelevo BOOLEAN,
     leitorDeTela BOOLEAN,
-    fonteTamanhoEspecifico BOOLEAN
+    fonteTamanhoEspecifico BOOLEAN)
 );
 
 CREATE TABLE RecursosPedagogicos (
@@ -46,26 +49,19 @@ CREATE TABLE RecursosPedagogicos (
     adaptacaoDidaticaAulasAvaliacoes BOOLEAN,
     materialDidaticoAdaptado BOOLEAN,
     usoTecnologiaAssistiva BOOLEAN,
-    tempoEmpregadoAtividadesAvaliacoes BOOLEAN
+    tempoEmpregadoAtividadesAvaliacoes BOOLEAN)
 );
 
 CREATE TABLE Deficiencia (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    descricao VARCHAR(255) NOT NULL,
-    tipoDeficiencia VARCHAR(100) NOT NULL,
-    recursoFisico_id INT,
-    recursoComunicacao_id INT,
-    recursoPedagogico_id INT,
-    FOREIGN KEY (recursoFisico_id) REFERENCES RecursoFisicoArquitetonico(id),
-    FOREIGN KEY (recursoComunicacao_id) REFERENCES RecursosComunicacaoEInformacao(id),
-    FOREIGN KEY (recursoPedagogico_id) REFERENCES RecursosPedagogicos(id)
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT NOT NULL,
+    grau_severidade VARCHAR(50),
+    cid VARCHAR(20),
+    aluno_matricula CHAR(16),
+    FOREIGN KEY (aluno_matricula) REFERENCES Aluno(matricula)
 );
 
-CREATE TABLE Deficiencia_Adaptacoes (
-    deficiencia_id INT,
-    adaptacao VARCHAR(255),
-    FOREIGN KEY (deficiencia_id) REFERENCES Deficiencia(id)
-);
 
 CREATE TABLE Professor (
     siape CHAR(16) PRIMARY KEY,
@@ -87,11 +83,9 @@ CREATE TABLE Aluno (
     responsavel VARCHAR(100),
     telResponsavel VARCHAR(20),
     telTrabalho VARCHAR(20),
-    organizacao_id INT,
     curso VARCHAR(100),
     turma VARCHAR(100),
-    FOREIGN KEY (pessoa_id) REFERENCES Pessoa(id) ON DELETE CASCADE,
-    FOREIGN KEY (organizacao_id) REFERENCES OrganizacaoAtendimento(id)
+    FOREIGN KEY (pessoa_id) REFERENCES Pessoa(id) ON DELETE CASCADE
 );
 
 CREATE TABLE Aluno_Deficiencia (

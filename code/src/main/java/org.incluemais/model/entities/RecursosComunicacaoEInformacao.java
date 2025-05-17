@@ -75,7 +75,5 @@ public class RecursosComunicacaoEInformacao {
     public boolean isFonteTamanhoEspecifico() { return fonteTamanhoEspecifico; }
     public void setFonteTamanhoEspecifico(boolean fonteTamanhoEspecifico) { this.fonteTamanhoEspecifico = fonteTamanhoEspecifico; }
 
-    public void adicionaNaDeficiencia(Deficiencia deficiencia, RecursosComunicacaoEInformacao recursosComunicacaoEInformacao){
-        deficiencia.setComunicacaoEInformacao(recursosComunicacaoEInformacao);
-    }
+
 }

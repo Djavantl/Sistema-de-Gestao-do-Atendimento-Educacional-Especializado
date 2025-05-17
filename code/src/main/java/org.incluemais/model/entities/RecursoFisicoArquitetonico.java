@@ -49,7 +49,5 @@ public class RecursoFisicoArquitetonico {
     public String getOutrosEspecificado() { return outrosEspecificado; }
     public void setOutrosEspecificado(String outrosEspecificado) { this.outrosEspecificado = outrosEspecificado; }
 
-    public void adicionaNaDeficiencia(Deficiencia deficiencia, RecursoFisicoArquitetonico recurso ){
-        deficiencia.setRecursoFisicoArquitetonico(recurso);
-    }
+
 }
