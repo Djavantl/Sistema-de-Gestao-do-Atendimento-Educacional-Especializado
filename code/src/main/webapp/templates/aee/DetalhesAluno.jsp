@@ -307,6 +307,57 @@
                 </div>
             </div>
 
+            <!-- Deficiências do Aluno -->
+            <div class="info-section">
+                <h3>Deficiências do Aluno</h3>
+                <c:choose>
+                    <c:when test="${not empty deficiencias}">
+                        <div class="info-grid">
+                            <c:forEach items="${deficiencias}" var="deficiencia">
+                                <div class="info-item">
+                                    <label>Nome</label>
+                                    <p>${deficiencia.nome}</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Descrição</label>
+                                    <p>${deficiencia.descricao}</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Grau</label>
+                                    <p>${deficiencia.grau}</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>CID</label>
+                                    <p>${deficiencia.cid}</p>
+                                </div>
+                                <div class="info-item" style="grid-column: span 2; display: flex; gap: 10px; align-items: center;">
+                                    <button class="botao-novo-aluno"
+                                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/deficiencia/atualizar?id=${deficiencia.id}&alunoId=${aluno.id}'">
+                                        Editar
+                                    </button>
+                                    <form action="${pageContext.request.contextPath}/templates/aee/deficiencia?acao=excluir"
+                                        method="POST" style="display:inline;">
+                                        <input type="hidden" name="id" value="${deficiencia.id}">
+                                        <input type="hidden" name="alunoId" value="${aluno.id}">
+                                        <button type="submit" class="botao-novo-aluno"
+                                            onclick="return confirm('Tem certeza que deseja excluir esta deficiência?')">
+                                            Excluir
+                                        </button>
+                                    </form>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <button class="botao-novo-aluno"
+                            onclick="window.location.href='/templates/aee/CriarDeficiencia.jsp'">
+                            Adicionar Deficiência
+                        </button>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+
+
             <!-- Organização de Atendimento -->
             <div class="info-section">
                 <h3>Organização de Atendimento</h3>
@@ -335,13 +386,6 @@
                             </div>
                         </div>
                     </c:when>
-                    <c:otherwise>
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <p>Nenhuma organização cadastrada</p>
-                            </div>
-                        </div>
-                    </c:otherwise>
                 </c:choose>
                 <c:choose>
                     <c:when test="${not empty organizacao}">
@@ -370,6 +414,16 @@
                         </button>
                     </c:otherwise>
                 </c:choose>
+            </div>
+            <!-- Relatorios -->
+            <div class="info-section">
+                <h3>Relatórios do Aluno</h3>
+                <div>
+                    <button class="botao-novo-aluno"
+                            onclick="window.location.href='/templates/aee/PorRelatorio.jsp'">
+                        Mostrar Relatorios
+                    </button>
+                </div>
             </div>
         </div>
     </div>
