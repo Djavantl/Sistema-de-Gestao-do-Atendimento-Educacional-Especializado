@@ -21,7 +21,7 @@ public class RecursoFisicoArquitetonicoDAO {
             stmt.setBoolean(3, r.isMesaAdaptadaCadeiraDeRodas());
             stmt.setBoolean(4, r.isUsoDeMuleta());
             stmt.setBoolean(5, r.isOutrosFisicoArquitetonico());
-            stmt.setString(6, r.getOutrosEspecificado());
+            stmt.setString(6, r.getOutrosEspecificado() != null ? r.getOutrosEspecificado() : "");
             stmt.executeUpdate();
 
             try (ResultSet rs = stmt.getGeneratedKeys()) {
