@@ -212,7 +212,7 @@
         <h2>Propostas Pedagógicas</h2>
     </div>
     <div class="conteudo-principal">
-        <form class="form-proposta" action="${pageContext.request.contextPath}/propostas" method="POST">
+        <form class="form-proposta" action="${pageContext.request.contextPath}/templates/aee/propostas" method="POST">
             <!-- Campos principais -->
             <div class="grupo-campos">
                 <div class="campo">
