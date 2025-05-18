@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Deficiências</title>
+    <title>Editar Deficiência</title>
     <style>
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
@@ -88,7 +88,7 @@
             background-color: #ffffff;
             border-radius: 20px;
             padding: 40px;
-            margin: 80px auto 40px; /* Alterado para centralizar */
+            margin: 80px auto 40px;
             width: 40%;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             display: flex;
@@ -96,24 +96,13 @@
             align-items: center;
         }
 
-        .linha-superior {
-            display: flex;
-            justify-content: flex-end;
-            margin-bottom: 30px;
-        }
-
         .form-columns {
             display: grid;
-            grid-template-columns: 1fr; /* Alterado para uma coluna */
+            grid-template-columns: 1fr;
             gap: 20px;
             margin-bottom: 20px;
             width: 100%;
-            max-width: 500px; /* Largura máxima do formulário */
-        }
-
-        .form-column {
-            display: flex;
-            flex-direction: column;
+            max-width: 500px;
         }
 
         label {
@@ -143,10 +132,10 @@
 
         .botoes-modal {
             display: flex;
-            justify-content: center; /* Alterado para centralizar */
             justify-content: flex-end;
             gap: 10px;
             margin-top: 20px;
+            width: 100%;
         }
 
         button[type="submit"] {
@@ -176,7 +165,7 @@
         }
 
         .botao-voltar:hover {
-            background-color: #372e9c;
+            background-color: #d0d0d0;
         }
     </style>
 </head>
@@ -195,41 +184,52 @@
     </div>
 
     <div id="titulo">
-        <h2>Criar Deficiências</h2>
+        <h2>Editar Deficiência</h2>
     </div>
 
     <div class="conteudo-principal">
-        <div class="linha-superior">
+        <c:if test="${not empty deficiencia}">
+            <form action="${pageContext.request.contextPath}/deficiencia" method="POST">
+                <input type="hidden" name="acao" value="atualizar">
+                <input type="hidden" name="id" value="${deficiencia.id}">
+                <input type="hidden" name="alunoId" value="${param.alunoId}">
+                 <input type="hidden" name="matricula" value="${param.matricula}">
 
-        </div>
+                <div class="form-columns">
+                    <div class="form-column">
+                        <label for="nome">Nome da deficiência:</label>
+                        <input type="text" id="nome" name="nome" value="${deficiencia.nome}" required>
 
-        <form id="formNovaDeficiencia" action="${pageContext.request.contextPath}/deficiencia" method="POST">
-            <div class=>
-                <div class=>
-                    <input type="hidden" name="acao" value="criar">
-                    <input type="hidden" name="alunoId" value="${param.alunoId}">
-                    <input type="hidden" name="matricula" value="${param.matricula}">
+                        <label for="descricao">Descrição:</label>
+                        <input type="text" id="descricao" name="descricao" value="${deficiencia.descricao}" required>
 
-                    <label for="nome">Nome da deficiência:</label>
-                    <input type="text" id="nome" name="nome" required>
+                        <label for="grau">Grau de severidade:</label>
+                        <input type="text" id="grau" name="grau" value="${deficiencia.grauSeveridade}">
 
-                    <label for="descricao">Descrição:</label>
-                    <input type="text" id="descricao" name="descricao" required>
-
-                    <label for="grau">Grau de severidade:</label>
-                    <input type="text" id="grau" name="grau">
-
-                    <label for="cid">Cid:</label>
-                    <input type="text" id="cid" name="cid" required>
-
+                        <label for="cid">CID:</label>
+                        <input type="text" id="cid" name="cid" value="${deficiencia.cid}" required>
+                    </div>
                 </div>
-            </div>
 
-            <div class="botoes-modal">
-                <button type="submit">Salvar</button>
-                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.id}'">Voltar</button>
+                <div class="botoes-modal">
+                    <button type="submit">Salvar Alterações</button>
+                    <button type="button" class="botao-voltar"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.alunoId}'">
+                        Voltar
+                    </button>
+                </div>
+            </form>
+        </c:if>
+
+        <c:if test="${empty deficiencia}">
+            <div class="alert error">
+                Deficiência não encontrada!
+                <button class="botao-voltar"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.alunoId}'">
+                    Voltar
+                </button>
             </div>
-        </form>
+        </c:if>
     </div>
 </body>
 </html>

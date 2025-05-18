@@ -204,6 +204,39 @@
         gap: 10px;
         margin-left: auto;
     }
+
+    /* Estilos para as deficiências */
+    .deficiencias-container {
+        margin-top: 20px;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .deficiencia-item {
+        padding: 15px;
+        background-color: #fff;
+    }
+
+    .deficiencia-item.separador {
+        border-bottom: 2px solid #bfbfbf;
+    }
+
+    .acoes-deficiencia {
+        grid-column: 1 / -1;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        padding: 10px 0;
+        margin-top: 10px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        align-items: start;
+    }
+
     </style>
 <body>
     <div class="sidebar">
@@ -310,51 +343,53 @@
             <!-- Deficiências do Aluno -->
             <div class="info-section">
                 <h3>Deficiências do Aluno</h3>
-                <c:choose>
-                    <c:when test="${not empty deficiencias}">
-                        <div class="info-grid">
-                            <c:forEach items="${deficiencias}" var="deficiencia">
-                                <div class="info-item">
-                                    <label>Nome</label>
-                                    <p>${deficiencia.nome}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>Descrição</label>
-                                    <p>${deficiencia.descricao}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>Grau</label>
-                                    <p>${deficiencia.grau}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>CID</label>
-                                    <p>${deficiencia.cid}</p>
-                                </div>
-                                <div class="info-item" style="grid-column: span 2; display: flex; gap: 10px; align-items: center;">
-                                    <button class="botao-novo-aluno"
-                                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/deficiencia/atualizar?id=${deficiencia.id}&alunoId=${aluno.id}'">
-                                        Editar
-                                    </button>
-                                    <form action="${pageContext.request.contextPath}/templates/aee/deficiencia?acao=excluir"
-                                        method="POST" style="display:inline;">
-                                        <input type="hidden" name="id" value="${deficiencia.id}">
-                                        <input type="hidden" name="alunoId" value="${aluno.id}">
-                                        <button type="submit" class="botao-novo-aluno"
-                                            onclick="return confirm('Tem certeza que deseja excluir esta deficiência?')">
-                                            Excluir
+                <button class="botao-novo-aluno"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/CriarDeficiencia.jsp?alunoId=${aluno.id}&matricula=${aluno.matricula}'">
+                    Adicionar Deficiência
+                </button>
+
+                <c:if test="${not empty deficiencias}">
+                    <div class="deficiencias-container">
+                        <c:forEach items="${deficiencias}" var="deficiencia" varStatus="loop">
+                            <div class="deficiencia-item ${not loop.last ? 'separador' : ''}">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label>Nome</label>
+                                        <p>${deficiencia.nome}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Descrição</label>
+                                        <p>${deficiencia.descricao}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Grau</label>
+                                        <p>${deficiencia.grauSeveridade}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>CID</label>
+                                        <p>${deficiencia.cid}</p>
+                                    </div>
+                                    <div class="acoes-deficiencia">
+                                        <button class="botao-novo-aluno"
+                                            onclick="window.location.href='${pageContext.request.contextPath}/deficiencia?acao=editar&id=${deficiencia.id}&alunoId=${aluno.id}'">
+                                            Editar
                                         </button>
-                                    </form>
+                                        <form action="${pageContext.request.contextPath}/deficiencia" method="POST" style="display:inline;">
+                                            <input type="hidden" name="acao" value="excluir">
+                                            <input type="hidden" name="id" value="${deficiencia.id}">
+                                            <input type="hidden" name="alunoId" value="${aluno.id}">
+                                            <input type="hidden" name="matricula" value="${param.matricula}">
+                                            <button type="submit" class="botao-novo-aluno"
+                                                onclick="return confirm('Tem certeza que deseja excluir esta deficiência?')">
+                                                Excluir
+                                            </button>
+                                        </form>
+                                    </div>
                                 </div>
-                            </c:forEach>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <button class="botao-novo-aluno"
-                            onclick="window.location.href='/templates/aee/CriarDeficiencia.jsp'">
-                            Adicionar Deficiência
-                        </button>
-                    </c:otherwise>
-                </c:choose>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </c:if>
             </div>
 
 
@@ -392,12 +427,13 @@
                         <div style="display: flex; gap: 10px;">
                             <div class="botoes-acoes">
                                 <button class="botao-novo-aluno"
-                                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/organizacao/atualizar?id=${organizacao.id}&alunoId=${aluno.id}'">
+                                        onclick="window.location.href='${pageContext.request.contextPath}/organizacao/editar?id=${organizacao.id}&alunoId=${aluno.id}'">
                                     Editar
                                 </button>
-                                <form action="${pageContext.request.contextPath}/templates/aee/organizacao?acao=excluir" method="POST" style="display:inline;">
-
-                                    <input type="hidden" name="id" value="${organizacao.id}">
+                                <form action="${pageContext.request.contextPath}/organizacao/${organizacao.id}"
+                                      method="POST"
+                                      style="display:inline;">
+                                    <input type="hidden" name="_method" value="DELETE">
                                     <input type="hidden" name="alunoId" value="${aluno.id}">
                                     <button type="submit" class="botao-novo-aluno"
                                             onclick="return confirm('Tem certeza que deseja excluir esta organização?')">

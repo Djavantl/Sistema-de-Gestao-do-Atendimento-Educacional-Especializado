@@ -3,6 +3,7 @@ package org.incluemais.model.dao;
 import org.incluemais.model.connection.DBConnection;
 import org.incluemais.model.entities.Aluno;
 import org.incluemais.model.entities.OrganizacaoAtendimento;
+import org.incluemais.model.entities.Pessoa;
 import org.incluemais.model.entities.PlanoAEE;
 
 import java.sql.*;
