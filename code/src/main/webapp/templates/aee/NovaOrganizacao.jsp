@@ -204,8 +204,8 @@
         </div>
 
         <form id="formNovaOrganizacao" action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST">
-            <div class=>
-                <div class=>
+            <div class>
+                <div class>
                     <input type="hidden" name="acao" value="criar">
                     <input type="hidden" name="id" value="${param.id}">
                     <input type="hidden" name="matricula" value="${param.matricula}">
@@ -233,7 +233,7 @@
 
             <div class="botoes-modal">
                 <button type="submit">Salvar</button>
-                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.id}'">Voltar</button>
+                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${aluno.id}'">Voltar</button>
             </div>
         </form>
     </div>

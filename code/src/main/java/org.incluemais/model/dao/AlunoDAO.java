@@ -247,7 +247,7 @@ public class AlunoDAO {
         }
     }
 
-    private Aluno mapearAluno(ResultSet rs) throws SQLException {
+    public Aluno mapearAluno(ResultSet rs) throws SQLException {
         Aluno aluno = new Aluno();
 
         // Mapeamento de Pessoa
@@ -270,7 +270,7 @@ public class AlunoDAO {
         return aluno;
     }
 
-    // Métodos auxiliares de transação
+
     private void rollback(Connection conn) {
         try {
             if (conn != null && !conn.isClosed()) {

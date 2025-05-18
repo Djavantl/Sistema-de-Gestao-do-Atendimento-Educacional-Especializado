@@ -1,5 +1,6 @@
 
 package org.incluemais.model.dao;
+import org.incluemais.model.entities.Aluno;
 import org.incluemais.model.entities.OrganizacaoAtendimento;
 import org.incluemais.model.connection.DBConnection;
 
@@ -44,16 +45,33 @@ public class OrganizacaoAtendimentoDAO {
     }
 
     public OrganizacaoAtendimento getById(int id) throws SQLException {
-        String sql = "SELECT * FROM OrganizacaoAtendimento WHERE id = ?";
-        OrganizacaoAtendimento org = null;
+        String sql = """
+        SELECT 
+            o.id,
+            o.periodo,
+            o.duracao,
+            o.frequencia,
+            o.composicao,
+            o.tipo,
+            a.pessoa_id,
+            a.matricula
+        FROM OrganizacaoAtendimento o
+        INNER JOIN Aluno a ON o.aluno_matricula = a.matricula
+        WHERE o.id = ?
+        """;
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
+
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    org = new OrganizacaoAtendimento(
+                    Aluno aluno = new Aluno();
+                    aluno.setId(rs.getInt("pessoa_id"));
+                    aluno.setMatricula(rs.getString("matricula"));
+                    aluno.setNome(rs.getString("nome"));
+
+                    OrganizacaoAtendimento org = new OrganizacaoAtendimento(
+                            aluno,
                             rs.getString("periodo"),
                             rs.getString("duracao"),
                             rs.getString("frequencia"),
@@ -61,11 +79,44 @@ public class OrganizacaoAtendimentoDAO {
                             rs.getString("tipo")
                     );
                     org.setId(id);
+                    return org;
                 }
             }
         }
-        return org;
+        return null;
     }
+
+
+    public OrganizacaoAtendimento buscarPorAlunoMatricula(String matricula) throws SQLException {
+        String sql = """
+        SELECT o.*, p.*, a.* 
+        FROM OrganizacaoAtendimento o
+        INNER JOIN Aluno a ON o.aluno_matricula = a.matricula
+        INNER JOIN Pessoa p ON a.pessoa_id = p.id
+        WHERE o.aluno_matricula = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Aluno aluno = new AlunoDAO(conn).mapearAluno(rs);
+
+                    return new OrganizacaoAtendimento(
+                            aluno,
+                            rs.getString("periodo"),
+                            rs.getString("duracao"),
+                            rs.getString("frequencia"),
+                            rs.getString("composicao"),
+                            rs.getString("tipo")
+                    );
+                }
+            }
+        }
+        return null;
+    }
+
 
     public List<OrganizacaoAtendimento> getAll() throws SQLException {
         String sql = "SELECT * FROM OrganizacaoAtendimento";
@@ -91,29 +142,21 @@ public class OrganizacaoAtendimentoDAO {
     }
 
     public void update(OrganizacaoAtendimento org) throws SQLException {
-        String sql = "UPDATE OrganizacaoAtendimento SET periodo = ?, duracao = ?, frequencia = ?, " +
-                "composicao = ?, tipo = ? WHERE id = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        String sql = "UPDATE OrganizacaoAtendimento SET periodo=?, duracao=?, frequencia=?, composicao=?, tipo=? WHERE id=?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, org.getPeriodo());
             stmt.setString(2, org.getDuracao());
             stmt.setString(3, org.getFrequencia());
             stmt.setString(4, org.getComposicao());
             stmt.setString(5, org.getTipo());
             stmt.setInt(6, org.getId());
-
             stmt.executeUpdate();
         }
     }
 
     public void delete(int id) throws SQLException {
         String sql = "DELETE FROM OrganizacaoAtendimento WHERE id = ?";
-
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
             stmt.executeUpdate();
         }

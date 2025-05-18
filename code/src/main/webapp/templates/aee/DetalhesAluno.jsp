@@ -178,6 +178,32 @@
         gap: 15px;
         margin-top: 20px;
     }
+
+    .alert {
+        padding: 15px;
+        margin: 20px 0;
+        border-radius: 8px;
+        border: 1px solid transparent;
+    }
+
+    .success {
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        color: #155724;
+    }
+
+    .error {
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+        color: #721c24;
+    }
+
+    .botoes-acoes {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-left: auto;
+    }
     </style>
 <body>
     <div class="sidebar">
@@ -188,7 +214,7 @@
             <div class="menu">
                 <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
                 <button class="menu-btn">Professores</button>
-                <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes?sucesso=Sessão+criada+com+sucesso'">Sessões</button>
+                <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
                 <button class="menu-btn">Usuários</button>
             </div>
     </div>
@@ -199,6 +225,13 @@
     </div>
 
     <div class="conteudo-principal">
+        <!-- Mensagens de feedback -->
+        <c:if test="${not empty sucesso}">
+            <div class="alert success">${sucesso}</div>
+        </c:if>
+        <c:if test="${not empty erro}">
+            <div class="alert error">${erro}</div>
+        </c:if>
         <div class="detalhes-header">
             <div></div>
             <button class="botao-novo-aluno" onclick="window.location.href='/templates/aee/alunos'">Voltar</button>
@@ -274,9 +307,69 @@
                 </div>
             </div>
 
-            <div class="linha-superior">
-                <button class="botao-novo-aluno">Adicionar Plano AEE</button>
-                <button class="botao-novo-aluno" onclick="window.location.href='/templates/aee/organizacao?id=${aluno.id}&matricula=${aluno.matricula}'">Adicionar Organização de Atendimento</button>
+            <!-- Organização de Atendimento -->
+            <div class="info-section">
+                <h3>Organização de Atendimento</h3>
+                <c:choose>
+                    <c:when test="${not empty organizacao}">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Período</label>
+                                <p>${organizacao.periodo}</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Duração</label>
+                                <p>${organizacao.duracao}</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Frequência</label>
+                                <p>${organizacao.frequencia}</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Composição</label>
+                                <p>${organizacao.composicao}</p>
+                            </div>
+                            <div class="info-item">
+                                <label>Tipo</label>
+                                <p>${organizacao.tipo}</p>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <p>Nenhuma organização cadastrada</p>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
+                <c:choose>
+                    <c:when test="${not empty organizacao}">
+                        <div style="display: flex; gap: 10px;">
+                            <div class="botoes-acoes">
+                                <button class="botao-novo-aluno"
+                                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/organizacao/atualizar?id=${organizacao.id}&alunoId=${aluno.id}'">
+                                    Editar
+                                </button>
+                                <form action="${pageContext.request.contextPath}/templates/aee/organizacao?acao=excluir" method="POST" style="display:inline;">
+
+                                    <input type="hidden" name="id" value="${organizacao.id}">
+                                    <input type="hidden" name="alunoId" value="${aluno.id}">
+                                    <button type="submit" class="botao-novo-aluno"
+                                            onclick="return confirm('Tem certeza que deseja excluir esta organização?')">
+                                        Excluir
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <button class="botao-novo-aluno"
+                                onclick="window.location.href='/templates/aee/organizacao?id=${aluno.id}&matricula=${aluno.matricula}'">
+                            Adicionar Organização
+                        </button>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </div>

@@ -6,7 +6,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.incluemais.model.dao.AlunoDAO;
+import org.incluemais.model.dao.OrganizacaoAtendimentoDAO;
 import org.incluemais.model.entities.Aluno;
+import org.incluemais.model.entities.OrganizacaoAtendimento;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,7 +26,7 @@ public class DetalhesAlunoServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException{
 
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {
@@ -34,6 +37,9 @@ public class DetalhesAlunoServlet extends HttpServlet {
         try {
             int id = Integer.parseInt(idParam);
             Aluno aluno = alunoDAO.obterPorId(id);
+            OrganizacaoAtendimentoDAO orgDAO = new OrganizacaoAtendimentoDAO((Connection) getServletContext().getAttribute("conexao"));
+            OrganizacaoAtendimento organizacao = orgDAO.buscarPorAlunoMatricula(aluno.getMatricula());
+            request.setAttribute("organizacao", organizacao);
 
             if (aluno == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
@@ -45,6 +51,8 @@ public class DetalhesAlunoServlet extends HttpServlet {
 
         } catch (NumberFormatException e) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID inválido");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

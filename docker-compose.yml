@@ -31,12 +31,13 @@ services:
       FLYWAY_USER: root
       FLYWAY_PASSWORD: cambrainha10
       FLYWAY_BASELINE_ON_MIGRATE: "true"
-      # retry settings:
-      FLYWAY_CONNECT_RETRIES: "60"         # tenta até 60 vezes
-      FLYWAY_CONNECT_RETRY_INTERVAL: "5"   # intervalo de 5 segundos entre tentativas
     networks:
       - backend
-    command: migrate
+    # Passa os flags de retry diretamente ao comando flyway
+    command:
+      - "-connectRetries=60"
+      - "-connectRetriesInterval=5"
+      - "migrate"
 
   app:
     build: .
