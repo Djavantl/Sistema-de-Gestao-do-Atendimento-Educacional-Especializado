@@ -1,151 +1,103 @@
 package org.incluemais.controller;
 
-import org.incluemais.model.dao.*;
-import org.incluemais.model.entities.*;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
+import org.incluemais.model.dao.PropostaPedagogicaDAO;
+import org.incluemais.model.entities.PropostaPedagogica;
+import org.incluemais.model.entities.RecursosComunicacaoEInformacao;
+import org.incluemais.model.entities.RecursosPedagogicos;
+import org.incluemais.model.entities.RecursoFisicoArquitetonico;
+import java.util.logging.Level;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
+import java.util.logging.Logger;
+import static org.incluemais.model.connection.DBConnection.getConnection;
+
 
 @WebServlet("/propostas")
 public class PropostaPedagogicaServlet extends HttpServlet {
-
-    private PropostaPedagogicaDAO propostaDAO;
-    private RecursosPedagogicosDAO recursosPDAO;
-    private RecursoFisicoArquitetonicoDAO recursosFADAO;
-    private RecursosComunicacaoEInformacaoDAO recursosCIDAO;
-
-    @Override
-    public void init() throws ServletException {
-        try {
-            Context ctx = new InitialContext();
-            DataSource ds = (DataSource) ctx.lookup("java:comp/env/jdbc/incluemaisDB");
-            Connection conn = ds.getConnection();
-
-            propostaDAO = new PropostaPedagogicaDAO(conn);
-            recursosPDAO = new RecursosPedagogicosDAO(conn);
-            recursosFADAO = new RecursoFisicoArquitetonicoDAO(conn);
-            recursosCIDAO = new RecursosComunicacaoEInformacaoDAO(conn);
-        } catch (NamingException | SQLException e) {
-            throw new ServletException("Erro ao inicializar conexões", e);
-        }
-    }
+    private static final Logger logger = Logger.getLogger(PropostaPedagogicaServlet.class.getName());
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/proposta.jsp").forward(request, response);
+        // Direciona direto para o JSP na sua estrutura
+        request.getRequestDispatcher("/templates/aee/PropostaPedagogica.jsp").forward(request, response);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        request.setCharacterEncoding("UTF-8");
-
-        String objetivos = request.getParameter("objetivos");
-        String metodologias = request.getParameter("metodologias");
-
-        RecursosPedagogicos recursosP = processarRecursosPedagogicos(request);
-        RecursoFisicoArquitetonico recursosFA = processarRecursosFA(request);
-        RecursosComunicacaoEInformacao recursosCI = processarRecursosCI(request);
-
-        PropostaPedagogica proposta = new PropostaPedagogica(objetivos, metodologias);
-        proposta.setRecursoP(recursosP);
-        proposta.setRecursoFA(recursosFA);
-        proposta.setRecursoCI(recursosCI);
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Connection conn = null;
         try {
-            boolean salvo = propostaDAO.salvarProposta(proposta);
-            if (salvo) {
-                response.sendRedirect(request.getContextPath() + "/propostas?success=true");
-            } else {
-                redirecionarComErro(request, response, "Falha ao salvar proposta");
-            }
-        } catch (Exception e) {
-            redirecionarComErro(request, response, "Erro no servidor: " + e.getMessage());
-        }
-    }
+            conn = getConnection();
+            RecursosPedagogicos recursoP = construirRecursoPedagogico(request);
+            RecursoFisicoArquitetonico recursoFA = construirRecursoFisico(request);
+            RecursosComunicacaoEInformacao recursoCI = construirRecursoComunicacao(request);
 
-    private RecursosPedagogicos processarRecursosPedagogicos(HttpServletRequest request) {
-        RecursosPedagogicos recursos = new RecursosPedagogicos();
-        recursos.setAdaptacaoDidaticaAulasAvaliacoes(verificarParametro(request, "recursoP_adaptacaoDidaticaAulasAvaliacoes"));
-        recursos.setMaterialDidaticoAdaptado(verificarParametro(request, "recursoP_materialDidaticoAdaptado"));
-        recursos.setUsoTecnologiaAssistiva(verificarParametro(request, "recursoP_usoTecnologiaAssistiva"));
-        recursos.setTempoEmpregadoAtividadesAvaliacoes(verificarParametro(request, "recursoP_tempoEmpregadoAtividadesAvaliacoes"));
+            PropostaPedagogica proposta = new PropostaPedagogica(
+                    request.getParameter("objetivos"),
+                    request.getParameter("metodologias"),
+                    recursoP,
+                    recursoFA,
+                    recursoCI
+            );
 
-        if (recursos.temRecursos()) {
-            try {
-                recursosPDAO.inserir(recursos);
-                return recursos;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
+            PropostaPedagogicaDAO propostaDAO = new PropostaPedagogicaDAO(conn);
+            propostaDAO.inserir(proposta);
 
-    private RecursoFisicoArquitetonico processarRecursosFA(HttpServletRequest request) {
-        RecursoFisicoArquitetonico recursos = new RecursoFisicoArquitetonico();
-        recursos.setUsoCadeiraDeRodas(verificarParametro(request, "recursoFA_usoCadeiraDeRodas"));
-        recursos.setAuxilioTranscricaoEscrita(verificarParametro(request, "recursoFA_auxilioTranscricaoEscrita"));
-        recursos.setMesaAdaptadaCadeiraDeRodas(verificarParametro(request, "recursoFA_mesaAdaptadaCadeiraDeRodas"));
-        recursos.setUsoDeMuleta(verificarParametro(request, "recursoFA_usoDeMuleta"));
-        boolean outros = verificarParametro(request, "recursoFA_outrosFisicoArquitetonico");
-        recursos.setOutrosFisicoArquitetonico(outros);
-        if (outros) {
-            recursos.setOutrosEspecificado(request.getParameter("recursoFA_outrosEspecificado"));
-        }
+            request.setAttribute("propostaId", proposta.getId());
+            response.sendRedirect(request.getContextPath() + "/propostas");
 
-        if (recursos.temRecursos()) {
-            try {
-                recursosFADAO.inserir(recursos);
-                return recursos;
-            } catch (SQLException e) {
-                e.printStackTrace();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Erro ao criar proposta", e);
+            request.setAttribute("erro", "Erro ao salvar proposta: " + e.getMessage());
+            request.getRequestDispatcher("/WEB-INF/templates/aee/PropostaPedagogica.jsp").forward(request, response);
+        } finally {
+            if (conn != null) {
+                try { conn.close(); }
+                catch (SQLException e) { logger.warning("Erro ao fechar conexão"); }
             }
         }
-        return null;
     }
 
-    private RecursosComunicacaoEInformacao processarRecursosCI(HttpServletRequest request) {
-        RecursosComunicacaoEInformacao recursos = new RecursosComunicacaoEInformacao();
-        recursos.setComunicacaoAlternativa(verificarParametro(request, "recursoCI_comunicacaoAlternativa"));
-        recursos.setTradutorInterprete(verificarParametro(request, "recursoCI_tradutorInterprete"));
-        recursos.setLeitorTranscritor(verificarParametro(request, "recursoCI_leitorTranscritor"));
-        recursos.setInterpreteOralizador(verificarParametro(request, "recursoCI_interpreteOralizador"));
-        recursos.setGuiaInterprete(verificarParametro(request, "recursoCI_guiaInterprete"));
-        recursos.setMaterialDidaticoBraille(verificarParametro(request, "recursoCI_materialDidaticoBraille"));
-        recursos.setMaterialDidaticoTextoAmpliado(verificarParametro(request, "recursoCI_materialDidaticoTextoAmpliado"));
-        recursos.setMaterialDidaticoRelevo(verificarParametro(request, "recursoCI_materialDidaticoRelevo"));
-        recursos.setLeitorDeTela(verificarParametro(request, "recursoCI_leitorDeTela"));
-        recursos.setFonteTamanhoEspecifico(verificarParametro(request, "recursoCI_fonteTamanhoEspecifico"));
-
-        if (recursos.temRecursos()) {
-            try {
-                recursosCIDAO.inserir(recursos);
-                return recursos;
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
+    private RecursosPedagogicos construirRecursoPedagogico(HttpServletRequest request) {
+        RecursosPedagogicos recurso = new RecursosPedagogicos(
+                request.getParameter("recursoP_adaptacaoDidaticaAulasAvaliacoes") != null,
+                request.getParameter("recursoP_materialDidaticoAdaptado") != null,
+                request.getParameter("recursoP_usoTecnologiaAssistiva") != null,
+                request.getParameter("recursoP_tempoEmpregadoAtividadesAvaliacoes") != null
+        );
+        return recurso.temRecursos() ? recurso : null;
     }
 
-    private boolean verificarParametro(HttpServletRequest request, String param) {
-        return "on".equals(request.getParameter(param));
+    private RecursoFisicoArquitetonico construirRecursoFisico(HttpServletRequest request) {
+        RecursoFisicoArquitetonico recurso = new RecursoFisicoArquitetonico(
+                request.getParameter("recursoFA_usoCadeiraDeRodas") != null,
+                request.getParameter("recursoFA_auxilioTranscricaoEscrita") != null,
+                request.getParameter("recursoFA_mesaAdaptadaCadeiraDeRodas") != null,
+                request.getParameter("recursoFA_usoDeMuleta") != null,
+                request.getParameter("recursoFA_outrosFisicoArquitetonico") != null,
+                request.getParameter("recursoFA_outrosEspecificado")
+        );
+        return recurso.temRecursos() ? recurso : null;
     }
 
-    private void redirecionarComErro(HttpServletRequest request, HttpServletResponse response, String mensagem)
-            throws ServletException, IOException {
-        request.setAttribute("error", mensagem);
-        request.getRequestDispatcher("/WEB-INF/proposta.jsp").forward(request, response);
+    private RecursosComunicacaoEInformacao construirRecursoComunicacao(HttpServletRequest request) {
+        RecursosComunicacaoEInformacao recurso = new RecursosComunicacaoEInformacao(
+                request.getParameter("recursoCI_comunicacaoAlternativa") != null,
+                request.getParameter("recursoCI_tradutorInterprete") != null,
+                request.getParameter("recursoCI_leitorTranscritor") != null,
+                request.getParameter("recursoCI_interpreteOralizador") != null,
+                request.getParameter("recursoCI_guiaInterprete") != null,
+                request.getParameter("recursoCI_materialDidaticoBraille") != null,
+                request.getParameter("recursoCI_materialDidaticoTextoAmpliado") != null,
+                request.getParameter("recursoCI_materialDidaticoRelevo") != null,
+                request.getParameter("recursoCI_leitorDeTela") != null,
+                request.getParameter("recursoCI_fonteTamanhoEspecifico") != null
+        );
+        return recurso.temRecursos() ? recurso : null;
     }
 }
