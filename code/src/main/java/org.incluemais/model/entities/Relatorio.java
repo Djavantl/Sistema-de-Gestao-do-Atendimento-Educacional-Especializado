@@ -23,6 +23,10 @@ public class Relatorio {
         this.observacoes = observacoes;
     }
 
+    public Relatorio() {
+
+    }
+
     public int getId() {
         return id;
     }

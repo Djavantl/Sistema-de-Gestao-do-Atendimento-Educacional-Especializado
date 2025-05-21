@@ -1,5 +1,6 @@
 package org.incluemais.model.entities;
 
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -14,6 +15,13 @@ public class ProfessorAEE extends Pessoa {
         super(nome, dataNascimento, email, sexo, naturalidade, telefone);
         this.siape = siape;
         this.especialidade = especialidade;
+    }
+
+    public ProfessorAEE(Connection conn) {
+    }
+
+    public ProfessorAEE() {
+
     }
 
     public List<Aluno> getAlunos() {
@@ -112,4 +120,11 @@ public class ProfessorAEE extends Pessoa {
     }
 
 
+    public List<ProfessorAEE> buscarTodos() {
+        return List.of();
+    }
+
+    public ProfessorAEE buscarPorSiape(String professorAEE) {
+        return null;
+    }
 }
