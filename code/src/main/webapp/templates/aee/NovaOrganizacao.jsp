@@ -199,10 +199,7 @@
     </div>
 
     <div class="conteudo-principal">
-        <div class="linha-superior">
-
-        </div>
-
+        <div class="linha-superior"></div>
         <form id="formNovaOrganizacao" action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST">
             <div class>
                 <div class>

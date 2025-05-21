@@ -21,6 +21,10 @@ public class Deficiencia {
         this.aluno = aluno;
     }
 
+    public Deficiencia() {
+
+    }
+
     public int getId() {
         return id;
     }

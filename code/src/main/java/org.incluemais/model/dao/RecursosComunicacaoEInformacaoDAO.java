@@ -1,126 +1,52 @@
 package org.incluemais.model.dao;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import org.incluemais.model.entities.RecursosComunicacaoEInformacao;
+import java.sql.*;
 
 public class RecursosComunicacaoEInformacaoDAO {
-    private Connection connection;
+    private final Connection conn;
 
     public RecursosComunicacaoEInformacaoDAO(Connection connection) {
-        this.connection = connection;
+        if (connection == null) {
+            throw new IllegalArgumentException("Conexão não pode ser nula");
+        }
+        this.conn = connection;
     }
 
-    public void inserir(RecursosComunicacaoEInformacao r) throws SQLException {
-        String sql = "INSERT INTO RecursosComunicacaoEInformacao (" +
-                "comunicacaoAlternativa, tradutorInterprete, leitorTranscritor, " +
-                "interpreteOralizador, guiaInterprete, materialDidaticoBraille, " +
-                "materialDidaticoTextoAmpliado, materialDidaticoRelevo, leitorDeTela, " +
-                "fonteTamanhoEspecifico) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void inserir(RecursosComunicacaoEInformacao recurso) throws SQLException {
+        String sql = "INSERT INTO RecursosComunicacaoEInformacao ("
+                + "comunicacaoAlternativa, tradutorInterprete, leitorTranscritor, "
+                + "interpreteOralizador, guiaInterprete, materialDidaticoBraille, "
+                + "materialDidaticoTextoAmpliado, materialDidaticoRelevo, leitorDeTela, "
+                + "fonteTamanhoEspecifico) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setBoolean(1, r.isComunicacaoAlternativa());
-            stmt.setBoolean(2, r.isTradutorInterprete());
-            stmt.setBoolean(3, r.isLeitorTranscritor());
-            stmt.setBoolean(4, r.isInterpreteOralizador());
-            stmt.setBoolean(5, r.isGuiaInterprete());
-            stmt.setBoolean(6, r.isMaterialDidaticoBraille());
-            stmt.setBoolean(7, r.isMaterialDidaticoTextoAmpliado());
-            stmt.setBoolean(8, r.isMaterialDidaticoRelevo());
-            stmt.setBoolean(9, r.isLeitorDeTela());
-            stmt.setBoolean(10, r.isFonteTamanhoEspecifico());
-            stmt.executeUpdate();
-            try (ResultSet rs = stmt.getGeneratedKeys()) {
-                if (rs.next()) {
-                    r.setId(rs.getInt(1));
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setBoolean(1, recurso.isComunicacaoAlternativa());
+            stmt.setBoolean(2, recurso.isTradutorInterprete());
+            stmt.setBoolean(3, recurso.isLeitorTranscritor());
+            stmt.setBoolean(4, recurso.isInterpreteOralizador());
+            stmt.setBoolean(5, recurso.isGuiaInterprete());
+            stmt.setBoolean(6, recurso.isMaterialDidaticoBraille());
+            stmt.setBoolean(7, recurso.isMaterialDidaticoTextoAmpliado());
+            stmt.setBoolean(8, recurso.isMaterialDidaticoRelevo());
+            stmt.setBoolean(9, recurso.isLeitorDeTela());
+            stmt.setBoolean(10, recurso.isFonteTamanhoEspecifico());
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Falha na inserção, nenhuma linha afetada.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    recurso.setId(generatedKeys.getInt(1));
+                } else {
+                    throw new SQLException("Falha na inserção, nenhum ID obtido.");
                 }
             }
-        } catch (SQLException e) {
-            throw new SQLException("Erro ao inserir recurso de comunicação e informação: " + e.getMessage(), e);
         }
-    }
-
-    public void atualizar(RecursosComunicacaoEInformacao r) throws SQLException {
-        String sql = "UPDATE RecursosComunicacaoEInformacao SET " +
-                "comunicacaoAlternativa = ?, tradutorInterprete = ?, leitorTranscritor = ?, " +
-                "interpreteOralizador = ?, guiaInterprete = ?, materialDidaticoBraille = ?, " +
-                "materialDidaticoTextoAmpliado = ?, materialDidaticoRelevo = ?, leitorDeTela = ?, " +
-                "fonteTamanhoEspecifico = ? WHERE id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setBoolean(1, r.isComunicacaoAlternativa());
-            stmt.setBoolean(2, r.isTradutorInterprete());
-            stmt.setBoolean(3, r.isLeitorTranscritor());
-            stmt.setBoolean(4, r.isInterpreteOralizador());
-            stmt.setBoolean(5, r.isGuiaInterprete());
-            stmt.setBoolean(6, r.isMaterialDidaticoBraille());
-            stmt.setBoolean(7, r.isMaterialDidaticoTextoAmpliado());
-            stmt.setBoolean(8, r.isMaterialDidaticoRelevo());
-            stmt.setBoolean(9, r.isLeitorDeTela());
-            stmt.setBoolean(10, r.isFonteTamanhoEspecifico());
-            stmt.setInt(11, r.getId());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new SQLException("Erro ao atualizar recurso de comunicação e informação: " + e.getMessage(), e);
-        }
-    }
-
-    public void deletar(int id) throws SQLException {
-        String sql = "DELETE FROM RecursosComunicacaoEInformacao WHERE id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            throw new SQLException("Erro ao deletar recurso de comunicação e informação: " + e.getMessage(), e);
-        }
-    }
-
-    public RecursosComunicacaoEInformacao buscarPorId(int id) throws SQLException {
-        String sql = "SELECT * FROM RecursosComunicacaoEInformacao WHERE id = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return construirRecurso(rs);
-                }
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Erro ao buscar recurso de comunicação e informação por ID: " + e.getMessage(), e);
-        }
-        return null;
-    }
-
-    public List<RecursosComunicacaoEInformacao> listarTodos() throws SQLException {
-        List<RecursosComunicacaoEInformacao> lista = new ArrayList<>();
-        String sql = "SELECT * FROM RecursosComunicacaoEInformacao";
-
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            while (rs.next()) {
-                lista.add(construirRecurso(rs));
-            }
-        } catch (SQLException e) {
-            throw new SQLException("Erro ao listar recursos de comunicação e informação: " + e.getMessage(), e);
-        }
-        return lista;
-    }
-
-    private RecursosComunicacaoEInformacao construirRecurso(ResultSet rs) throws SQLException {
-        RecursosComunicacaoEInformacao r = new RecursosComunicacaoEInformacao();
-        r.setId(rs.getInt("id"));
-        r.setComunicacaoAlternativa(rs.getBoolean("comunicacaoAlternativa"));
-        r.setTradutorInterprete(rs.getBoolean("tradutorInterprete"));
-        r.setLeitorTranscritor(rs.getBoolean("leitorTranscritor"));
-        r.setInterpreteOralizador(rs.getBoolean("interpreteOralizador"));
-        r.setGuiaInterprete(rs.getBoolean("guiaInterprete"));
-        r.setMaterialDidaticoBraille(rs.getBoolean("materialDidaticoBraille"));
-        r.setMaterialDidaticoTextoAmpliado(rs.getBoolean("materialDidaticoTextoAmpliado"));
-        r.setMaterialDidaticoRelevo(rs.getBoolean("materialDidaticoRelevo"));
-        r.setLeitorDeTela(rs.getBoolean("leitorDeTela"));
-        r.setFonteTamanhoEspecifico(rs.getBoolean("fonteTamanhoEspecifico"));
-        return r;
     }
 }

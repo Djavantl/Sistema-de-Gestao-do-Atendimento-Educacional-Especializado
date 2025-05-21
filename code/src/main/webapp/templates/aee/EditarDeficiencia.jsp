@@ -6,8 +6,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Organização de Atendimento</title>
+    <title>Editar Deficiência</title>
     <style>
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
         * {
             margin: 0;
             padding: 0;
@@ -16,6 +18,7 @@
 
         body {
             background-color: #f9f9ff;
+
         }
 
         .sidebar {
@@ -82,6 +85,7 @@
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+
         }
 
         .form-header {
@@ -95,58 +99,90 @@
             color: #4D44B5;
         }
 
-        .form-grid {
+        .form-columns {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 1fr;
             gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 500px;
         }
 
         label {
-            display: block;
-            color: #6c757d;
-            margin-bottom: 5px;
             font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+            margin-top: 8px;
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background-color: #f8f9fa;
+            padding: 10px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-top: 4px;
+            margin-bottom: 12px;
+            background-color: #fefefe;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
 
-        .button-group {
-            margin-top: 30px;
+        input:focus, select:focus {
+            border-color: #4D44B5;
+            box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
+            outline: none;
+        }
+
+        .botoes-modal {
             display: flex;
-            gap: 15px;
             justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            width: 100%;
         }
 
-        .btn {
-            padding: 10px 25px;
+        button[type="submit"] {
+            background-color: #4D44B5;
+            color: #ffffff;
             border: none;
-            border-radius: 6px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
-        .btn-primary {
-            background-color: #4D44B5;
-            color: white;
+
+
+        button[type="submit"]:hover {
+            background-color: #372e9c;
         }
 
-        .btn-secondary {
-            background-color: #6c757d;
-            color: white;
+        .botao-voltar {
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .btn:hover {
-            opacity: 0.9;
+        .botao-voltar:hover {
+            background-color: #d0d0d0;
+        }
+
+        .conteudo-principal {
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 80px auto 40px; /* Alterado para centralizar */
+            width: 40%;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
     </style>
 </head>
@@ -162,53 +198,36 @@
             <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
             <button class="menu-btn">Usuários</button>
         </div>
-     </div>
-
-    <div class="container">
+    </div>
+    <div class="conteudo-principal">
         <div class="form-header">
-            <h2>Editar Organização de Atendimento</h2>
+            <h2>Editar Condição</h2>
         </div>
-
-        <form action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST">
+        <form action="${pageContext.request.contextPath}/deficiencia" method="POST">
             <input type="hidden" name="acao" value="atualizar">
-            <input type="hidden" name="alunoM" value="${aluno.matricula}">
-            <input type="hidden" name="alunoId" value="${aluno.id}">
+            <input type="hidden" name="id" value="${deficiencia.id}">
+            <input type="hidden" name="alunoId" value="${param.alunoId}">
+            <input type="hidden" name="matricula" value="${param.matricula}">
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="periodo">Período:</label>
-                    <input type="text" id="periodo" name="periodo" value="${organizacao.periodo}" required>
-                </div>
+            <div class="form-columns">
+                <div class="form-column">
+                    <label for="nome">Nome da Condição:</label>
+                    <input type="text" id="nome" name="nome" value="${deficiencia.nome}" required>
 
-                <div class="form-group">
-                    <label for="duracao">Duração:</label>
-                    <input type="text" id="duracao" name="duracao" value="${organizacao.duracao}" required>
-                </div>
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" id="descricao" name="descricao" value="${deficiencia.descricao}" required>
 
-                <div class="form-group">
-                    <label for="frequencia">Frequência:</label>
-                    <input type="text" id="frequencia" name="frequencia" value="${organizacao.frequencia}">
-                </div>
+                    <label for="grau">Grau de severidade:</label>
+                    <input type="text" id="grau" name="grau" value="${deficiencia.grauSeveridade}">
 
-                <div class="form-group">
-                    <label for="composicao">Composição:</label>
-                    <input type="text" id="composicao" name="composicao" value="${organizacao.composicao}" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="tipo">Tipo de Atendimento:</label>
-                    <select id="tipo" name="tipo">
-                        <option value="Individual" ${organizacao.tipo eq 'Individual' ? 'selected' : ''}>Individual</option>
-                        <option value="Parceria" ${organizacao.tipo eq 'Parceria' ? 'selected' : ''}>Parceria</option>
-                        <option value="Grupo" ${organizacao.tipo eq 'Grupo' ? 'selected' : ''}>Grupo</option>
-                    </select>
+                    <label for="cid">CID:</label>
+                    <input type="text" id="cid" name="cid" value="${deficiencia.cid}" required>
                 </div>
             </div>
-
-            <div class="button-group">
-                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                <button type="button" class="btn btn-secondary"
-                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${aluno.id}'">
+            <div class="botoes-modal">
+                <button type="submit">Salvar Alterações</button>
+                <button type="button" class="botao-voltar"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.alunoId}'">
                     Cancelar
                 </button>
             </div>

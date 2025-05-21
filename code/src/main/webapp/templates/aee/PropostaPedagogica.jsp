@@ -193,6 +193,25 @@
             cursor: pointer;
             font-size: 14px;
         }
+
+        .alert-sucesso {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-erro {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
     </style>
 </head>
     <!-- Sidebar idêntica à página de alunos -->
@@ -212,7 +231,19 @@
         <h2>Propostas Pedagógicas</h2>
     </div>
     <div class="conteudo-principal">
-        <form class="form-proposta" action="${pageContext.request.contextPath}/propostas" method="POST">
+        <!-- Mensagens de Sucesso/Erro -->
+        <c:if test="${not empty propostaId}">
+            <div class="alert-sucesso">
+                ✅ Proposta criada com ID: <strong>${propostaId}</strong>
+            </div>
+        </c:if>
+
+        <c:if test="${not empty erro}">
+            <div class="alert-erro">
+                ❌ Erro: ${erro}
+            </div>
+        </c:if>
+            <form action="${pageContext.request.contextPath}/propostas" method="POST">
             <!-- Campos principais -->
             <div class="grupo-campos">
                 <div class="campo">

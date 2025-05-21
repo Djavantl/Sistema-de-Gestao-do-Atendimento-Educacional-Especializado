@@ -5,6 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.incluemais.model.connection.DBConnection;
 import org.incluemais.model.dao.AlunoDAO;
 import org.incluemais.model.dao.OrganizacaoAtendimentoDAO;
 import org.incluemais.model.entities.Aluno;
@@ -31,26 +32,35 @@ public class OrganizacaoServlet extends HttpServlet {
         }
         this.alunoDAO = new AlunoDAO(conn);
         this.organizacaoDAO = new OrganizacaoAtendimentoDAO(conn);
-        logger.info("🔄 Servlet inicializado com sucesso");
+
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String pathInfo = request.getPathInfo();
-        String action = request.getParameter("acao");
+        String acao = request.getParameter("acao");
+        String matricula = request.getParameter("alunoM");
 
         try {
-            // Verificar se é uma requisição de edição
-            if (pathInfo != null && pathInfo.contains("/editar")) {
-                handleEdicao(request, response);
+
+            if ("editar".equals(acao)) {
+                try (Connection conn = DBConnection.getConnection()) {
+                    OrganizacaoAtendimentoDAO dao = new OrganizacaoAtendimentoDAO(conn);
+                    int orgId = dao.buscarIdPorMatricula(matricula);
+                    OrganizacaoAtendimento org = dao.buscarPorAlunoMatricula(matricula);
+                    org.setId(orgId);
+                    if (org != null) {
+                        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+                        request.setAttribute("aluno", aluno);
+                        request.setAttribute("organizacao", org);
+                        request.getRequestDispatcher("/templates/aee/EditarOrganizacao.jsp").forward(request, response);
+                    } else {
+                        System.out.println("nao editou");
+                    }
+                }
             }
-            // Verificar se é nova organização com dados do aluno
-            else if (request.getParameter("id") != null && request.getParameter("matricula") != null) {
-                handleNovaOrganizacao(request, response);
-            }
-            // Caso padrão (nova organização vazia)
+
             else {
                 request.getRequestDispatcher("/templates/aee/NovaOrganizacao.jsp").forward(request, response);
             }
@@ -58,45 +68,6 @@ public class OrganizacaoServlet extends HttpServlet {
         } catch (SQLException | NumberFormatException e) {
             logger.log(Level.SEVERE, "Erro no processamento GET", e);
             response.sendRedirect(request.getContextPath() + "/templates/aee/alunos?erro=Erro+no+servidor");
-        }
-    }
-
-    private void handleEdicao(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, ServletException, IOException {
-
-        int idOrganizacao = Integer.parseInt(request.getParameter("id"));
-        int alunoId = Integer.parseInt(request.getParameter("alunoId"));
-
-        logger.info("Tentando editar organização ID: " + idOrganizacao + " para aluno ID: " + alunoId);
-
-        OrganizacaoAtendimento org = organizacaoDAO.getById(idOrganizacao);
-        Aluno aluno = alunoDAO.buscarPorId(alunoId);
-
-        if (org != null && aluno != null && org.getAluno().getMatricula().equals(aluno.getMatricula())) {
-            request.setAttribute("organizacao", org);
-            request.setAttribute("aluno", aluno);
-            request.getRequestDispatcher("/templates/aee/EditarOrganizacao.jsp").forward(request, response);
-        } else {
-            response.sendRedirect(request.getContextPath() +
-                    "/templates/aee/detalhes-aluno?id=" + alunoId +
-                    "&erro=Acesso+inválido+ou+organização+não+encontrada");
-        }
-    }
-
-    private void handleNovaOrganizacao(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, ServletException, IOException {
-
-        int alunoId = Integer.parseInt(request.getParameter("id"));
-        String matricula = request.getParameter("matricula");
-
-        Aluno aluno = alunoDAO.buscarPorId(alunoId);
-        if (aluno != null && aluno.getMatricula().equals(matricula)) {
-            request.setAttribute("aluno", aluno);
-            request.getRequestDispatcher("/templates/aee/NovaOrganizacao.jsp").forward(request, response);
-        } else {
-            response.sendRedirect(request.getContextPath() +
-                    "/templates/aee/detalhes-aluno?id=" + alunoId +
-                    "&erro=Dados+inválidos");
         }
     }
 
@@ -140,8 +111,9 @@ public class OrganizacaoServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         String matricula = request.getParameter("matricula");
 
+
         try {
-            Aluno alunoM = alunoDAO.buscarPorMatricula(matricula); // Novo método necessário
+            Aluno alunoM = alunoDAO.buscarPorMatricula(matricula);
 
             if (alunoM == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
@@ -184,12 +156,16 @@ public class OrganizacaoServlet extends HttpServlet {
         }
     }
 
-    private void excluirOrganizacao(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        int id = Integer.parseInt(request.getParameter("id"));
+    private void excluirOrganizacao(HttpServletRequest request, HttpServletResponse response) throws IOException, SQLException {
+        String matricula = request.getParameter("alunoM");
         int alunoId = Integer.parseInt(request.getParameter("alunoId"));
+        System.out.println(matricula);
+        System.out.println(alunoId);
+        int idOrg = organizacaoDAO.buscarIdPorMatricula(matricula);
+
 
         try {
-            organizacaoDAO.delete(id);
+            organizacaoDAO.delete(idOrg);
 
             response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-aluno?id=" + alunoId + "&sucesso=Organização+excluída+com+sucesso");
 
@@ -204,11 +180,14 @@ public class OrganizacaoServlet extends HttpServlet {
 
     private void atualizarOrganizacao(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            int id = Integer.parseInt(request.getParameter("id"));
+            String matricula = request.getParameter("alunoM");
             int alunoId = Integer.parseInt(request.getParameter("alunoId"));
+            int id = organizacaoDAO.buscarIdPorMatricula(matricula);
+            System.out.println(matricula);
+            System.out.println(alunoId);
 
             OrganizacaoAtendimento org = new OrganizacaoAtendimento(
-                    alunoDAO.buscarPorId(alunoId),
+                    alunoDAO.buscarPorMatricula(matricula),
                     request.getParameter("periodo"),
                     request.getParameter("duracao"),
                     request.getParameter("frequencia"),
