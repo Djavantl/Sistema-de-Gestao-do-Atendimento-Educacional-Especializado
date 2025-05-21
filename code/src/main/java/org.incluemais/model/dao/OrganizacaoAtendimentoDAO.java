@@ -141,6 +141,21 @@ public class OrganizacaoAtendimentoDAO {
         return organizacoes;
     }
 
+    public Integer buscarIdPorMatricula(String matricula) throws SQLException {
+        String sql = "SELECT id FROM OrganizacaoAtendimento WHERE aluno_matricula = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                }
+            }
+        }
+        return null;
+    }
+
     public void update(OrganizacaoAtendimento org) throws SQLException {
         String sql = "UPDATE OrganizacaoAtendimento SET periodo=?, duracao=?, frequencia=?, composicao=?, tipo=? WHERE id=?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {

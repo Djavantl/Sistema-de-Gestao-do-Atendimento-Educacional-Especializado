@@ -195,7 +195,7 @@
     </div>
 
     <div id="titulo">
-        <h2>Criar Deficiências</h2>
+        <h2>Adicionar Condições Especias</h2>
     </div>
 
     <div class="conteudo-principal">
@@ -210,7 +210,7 @@
                     <input type="hidden" name="alunoId" value="${param.alunoId}">
                     <input type="hidden" name="matricula" value="${param.matricula}">
 
-                    <label for="nome">Nome da deficiência:</label>
+                    <label for="nome">Nome da Condição:</label>
                     <input type="text" id="nome" name="nome" required>
 
                     <label for="descricao">Descrição:</label>
@@ -227,7 +227,7 @@
 
             <div class="botoes-modal">
                 <button type="submit">Salvar</button>
-                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.id}'">Voltar</button>
+                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.alunoId}'">Voltar</button>
             </div>
         </form>
     </div>

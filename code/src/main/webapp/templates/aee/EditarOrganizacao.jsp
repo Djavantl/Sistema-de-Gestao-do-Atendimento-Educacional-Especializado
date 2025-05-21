@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Organização de Atendimento</title>
     <style>
-        /* Estilos consistentes com o restante do sistema */
         * {
             margin: 0;
             padding: 0;
@@ -17,12 +16,68 @@
 
         body {
             background-color: #f9f9ff;
-            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #4D44B5;
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
+        .menu {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .menu-btn {
+            background-color: transparent;
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .menu-btn.ativo {
+            background-color: #f9f9ff;
+            color: #4D44B5;
+        }
+
+        .menu-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .container {
             margin: 80px 0 40px 350px;
-            width: 70%;
+            width: 60%;
             padding: 40px;
             background-color: white;
             border-radius: 10px;
@@ -97,8 +152,17 @@
 </head>
 <body>
     <div class="sidebar">
-        <!-- Sidebar igual às outras páginas -->
-    </div>
+        <div class="logo">
+            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
+            <h2>Inclui+</h2>
+        </div>
+        <div class="menu">
+            <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
+            <button class="menu-btn">Professores</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
+            <button class="menu-btn">Usuários</button>
+        </div>
+     </div>
 
     <div class="container">
         <div class="form-header">
@@ -107,7 +171,7 @@
 
         <form action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST">
             <input type="hidden" name="acao" value="atualizar">
-            <input type="hidden" name="id" value="${organizacao.id}">
+            <input type="hidden" name="alunoM" value="${aluno.matricula}">
             <input type="hidden" name="alunoId" value="${aluno.id}">
 
             <div class="form-grid">
@@ -142,11 +206,11 @@
             </div>
 
             <div class="button-group">
+                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                 <button type="button" class="btn btn-secondary"
                         onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${aluno.id}'">
                     Cancelar
                 </button>
-                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
             </div>
         </form>
     </div>

@@ -340,12 +340,12 @@
                 </div>
             </div>
 
-            <!-- Deficiências do Aluno -->
+            <!-- Condições do Aluno -->
             <div class="info-section">
-                <h3>Deficiências do Aluno</h3>
+                <h3>Condições do Aluno</h3>
                 <button class="botao-novo-aluno"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/CriarDeficiencia.jsp?alunoId=${aluno.id}&matricula=${aluno.matricula}'">
-                    Adicionar Deficiência
+                    Adicionar Condições Especiais
                 </button>
 
                 <c:if test="${not empty deficiencias}">
@@ -396,8 +396,8 @@
             <!-- Organização de Atendimento -->
             <div class="info-section">
                 <h3>Organização de Atendimento</h3>
-                <c:choose>
-                    <c:when test="${not empty organizacao}">
+
+                    <c:if test="${not empty organizacao}">
                         <div class="info-grid">
                             <div class="info-item">
                                 <label>Período</label>
@@ -420,36 +420,33 @@
                                 <p>${organizacao.tipo}</p>
                             </div>
                         </div>
-                    </c:when>
-                </c:choose>
-                <c:choose>
-                    <c:when test="${not empty organizacao}">
-                        <div style="display: flex; gap: 10px;">
+
                             <div class="botoes-acoes">
-                                <button class="botao-novo-aluno"
-                                        onclick="window.location.href='${pageContext.request.contextPath}/organizacao/editar?id=${organizacao.id}&alunoId=${aluno.id}'">
-                                    Editar
-                                </button>
-                                <form action="${pageContext.request.contextPath}/organizacao/${organizacao.id}"
-                                      method="POST"
-                                      style="display:inline;">
-                                    <input type="hidden" name="_method" value="DELETE">
+
+                                    <button class="botao-novo-aluno"
+                                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/organizacao?acao=editar&alunoM=${aluno.matricula}&alunoId=${aluno.id}'">
+                                        Editar
+                                    </button>
+
+                                <form action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST" style="display:inline;">
+                                    <input type="hidden" name="acao" value="excluir">
                                     <input type="hidden" name="alunoId" value="${aluno.id}">
+                                    <input type="hidden" name="alunoM" value="${aluno.matricula}">
                                     <button type="submit" class="botao-novo-aluno"
                                             onclick="return confirm('Tem certeza que deseja excluir esta organização?')">
                                         Excluir
                                     </button>
                                 </form>
                             </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
+
+                    </c:if>
+                    <c:if test="${empty organizacao}">
                         <button class="botao-novo-aluno"
                                 onclick="window.location.href='/templates/aee/organizacao?id=${aluno.id}&matricula=${aluno.matricula}'">
                             Adicionar Organização
                         </button>
-                    </c:otherwise>
-                </c:choose>
+                    </c:if>
+
             </div>
             <!-- Relatorios -->
             <div class="info-section">
