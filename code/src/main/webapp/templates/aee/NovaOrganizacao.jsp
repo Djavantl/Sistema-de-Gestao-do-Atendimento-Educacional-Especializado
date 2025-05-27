@@ -206,6 +206,7 @@
                     <input type="hidden" name="acao" value="criar">
                     <input type="hidden" name="id" value="${param.id}">
                     <input type="hidden" name="matricula" value="${param.matricula}">
+                    <input type="hidden" name="alunoId" value="${aluno.id}">
 
                     <label for="periodo">Período:</label>
                     <input type="text" id="periodo" name="periodo" required>
@@ -230,7 +231,9 @@
 
             <div class="botoes-modal">
                 <button type="submit">Salvar</button>
-                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${aluno.id}'">Voltar</button>
+                <button class="botao-voltar"
+                onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.id}'">
+                Voltar</button>
             </div>
         </form>
     </div>

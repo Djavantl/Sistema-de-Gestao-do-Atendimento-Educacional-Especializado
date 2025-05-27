@@ -43,8 +43,6 @@ public class AlunoDAO {
             rollback(conn);
             logger.log(Level.SEVERE, "Erro ao salvar aluno", e);
             return false;
-        } finally {
-            resetAutoCommit(conn);
         }
     }
 
@@ -99,8 +97,6 @@ public class AlunoDAO {
             rollback(conn);
             logger.log(Level.SEVERE, "Erro ao atualizar aluno", e);
             return false;
-        } finally {
-            resetAutoCommit(conn);
         }
     }
 
@@ -162,8 +158,6 @@ public class AlunoDAO {
             rollback(conn);
             logger.log(Level.SEVERE, "Erro ao excluir aluno", e);
             return false;
-        } finally {
-            resetAutoCommit(conn);
         }
     }
 
@@ -282,15 +276,6 @@ public class AlunoDAO {
         }
     }
 
-    private void resetAutoCommit(Connection conn) {
-        try {
-            if (conn != null && !conn.isClosed()) {
-                conn.setAutoCommit(true);
-            }
-        } catch (SQLException e) {
-            logger.log(Level.WARNING, "Erro ao resetar auto-commit", e);
-        }
-    }
     public Aluno obterPorId(int id) {
         Aluno aluno = null;
         String sql = """

@@ -10,7 +10,7 @@ public class PlanoAEE {
     private Aluno aluno;
     private LocalDate dataInicio;
     private List<Meta> metas = new ArrayList<>();
-    private List<PropostaPedagogica> propostaPedagogicas = new ArrayList<>();
+    private PropostaPedagogica propostaPedagogicas;
     private String recomendacoes;
     private String observacoes;
 
@@ -62,12 +62,6 @@ public class PlanoAEE {
         this.metas = metas;
     }
 
-    public List<PropostaPedagogica> getPropostaPedagogicas() {
-        return propostaPedagogicas;
-    }
-
-    public void setPropostaPedagogicas(List<PropostaPedagogica> propostaPedagogicas) { this.propostaPedagogicas = propostaPedagogicas; }
-
     public String getRecomendacoes() {
         return recomendacoes;
     }
@@ -76,9 +70,6 @@ public class PlanoAEE {
         this.recomendacoes = recomendacoes;
     }
 
-    public void  adicionarProposta(PropostaPedagogica proposta){
-        this.propostaPedagogicas.add(proposta);
-    }
 
     public void adicionarMeta(Meta meta){
         this.metas.add(meta);

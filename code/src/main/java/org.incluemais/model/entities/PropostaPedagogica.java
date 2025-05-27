@@ -109,7 +109,4 @@ public class PropostaPedagogica {
         this.recursoCI = recursoCI;
     }
 
-    public void adicionarAoPlano(PlanoAEE plano, PropostaPedagogica proposta){
-        plano.adicionarProposta(proposta);
-    }
 }
