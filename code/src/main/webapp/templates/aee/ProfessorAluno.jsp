@@ -318,6 +318,157 @@
         .info-aluno span {
             font-weight: 600;
         }
+
+        /* Modal Overlay - Base */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        /* Conteúdo do Modal */
+        .modal-conteudo {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 450px;
+            transform: scale(0.95);
+            animation: modalAppear 0.3s ease-out forwards;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modalAppear {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Cabeçalho do Modal */
+        .modal-conteudo h2,
+        .modal-conteudo h3 {
+            color: #4D44B5;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+            font-size: 1.5rem;
+        }
+
+        /* Formulários dentro do Modal */
+        .modal-conteudo form {
+            padding: 25px;
+        }
+
+        .modal-conteudo label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .modal-conteudo select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234D44B5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 16px;
+        }
+
+        .modal-conteudo select:focus {
+            border-color: #4D44B5;
+            box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
+            outline: none;
+            background-color: #fff;
+        }
+
+        /* Botões do Modal */
+        .botoes-modal {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .botoes-modal button {
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .botoes-modal button[type="submit"] {
+            background-color: #4D44B5;
+            color: white;
+            border: 2px solid #4D44B5;
+        }
+
+        .botoes-modal button[type="submit"]:hover {
+            background-color: #3b32a0;
+            border-color: #3b32a0;
+        }
+
+        .botoes-modal button[type="button"] {
+            background-color: transparent;
+            color: #6c757d;
+            border: 2px solid #e0e0e0;
+        }
+
+        .botoes-modal button[type="button"]:hover {
+            background-color: #f8f9fa;
+            color: #4D44B5;
+            border-color: #4D44B5;
+        }
+
+        /* Modal de Confirmação Específico */
+        #modalDesvincular .modal-conteudo {
+            text-align: center;
+        }
+
+        #modalDesvincular p {
+            color: #666;
+            margin: 15px 0 25px;
+            line-height: 1.5;
+        }
+
+        /* Responsividade */
+        @media (max-width: 480px) {
+            .modal-conteudo {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .botoes-modal {
+                flex-direction: column;
+            }
+
+            .botoes-modal button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -329,9 +480,9 @@
         </div>
         <div class="menu">
             <button class="menu-btn" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn ativo">Professores</button>
+            <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/professores'">Professores</button>
             <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
-            <button class="menu-btn">Usuários</button>
+
         </div>
     </div>
 
@@ -375,7 +526,7 @@
                 <tr>
                     <th>Nome</th>
                     <th>SIAPE</th>
-                    <th>Especialidade</th>
+                    <th>Cursos</th>
                     <th style="width: 150px">Ações</th>
                 </tr>
             </thead>

@@ -170,7 +170,7 @@ public class RelatorioServlet extends HttpServlet {
 
         Aluno aluno = alunoDAO.buscarPorMatricula(matriculaAluno);
         ProfessorAEE professor = siapeProfessor != null && !siapeProfessor.isEmpty() ?
-                professorDAO.buscarPorSiape(siapeProfessor) : null;
+                professorDAO.getBySiape(siapeProfessor) : null;
 
         relatorio.setAluno(aluno);
         relatorio.setProfessorAEE(professor);
@@ -212,7 +212,7 @@ public class RelatorioServlet extends HttpServlet {
             throws ServletException, IOException, SQLException {
 
         List<Aluno> alunos = alunoDAO.buscarTodos();
-        List<ProfessorAEE> professores = professorDAO.buscarTodos();
+        List<ProfessorAEE> professores = professorDAO.getAll();
 
         request.setAttribute("todosAlunos", alunos);
         request.setAttribute("todosProfessores", professores);
@@ -228,7 +228,7 @@ public class RelatorioServlet extends HttpServlet {
 
         if (relatorio != null) {
             List<Aluno> alunos = alunoDAO.buscarTodos();
-            List<ProfessorAEE> professores = professorDAO.buscarTodos();
+            List<ProfessorAEE> professores = professorDAO.getAll();
 
             request.setAttribute("relatorio", relatorio);
             request.setAttribute("todosAlunos", alunos);

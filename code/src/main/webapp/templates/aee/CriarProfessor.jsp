@@ -374,6 +374,41 @@
             transform: rotate(180deg);
             transition: transform 0.3s ease;
         }
+
+        /* Modal de Exclusão - Estilo Consistente */
+        #modalExcluir .modal-conteudo {
+            border-top: 3px solid #4D44B5; /* Roxo principal */
+        }
+
+        #modalExcluir h3 {
+            color: #4D44B5; /* Roxo do tema */
+            border-bottom: 2px solid #ecf0f1; /* Cinza claro da tabela */
+        }
+
+        #modalExcluir p {
+            color: #6c757d; /* Cinza médio padrão */
+        }
+
+        #modalExcluir .botoes-modal button[type="submit"] {
+            background-color: #4D44B5; /* Roxo principal */
+            border-color: #4D44B5;
+        }
+
+        #modalExcluir .botoes-modal button[type="submit"]:hover {
+            background-color: #3b32a0; /* Roxo mais escuro */
+            border-color: #3b32a0;
+        }
+
+        #modalExcluir .botoes-modal button[type="button"] {
+            background-color: #6c757d; /* Cinza dos botões */
+            border-color: #6c757d;
+            color: #ffffff;
+        }
+
+        #modalExcluir .botoes-modal button[type="button"]:hover {
+            background-color: #5a6268; /* Cinza hover */
+            border-color: #5a6268;
+        }
     </style>
 </head>
 <body>
@@ -385,8 +420,7 @@
         <div class="menu">
             <button class="menu-btn" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
             <button class="menu-btn ativo">Professores</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
-            <button class="menu-btn">Usuários</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/professoresAEE'">Professores AEE</button>
         </div>
     </div>
 
@@ -496,6 +530,11 @@
                                                 <i class="fas fa-chevron-down icone-seta"></i> Detalhes
                                             </button>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <a href="${pageContext.request.contextPath}/templates/professor/professor-alunos?siape=${professor.siape}">
+                                          Ver Alunos
+                                        </a>
                                     </td>
                                 </tr>
 

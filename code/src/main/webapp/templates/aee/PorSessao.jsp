@@ -414,9 +414,9 @@
         </div>
         <div class="menu">
             <button class="menu-btn" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/professor">Professores</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/professores'">Professores</button>
             <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
-            <button class="menu-btn">Usuários</button>
+
         </div>
     </div>
 
@@ -486,7 +486,7 @@
 
             <tbody>
                 <c:forEach items="${sessoeslista}" var="sessao">
-                    <tr data-id="${sessao.id}" id="linha-${sessao.id}">
+                    <tr class="linha-principal" data-id="${sessao.id}" id="linha-${sessao.id}">
                         <td>${sessao.aluno.nome}</td>
                         <td>${sessao.data}</td>
                         <td>${sessao.horario}</td>
@@ -644,6 +644,19 @@
             const linhaDetalhes = botao.closest('tr').nextElementSibling;
             linhaDetalhes.style.display = linhaDetalhes.style.display === 'none' ? 'table-row' : 'none';
         }
+
+        // Filtro simplificado
+        document.querySelectorAll('.linha-filtro input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const colIndex = e.target.parentElement.cellIndex;
+                const valor = e.target.value.toLowerCase();
+
+                document.querySelectorAll('.linha-principal').forEach(linha => {
+                    const conteudo = linha.cells[colIndex].textContent.toLowerCase();
+                    linha.style.display = conteudo.includes(valor) ? '' : 'none';
+                });
+            });
+        });
     </script>
 </body>
 </html>

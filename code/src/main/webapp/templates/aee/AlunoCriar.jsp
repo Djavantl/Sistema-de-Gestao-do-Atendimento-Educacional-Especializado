@@ -320,9 +320,9 @@ body {
         </div>
         <div class="menu">
             <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/professor">Professores</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/professores'">Professores</button>
             <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes?sucesso=Sessão+criada+com+sucesso'">Sessões</button>
-            <button class="menu-btn">Usuários</button>
+
         </div>
     </div>
 
@@ -438,6 +438,7 @@ body {
                                 <button class="botao-excluir" onclick="confirmarExclusao(${aluno.id})">Excluir</button>
                             </div>
                         </td>
+
                     </tr>
                 </c:forEach>
             </tbody>

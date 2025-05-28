@@ -84,7 +84,7 @@ public class SessaoAtendimentoDAO {
 
     public List<SessaoAtendimento> listarTodos() throws SQLException {
         List<SessaoAtendimento> lista = new ArrayList<>();
-        String sql = "SELECT * FROM SessaoAtendimento";
+        String sql = "SELECT *  FROM SessaoAtendimento  ORDER BY  CASE WHEN data >= CURDATE() THEN 0 ELSE 1 END, CASE WHEN data >= CURDATE() THEN data END ASC, CASE WHEN data <  CURDATE() THEN data END DESC;";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {

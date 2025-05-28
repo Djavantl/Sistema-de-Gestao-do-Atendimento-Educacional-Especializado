@@ -383,10 +383,8 @@
             <h2>Inclui+</h2>
         </div>
         <div class="menu">
-            <button class="menu-btn">Estudantes</button>
-            <button class="menu-btn ativo">Professores AEE</button>
-            <button class="menu-btn">Sessões</button>
-            <button class="menu-btn">Usuários</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/professores'">Professores</button>
+            <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/professoresAEE'">Professores AEE</button>
         </div>
     </div>
 
