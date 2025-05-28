@@ -1,6 +1,5 @@
 package org.incluemais.model.dao;
 
-import org.incluemais.model.connection.DBConnection;
 import org.incluemais.model.entities.Professor;
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,25 +22,21 @@ public class ProfessorDAO {
     public boolean salvarProfessor(Professor professor) {
         String sqlPessoa = "INSERT INTO Pessoa (nome, dataNascimento, email, sexo, naturalidade, telefone) VALUES (?, ?, ?, ?, ?, ?)";
         String sqlProfessor = "INSERT INTO Professor (siape, pessoa_id, especialidade) VALUES (?, ?, ?)";
-        System.out.println("entrou em salvar 1");
         try {
             conn.setAutoCommit(false);
-            System.out.println("entrou em salvar");
-            // Inserir na tabela Pessoa
             int pessoaId = inserirPessoa(professor, sqlPessoa);
-            if (pessoaId == 0) return false;
+            if (pessoaId == 0) {
+                conn.rollback();
+                return false;
+            }
 
-            // Inserir na tabela Professor
             try (PreparedStatement stmtProfessor = conn.prepareStatement(sqlProfessor)) {
-                System.out.println("entrou em inserir professor");
                 stmtProfessor.setString(1, professor.getSiape());
                 stmtProfessor.setInt(2, pessoaId);
                 stmtProfessor.setString(3, professor.getEspecialidade());
 
                 if (stmtProfessor.executeUpdate() == 0) {
-                    System.out.println("entrou em rollback");
                     conn.rollback();
-                    System.out.println("entrou rollback");
                     return false;
 
                 }
@@ -57,7 +52,6 @@ public class ProfessorDAO {
     }
 
     private int inserirPessoa(Professor professor, String sql) throws SQLException {
-        System.out.println("entrou em inserir");
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, professor.getNome());
             stmt.setDate(2, Date.valueOf(professor.getDataNascimento()));
@@ -99,8 +93,6 @@ public class ProfessorDAO {
             throw new RuntimeException("Erro ao buscar professor por SIAPE", e);
         }
     }
-
-
 
     public List<Professor> getAll() {
         logger.info("Executando query para buscar professores");
@@ -162,27 +154,25 @@ public class ProfessorDAO {
         String sqlDeletePessoa = "DELETE FROM Pessoa WHERE id = (SELECT pessoa_id FROM Professor WHERE siape = ?)";
 
         try {
-            conn.setAutoCommit(false); // Iniciar transação
+            conn.setAutoCommit(false);
 
-
-            // 2. Excluir Pessoa (irá cascatear se ON DELETE CASCADE estiver configurado)
             try (PreparedStatement stmtDelPessoa = conn.prepareStatement(sqlDeletePessoa)) {
                 stmtDelPessoa.setString(1, siape);
                 stmtDelPessoa.executeUpdate();
             }
 
-            conn.commit(); // Confirmar transação
+            conn.commit();
 
         } catch (SQLException e) {
             try {
-                conn.rollback(); // Rollback em caso de erro
+                conn.rollback();
             } catch (SQLException ex) {
                 logger.log(Level.SEVERE, "Erro ao fazer rollback", ex);
             }
             throw new RuntimeException("Erro ao deletar professor: " + e.getMessage(), e);
         } finally {
             try {
-                conn.setAutoCommit(true); // Restaurar autoCommit
+                conn.setAutoCommit(true);
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Erro ao restaurar autoCommit", e);
             }

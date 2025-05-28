@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -323,18 +324,6 @@ body {
 }
 </style>
 <body>
-<%-- Bloco de debug --%>
-    <div style="background: #f0f0f0; padding: 10px; margin-bottom: 20px;">
-        <h4>Informações de Debug:</h4>
-        <p>Total de relatórios: ${not empty relatoriosLista ? relatoriosLista.size() : 0}</p>
-        <c:if test="${not empty relatoriosLista && relatoriosLista.size() > 0}">
-            <p>Primeiro relatório:
-                ID: ${relatoriosLista[0].id},
-                Título: ${relatoriosLista[0].titulo},
-                Aluno: ${relatoriosLista[0].aluno.nome}
-            </p>
-        </c:if>
-    </div>
     <div class="sidebar">
         <div class="logo">
             <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
@@ -408,31 +397,33 @@ body {
                 </tr>
             </thead>
             <tbody>
-                <c:forEach items="${relatoriosLista}" var="relatorio">
-                    <tr data-id="${relatorio.id}">
-                        <td>${relatorio.titulo}</td>
-                        <td>${relatorio.aluno.nome}</td>
-                        <td>${relatorio.dataGeracao}</td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${not empty relatorio.professorAEE}">
-                                    ${relatorio.professorAEE.nome} (${relatorio.professorAEE.siape})
-                                </c:when>
-                                <c:otherwise>
-                                    Não atribuído
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>
-                            <div class="botoes-acoes">
-                                <button class="botao-editar" onclick="abrirEdicao(${relatorio.id})">Editar</button>
-                                <button class="botao-detalhes"
-                                    onclick="window.location.href='detalhes-relatorio?id=${relatorio.id}'">Detalhes</button>
-                                <button class="botao-excluir" onclick="confirmarExclusao(${relatorio.id})">Excluir</button>
-                            </div>
-                        </td>
-                    </tr>
-                </c:forEach>
+               <c:forEach items="${relatoriosLista}" var="relatorio">
+                   <tr data-id="${relatorio.id}">
+                       <td>${relatorio.titulo}</td>
+                       <td>${relatorio.aluno.nome}</td>
+                       <td>
+                           <fmt:formatDate value="${relatorio.dataGeracao}" pattern="dd/MM/yyyy" />
+                       </td>
+                       <td>
+                           <c:choose>
+                               <c:when test="${not empty relatorio.professorAEE}">
+                                   ${relatorio.professorAEE.nome} (${relatorio.professorAEE.siape})
+                               </c:when>
+                               <c:otherwise>
+                                   Não atribuído
+                               </c:otherwise>
+                           </c:choose>
+                       </td>
+                       <td>
+                           <div class="botoes-acoes">
+                               <button class="botao-editar" onclick="abrirEdicao(${relatorio.id})">Editar</button>
+                               <button class="botao-detalhes"
+                                   onclick="window.location.href='detalhes-relatorio?id=${relatorio.id}'">Detalhes</button>
+                               <button class="botao-excluir" onclick="confirmarExclusao(${relatorio.id})">Excluir</button>
+                           </div>
+                       </td>
+                   </tr>
+               </c:forEach>
             </tbody>
         </table>
 

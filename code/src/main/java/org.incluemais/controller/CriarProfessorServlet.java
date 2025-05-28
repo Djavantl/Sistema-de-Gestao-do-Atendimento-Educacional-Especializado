@@ -137,12 +137,15 @@ public class CriarProfessorServlet extends HttpServlet {
     }
 
     private void atualizarProfessor(HttpServletRequest request, HttpServletResponse response)
-            throws IOException, ServletException {
+            throws IOException, ServletException, SQLException {
 
             Professor professor = construirProfessor(request);
             professor.setSiape(request.getParameter("siape"));
             professorDAO.update(professor);
-            response.sendRedirect(request.getContextPath() + "/templates/aee/professores?sucesso=Professor+atualizado");
+
+            List<Professor> professores = professorDAO.getAll();
+            request.setAttribute("professoresLista", professores);
+            request.getRequestDispatcher("/templates/aee/CriarProfessor.jsp").forward(request, response);
 
     }
 
@@ -150,8 +153,6 @@ public class CriarProfessorServlet extends HttpServlet {
             throws SQLException, IOException, ServletException {
 
         String siape = request.getParameter("siape");
-        System.out.println(siape);
-        System.out.println("entrou em excluir");
         if (siape != null && !siape.isEmpty()) {
                 professorDAO.delete(siape);
                 response.sendRedirect(request.getContextPath() +
