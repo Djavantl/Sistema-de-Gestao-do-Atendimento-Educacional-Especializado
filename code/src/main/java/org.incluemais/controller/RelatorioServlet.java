@@ -48,13 +48,27 @@ public class RelatorioServlet extends HttpServlet {
 
         try {
             String action = request.getParameter("acao");
+            String pathInfo = request.getPathInfo();
 
+            // Se for uma requisição para detalhes (ex: /relatorios/detalhes/1)
+            if (pathInfo != null && pathInfo.startsWith("/detalhes")) {
+                String[] parts = pathInfo.split("/");
+                if (parts.length >= 3) {
+                    int id = Integer.parseInt(parts[2]);
+                    exibirDetalhesRelatorio(id, request, response);
+                    return;
+                }
+            }
+
+            // Ações padrão via parâmetro acao
             if ("editar".equals(action)) {
-                exibirFormularioEdicao(request, response);
+                int id = Integer.parseInt(request.getParameter("id"));
+                exibirFormularioEdicao(id, request, response);
             } else if ("novo".equals(action)) {
                 exibirFormularioCriacao(request, response);
             } else if ("detalhes".equals(action)) {
-                exibirDetalhesRelatorio(request, response);
+                int id = Integer.parseInt(request.getParameter("id"));
+                exibirDetalhesRelatorio(id, request, response);
             } else {
                 listarRelatorios(request, response);
             }
@@ -109,7 +123,7 @@ public class RelatorioServlet extends HttpServlet {
             // Adicionar o relatório ao aluno
             relatorio.adicionarAoAluno(relatorio.getAluno(), relatorio);
 
-            response.sendRedirect(request.getContextPath() + "/relatorios?sucesso=Relatório+criado+com+sucesso");
+            listarRelatorios(request, response);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao criar relatório", e);
             request.setAttribute("erro", "Erro ao criar relatório no banco de dados");
@@ -126,7 +140,7 @@ public class RelatorioServlet extends HttpServlet {
         if (!erros.isEmpty()) {
             request.setAttribute("erros", erros);
             request.setAttribute("relatorio", extrairDadosFormulario(request));
-            exibirFormularioEdicao(request, response);
+            exibirFormularioEdicao(id, request, response);
             return;
         }
 
@@ -139,7 +153,7 @@ public class RelatorioServlet extends HttpServlet {
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao atualizar relatório", e);
             request.setAttribute("erro", "Erro ao atualizar relatório no banco de dados");
-            exibirFormularioEdicao(request, response);
+            exibirFormularioEdicao(id, request, response);
         }
     }
 
@@ -182,28 +196,20 @@ public class RelatorioServlet extends HttpServlet {
 
     private void listarRelatorios(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
+
         try {
-            System.out.println("DEBUG - Iniciando listarRelatorios()");
             List<Relatorio> relatorios = relatorioDAO.buscarTodos();
-
-            // Debug detalhado
-            System.out.println("DEBUG - Número de relatórios encontrados: " + relatorios.size());
-            if (!relatorios.isEmpty()) {
-                Relatorio primeiro = relatorios.get(0);
-                System.out.println("DEBUG - Primeiro relatório: " +
-                        primeiro.getId() + " - " + primeiro.getTitulo() +
-                        " - Aluno: " + primeiro.getAluno().getNome());
-            }
-
             request.setAttribute("relatoriosLista", relatorios);
+            request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
 
-            System.out.println("DEBUG - Encaminhando para /templates/aee/PorRelatorio.jsp");
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Erro de banco de dados", e);
+            request.setAttribute("erro", "Erro ao carregar relatórios do banco de dados");
             request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
 
         } catch (Exception e) {
-            System.err.println("ERRO - Em listarRelatorios: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("erro", "Erro ao carregar relatórios: " + e.getMessage());
+            logger.log(Level.SEVERE, "Erro inesperado", e);
+            request.setAttribute("erro", "Ocorreu um erro inesperado");
             request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
         }
     }
@@ -220,10 +226,9 @@ public class RelatorioServlet extends HttpServlet {
         request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
     }
 
-    private void exibirFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
+    private void exibirFormularioEdicao(int id, HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        int id = Integer.parseInt(request.getParameter("id"));
         Relatorio relatorio = relatorioDAO.buscarPorId(id);
 
         if (relatorio != null) {
@@ -240,9 +245,9 @@ public class RelatorioServlet extends HttpServlet {
         }
     }
 
-    private void exibirDetalhesRelatorio(HttpServletRequest request, HttpServletResponse response)
+    private void exibirDetalhesRelatorio(int id, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        int id = Integer.parseInt(request.getParameter("id"));
+
         Relatorio relatorio = relatorioDAO.buscarPorId(id);
 
         if (relatorio != null) {
@@ -304,6 +309,4 @@ public class RelatorioServlet extends HttpServlet {
         request.setAttribute("erro", mensagem);
         request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
     }
-
-
 }

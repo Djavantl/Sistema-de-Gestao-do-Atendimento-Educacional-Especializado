@@ -74,34 +74,37 @@ public class RelatorioDAO {
 
     public List<Relatorio> buscarTodos() throws SQLException {
         List<Relatorio> relatorios = new ArrayList<>();
-        String sql = "SELECT r.*, a.nome as aluno_nome, a.matricula, p.nome as professor_nome, p.siape " +
+        String sql = "SELECT r.*, p.nome as aluno_nome, a.matricula, " +
+                "p2.nome as professor_nome, prof.siape " +
                 "FROM Relatorio r " +
                 "JOIN Aluno a ON r.aluno_matricula = a.matricula " +
-                "LEFT JOIN ProfessorAEE p ON r.professorAEE_siape = p.siape";
+                "JOIN Pessoa p ON a.pessoa_id = p.id " +
+                "LEFT JOIN ProfessorAEE prof ON r.professorAEE_siape = prof.siape " +
+                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id";
 
-        System.out.println("DEBUG - SQL: " + sql); // Verifique no console
+        System.out.println("SQL: " + sql);
 
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
-            int count = 0;
             while (rs.next()) {
-                count++;
-                System.out.println("DEBUG - Registro "+count+": " +
-                        rs.getInt("id") + " - " + rs.getString("titulo"));
                 Relatorio relatorio = mapearRelatorio(rs);
+                System.out.println("Relatório encontrado: ID=" + relatorio.getId() +
+                        ", Título=" + relatorio.getTitulo());
                 relatorios.add(relatorio);
             }
-            System.out.println("DEBUG - Total de registros encontrados: " + count);
         }
         return relatorios;
     }
 
     public Relatorio buscarPorId(int id) throws SQLException {
-        String sql = "SELECT r.*, a.nome as aluno_nome, a.matricula, p.nome as professor_nome, p.siape " +
+        String sql = "SELECT r.*, p.nome as aluno_nome, a.matricula, " +
+                "p2.nome as professor_nome, prof.siape " +
                 "FROM Relatorio r " +
                 "JOIN Aluno a ON r.aluno_matricula = a.matricula " +
-                "LEFT JOIN ProfessorAEE p ON r.professorAEE_siape = p.siape " +
+                "JOIN Pessoa p ON a.pessoa_id = p.id " +
+                "LEFT JOIN ProfessorAEE prof ON r.professorAEE_siape = prof.siape " +
+                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id " +
                 "WHERE r.id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -119,14 +122,18 @@ public class RelatorioDAO {
         Relatorio relatorio = new Relatorio();
         relatorio.setId(rs.getInt("id"));
         relatorio.setTitulo(rs.getString("titulo"));
-        relatorio.setDataGeracao(rs.getDate("dataGeracao").toLocalDate());
+
+        // Tratamento da data
+        java.sql.Date sqlDate = rs.getDate("dataGeracao");
+        relatorio.setDataGeracao(sqlDate != null ? sqlDate.toLocalDate() : null);
+
         relatorio.setResumo(rs.getString("resumo"));
         relatorio.setObservacoes(rs.getString("observacoes"));
 
         // Mapear Aluno
         Aluno aluno = new Aluno();
         aluno.setMatricula(rs.getString("matricula"));
-        aluno.setNome(rs.getString("aluno_nome"));
+        aluno.setNome(rs.getString("aluno_nome")); // Nome vem da tabela Pessoa
         relatorio.setAluno(aluno);
 
         // Mapear Professor (opcional)
@@ -134,7 +141,7 @@ public class RelatorioDAO {
         if (siape != null) {
             ProfessorAEE professor = new ProfessorAEE();
             professor.setSiape(siape);
-            professor.setNome(rs.getString("professor_nome"));
+            professor.setNome(rs.getString("professor_nome")); // Nome vem da tabela Pessoa
             relatorio.setProfessorAEE(professor);
         }
 
