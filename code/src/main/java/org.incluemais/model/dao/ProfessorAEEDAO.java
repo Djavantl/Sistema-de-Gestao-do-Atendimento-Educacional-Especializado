@@ -18,28 +18,39 @@ public class ProfessorAEEDAO {
         this.conn = connection;
     }
 
-    // Método para inserir um novo ProfessorAEE
-    public boolean salvarProfessor(ProfessorAEE professor) {
+    public boolean salvarProfessorAEE(ProfessorAEE professor) {
         String sqlPessoa = "INSERT INTO Pessoa (nome, dataNascimento, email, sexo, naturalidade, telefone) VALUES (?, ?, ?, ?, ?, ?)";
-        String sqlProfessor = "INSERT INTO ProfessorAEE (siape, especialidade, pessoa_id) VALUES (?, ?, ?)";
+        String sqlProfessorAEE = "INSERT INTO ProfessorAEE (siape, pessoa_id, especialidade) VALUES (?, ?, ?)";
 
         try {
             conn.setAutoCommit(false);
-
             int pessoaId = inserirPessoa(professor, sqlPessoa);
-            if (pessoaId == 0) return false;
 
-            if (!inserirDadosProfessor(professor, pessoaId, sqlProfessor)) return false;
+            if (pessoaId == 0) {
+                conn.rollback();
+                return false;
+            }
+
+            try (PreparedStatement stmtProfessor = conn.prepareStatement(sqlProfessorAEE)) {
+                stmtProfessor.setString(1, professor.getSiape());
+                stmtProfessor.setInt(2, pessoaId);
+                stmtProfessor.setString(3, professor.getEspecialidade());
+
+                if (stmtProfessor.executeUpdate() == 0) {
+                    conn.rollback();
+                    return false;
+                }
+            }
 
             conn.commit();
             return true;
 
         } catch (SQLException e) {
-            rollback(conn);
-            logger.log(Level.SEVERE, "Erro ao salvar professor", e);
+            logger.log(Level.SEVERE, "Erro ao salvar ProfessorAEE", e);
+            rollback();
             return false;
         } finally {
-            resetAutoCommit(conn);
+            restaurarAutoCommit();
         }
     }
 
@@ -60,199 +71,132 @@ public class ProfessorAEEDAO {
         }
     }
 
-    private boolean inserirDadosProfessor(ProfessorAEE professor, int pessoaId, String sql) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, professor.getSiape());
-            stmt.setString(2, professor.getEspecialidade());
-            stmt.setInt(3, pessoaId);
-
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
-    // Método para atualizar um ProfessorAEE existente
-    public boolean atualizarProfessor(ProfessorAEE professor) {
-        String sqlPessoa = "UPDATE Pessoa SET nome=?, dataNascimento=?, email=?, sexo=?, naturalidade=?, telefone=? WHERE id=?";
-        String sqlProfessor = "UPDATE ProfessorAEE SET siape=?, especialidade=? WHERE pessoa_id=?";
-
-        try {
-            conn.setAutoCommit(false);
-
-            if (!atualizarPessoa(professor, sqlPessoa)) return false;
-            if (!atualizarDadosProfessor(professor, sqlProfessor)) return false;
-
-            conn.commit();
-            return true;
-
-        } catch (SQLException e) {
-            rollback(conn);
-            logger.log(Level.SEVERE, "Erro ao atualizar professor", e);
-            return false;
-        } finally {
-            resetAutoCommit(conn);
-        }
-    }
-
-    private boolean atualizarPessoa(ProfessorAEE professor, String sql) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, professor.getNome());
-            stmt.setDate(2, Date.valueOf(professor.getDataNascimento()));
-            stmt.setString(3, professor.getEmail());
-            stmt.setString(4, professor.getSexo());
-            stmt.setString(5, professor.getNaturalidade());
-            stmt.setString(6, professor.getTelefone());
-            stmt.setInt(7, professor.getId());
-
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
-    private boolean atualizarDadosProfessor(ProfessorAEE professor, String sql) throws SQLException {
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, professor.getSiape());
-            stmt.setString(2, professor.getEspecialidade());
-            stmt.setInt(3, professor.getId());
-
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
-    // Método para excluir um ProfessorAEE
-    public boolean excluirProfessor(int professorId) {
-        String sqlProfessor = "DELETE FROM ProfessorAEE WHERE pessoa_id=?";
-        String sqlPessoa = "DELETE FROM Pessoa WHERE id=?";
-
-        try {
-            conn.setAutoCommit(false);
-
-            try (PreparedStatement stmtProfessor = conn.prepareStatement(sqlProfessor)) {
-                stmtProfessor.setInt(1, professorId);
-                if (stmtProfessor.executeUpdate() == 0) {
-                    conn.rollback();
-                    return false;
-                }
-            }
-
-            try (PreparedStatement stmtPessoa = conn.prepareStatement(sqlPessoa)) {
-                stmtPessoa.setInt(1, professorId);
-                if (stmtPessoa.executeUpdate() == 0) {
-                    conn.rollback();
-                    return false;
-                }
-            }
-
-            conn.commit();
-            return true;
-
-        } catch (SQLException e) {
-            rollback(conn);
-            logger.log(Level.SEVERE, "Erro ao excluir professor", e);
-            return false;
-        } finally {
-            resetAutoCommit(conn);
-        }
-    }
-
-    // Método para buscar um ProfessorAEE por ID
-    public ProfessorAEE buscarPorId(int id) {
-        String sql = "SELECT p.*, pr.siape, pr.especialidade FROM Pessoa p " +
-                "JOIN ProfessorAEE pr ON p.id = pr.pessoa_id WHERE p.id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return criarProfessorAPartirResultSet(rs);
-                }
-            }
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao buscar professor por ID", e);
-        }
-        return null;
-    }
-
-    // Método para buscar um ProfessorAEE por SIAPE
-    public ProfessorAEE buscarPorSiape(String siape) {
-        String sql = "SELECT p.*, pr.siape, pr.especialidade FROM Pessoa p " +
-                "JOIN ProfessorAEE pr ON p.id = pr.pessoa_id WHERE pr.siape = ?";
+    public ProfessorAEE getBySiape(String siape) {
+        String sql = "SELECT p.*, pa.especialidade FROM Pessoa p " +
+                "JOIN ProfessorAEE pa ON p.id = pa.pessoa_id " +
+                "WHERE pa.siape = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, siape);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return criarProfessorAPartirResultSet(rs);
-                }
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new ProfessorAEE(
+                        rs.getString("nome"),
+                        rs.getDate("dataNascimento").toLocalDate(),
+                        rs.getString("email"),
+                        rs.getString("sexo"),
+                        rs.getString("naturalidade"),
+                        rs.getString("telefone"),
+                        siape,
+                        rs.getString("especialidade")
+                );
             }
+            return null;
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao buscar professor por SIAPE", e);
+            logger.log(Level.SEVERE, "Erro ao buscar ProfessorAEE", e);
+            throw new RuntimeException("Erro ao buscar ProfessorAEE", e);
         }
-        return null;
     }
 
-    // Método para listar todos os ProfessoresAEE
-    public List<ProfessorAEE> buscarTodos() {
+    public List<ProfessorAEE> getAll() {
+        String sql = "SELECT p.*, pa.siape, pa.especialidade FROM Pessoa p " +
+                "JOIN ProfessorAEE pa ON p.id = pa.pessoa_id";
         List<ProfessorAEE> professores = new ArrayList<>();
-        String sql = "SELECT p.*, pr.siape, pr.especialidade FROM Pessoa p " +
-                "JOIN ProfessorAEE pr ON p.id = pr.pessoa_id";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
+
             while (rs.next()) {
-                professores.add(criarProfessorAPartirResultSet(rs));
+                professores.add(new ProfessorAEE(
+                        rs.getString("nome"),
+                        rs.getDate("dataNascimento").toLocalDate(),
+                        rs.getString("email"),
+                        rs.getString("sexo"),
+                        rs.getString("naturalidade"),
+                        rs.getString("telefone"),
+                        rs.getString("siape"),
+                        rs.getString("especialidade")
+                ));
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao buscar todos os professores", e);
+            logger.log(Level.SEVERE, "Erro ao listar ProfessoresAEE", e);
+            throw new RuntimeException("Erro ao listar ProfessoresAEE", e);
         }
         return professores;
     }
 
-    // Método para buscar ProfessoresAEE por nome (usando LIKE)
-    public List<ProfessorAEE> buscarPorNome(String nome) {
-        List<ProfessorAEE> professores = new ArrayList<>();
-        String sql = "SELECT p.*, pr.siape, pr.especialidade FROM Pessoa p " +
-                "JOIN ProfessorAEE pr ON p.id = pr.pessoa_id WHERE p.nome LIKE ?";
+    public void update(ProfessorAEE professor) {
+        String sqlPessoa = "UPDATE Pessoa SET nome = ?, dataNascimento = ?, email = ?, " +
+                "sexo = ?, naturalidade = ?, telefone = ? " +
+                "WHERE id = (SELECT pessoa_id FROM ProfessorAEE WHERE siape = ?)";
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, "%" + nome + "%");
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    professores.add(criarProfessorAPartirResultSet(rs));
-                }
+        String sqlProfessorAEE = "UPDATE ProfessorAEE SET especialidade = ? WHERE siape = ?";
+
+        try {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmtPessoa = conn.prepareStatement(sqlPessoa)) {
+                stmtPessoa.setString(1, professor.getNome());
+                stmtPessoa.setDate(2, Date.valueOf(professor.getDataNascimento()));
+                stmtPessoa.setString(3, professor.getEmail());
+                stmtPessoa.setString(4, professor.getSexo());
+                stmtPessoa.setString(5, professor.getNaturalidade());
+                stmtPessoa.setString(6, professor.getTelefone());
+                stmtPessoa.setString(7, professor.getSiape());
+                stmtPessoa.executeUpdate();
             }
+
+            try (PreparedStatement stmtProfessor = conn.prepareStatement(sqlProfessorAEE)) {
+                stmtProfessor.setString(1, professor.getEspecialidade());
+                stmtProfessor.setString(2, professor.getSiape());
+                stmtProfessor.executeUpdate();
+            }
+
+            conn.commit();
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao buscar professores por nome", e);
+            logger.log(Level.SEVERE, "Erro ao atualizar ProfessorAEE", e);
+            rollback();
+            throw new RuntimeException("Erro ao atualizar ProfessorAEE", e);
+        } finally {
+            restaurarAutoCommit();
         }
-        return professores;
     }
 
-    private ProfessorAEE criarProfessorAPartirResultSet(ResultSet rs) throws SQLException {
-        ProfessorAEE professor = new ProfessorAEE(
-                rs.getString("nome"),
-                rs.getDate("dataNascimento").toLocalDate(),
-                rs.getString("email"),
-                rs.getString("sexo"),
-                rs.getString("naturalidade"),
-                rs.getString("telefone"),
-                rs.getString("siape"),
-                rs.getString("especialidade")
-        );
-        professor.setId(rs.getInt("id"));
-        return professor;
+    public void delete(String siape) {
+        String sqlDeletePessoa = "DELETE FROM Pessoa WHERE id = (SELECT pessoa_id FROM ProfessorAEE WHERE siape = ?)";
+
+        try {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement stmt = conn.prepareStatement(sqlDeletePessoa)) {
+                stmt.setString(1, siape);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Erro ao deletar ProfessorAEE", e);
+            rollback();
+            throw new RuntimeException("Erro ao deletar ProfessorAEE", e);
+        } finally {
+            restaurarAutoCommit();
+        }
     }
 
-    private void rollback(Connection conn) {
+    private void rollback() {
         try {
             if (conn != null) conn.rollback();
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao fazer rollback", e);
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Erro ao fazer rollback", ex);
         }
     }
 
-    private void resetAutoCommit(Connection conn) {
+    private void restaurarAutoCommit() {
         try {
             if (conn != null) conn.setAutoCommit(true);
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao resetar autoCommit", e);
+            logger.log(Level.SEVERE, "Erro ao restaurar autoCommit", e);
         }
     }
 }

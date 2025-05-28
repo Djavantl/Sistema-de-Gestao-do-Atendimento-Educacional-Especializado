@@ -7,7 +7,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professores</title>
+    <title>Professores AEE</title>
     <style>
         @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
 
@@ -383,28 +383,28 @@
             <h2>Inclui+</h2>
         </div>
         <div class="menu">
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn ativo">Professores</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
+            <button class="menu-btn">Estudantes</button>
+            <button class="menu-btn ativo">Professores AEE</button>
+            <button class="menu-btn">Sessões</button>
             <button class="menu-btn">Usuários</button>
         </div>
     </div>
 
     <div id="titulo">
-        <h2>Professores</h2>
+        <h2>Professores AEE</h2>
     </div>
 
     <div class="conteudo-principal">
         <div class="linha-superior">
-            <button class="botao-novo-professor">+ Novo Professor</button>
+            <button class="botao-novo-professor">+ Novo Professor AEE</button>
         </div>
 
-        <!-- Modal Novo Professor -->
-        <div class="modal-overlay" id="modalNovoProfessor">
+        <!-- Modal Novo Professor AEE -->
+        <div class="modal-overlay" id="modalNovoProfessorAEE">
             <div class="modal-conteudo">
-                <h2>Cadastrar Novo Professor</h2>
-                <form id="formNovoProfessor"
-                      action="${pageContext.request.contextPath}/templates/aee/professores?acao=criar"
+                <h2>Cadastrar Novo Professor AEE</h2>
+                <form id="formNovoProfessorAEE"
+                      action="${pageContext.request.contextPath}/templates/aee/professoresAEE?acao=criar"
                       method="POST">
                     <label for="nome">Nome Completo:</label>
                     <input type="text" id="nome" name="nome" required>
@@ -437,102 +437,98 @@
 
                     <div class="botoes-modal">
                         <button type="submit">Salvar</button>
-                        <button type="button" onclick="fecharModal(modalNovoProfessor)">Cancelar</button>
+                        <button type="button" onclick="fecharModal(modalNovoProfessorAEE)">Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
-         <%-- Linha de debug --%>
-            <div style="display: none;">
-                ProfessoresLista: ${not empty professoresLista} | Tamanho: ${professoresLista.size()}
-            </div>
-        <!-- Tabela de Professores -->
-            <table class="tabela-professores">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>SIAPE</th>
-                        <th>Email</th>
-                        <th>Telefone</th>
-                        <th>Especialidade</th>
-                        <th style="width: 180px">Ações</th>
-                    </tr>
-                    <tr class="linha-filtro">
-                        <th><input type="text" placeholder="Filtrar Nome"></th>
-                        <th><input type="text" placeholder="Filtrar SIAPE"></th>
-                        <th><input type="text" placeholder="Filtrar Email"></th>
-                        <th><input type="text" placeholder="Filtrar Telefone"></th>
-                        <th><input type="text" placeholder="Filtrar Especialidade"></th>
-                        <th></th>
-                    </tr>
-                </thead>
 
-                <tbody>
-                    <c:choose>
-                        <c:when test="${empty professoresLista}">
-                            <tr>
-                                <td colspan="5">Nenhum professor encontrado.</td>
+        <!-- Tabela de Professores AEE -->
+        <table class="tabela-professores">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>SIAPE</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Especialidade</th>
+                    <th style="width: 180px">Ações</th>
+                </tr>
+                <tr class="linha-filtro">
+                    <th><input type="text" placeholder="Filtrar Nome"></th>
+                    <th><input type="text" placeholder="Filtrar SIAPE"></th>
+                    <th><input type="text" placeholder="Filtrar Email"></th>
+                    <th><input type="text" placeholder="Filtrar Telefone"></th>
+                    <th><input type="text" placeholder="Filtrar Especialidade"></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <c:choose>
+                    <c:when test="${empty professoresAEELista}">
+                        <tr>
+                            <td colspan="6">Nenhum professor AEE encontrado.</td>
+                        </tr>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${professoresAEELista}" var="professorAEE">
+                            <tr class="linha-principal" data-id="${professorAEE.siape}">
+                                <td>${professorAEE.nome}</td>
+                                <td>${professorAEE.siape}</td>
+                                <td>${professorAEE.email}</td>
+                                <td>${professorAEE.telefone}</td>
+                                <td>${professorAEE.especialidade}</td>
+                                <td>
+                                    <div class="container-acoes">
+                                        <button class="botao-acao botao-editar"
+                                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professoresAEE?acao=editar&siape=${professorAEE.siape}'">
+                                           <i class="fas fa-edit"></i> Editar
+                                        </button>
+                                        <button class="botao-acao botao-excluir"
+                                            onclick="confirmarExclusao('${professorAEE.siape}')">
+                                            <i class="fas fa-trash"></i> Excluir
+                                        </button>
+                                        <button class="botao-acao botao-detalhes"
+                                            onclick="toggleDetalhes(this)">
+                                            <i class="fas fa-chevron-down icone-seta"></i> Detalhes
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
-                        </c:when>
-                        <c:otherwise>
-                            <c:forEach items="${professoresLista}" var="professor">
-                                <!-- Linha principal -->
-                                <tr class="linha-principal" data-id="${professor.siape}">
-                                    <td>${professor.nome}</td>
-                                    <td>${professor.siape}</td>
-                                    <td>${professor.email}</td>
-                                    <td>${professor.telefone}</td>
-                                    <td>${professor.especialidade}</td> <!-- Apenas texto -->
-                                    <td>
-                                        <div class="container-acoes">
-                                            <button class="botao-acao botao-editar"
-                                                onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professores?acao=editar&siape=${professor.siape}'">
-                                                <i class="fas fa-edit"></i> Editar
-                                            </button>
-                                            <button class="botao-acao botao-excluir" onclick="confirmarExclusao('${professor.siape}')">
-                                                <i class="fas fa-trash"></i> Excluir
-                                            </button>
-                                            <button class="botao-acao botao-detalhes" onclick="toggleDetalhes(this)">
-                                                <i class="fas fa-chevron-down icone-seta"></i> Detalhes
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-
-                                <!-- Linha de detalhes -->
-                                <tr class="linha-detalhes">
-                                    <td colspan="5">
-                                        <div class="detalhes-content">
-                                            <div class="detalhes-grid">
-                                                <div class="detalhe-item">
-                                                    <span class="detalhe-label">Nascimento:</span>
-                                                    <span class="detalhe-valor">${professor.dataNascimento}</span>
-                                                </div>
-                                                <div class="detalhe-item">
-                                                    <span class="detalhe-label">Sexo:</span>
-                                                    <span class="detalhe-valor">${professor.sexo}</span>
-                                                </div>
-                                                <div class="detalhe-item">
-                                                    <span class="detalhe-label">Naturalidade:</span>
-                                                    <span class="detalhe-valor">${professor.naturalidade}</span>
-                                                </div>
+                            <tr class="linha-detalhes">
+                                <td colspan="6">
+                                    <div class="detalhes-content">
+                                        <div class="detalhes-grid">
+                                            <div class="detalhe-item">
+                                                <span class="detalhe-label">Nascimento:</span>
+                                                <span class="detalhe-valor">${professorAEE.dataNascimento}</span>
+                                            </div>
+                                            <div class="detalhe-item">
+                                                <span class="detalhe-label">Sexo:</span>
+                                                <span class="detalhe-valor">${professorAEE.sexo}</span>
+                                            </div>
+                                            <div class="detalhe-item">
+                                                <span class="detalhe-label">Naturalidade:</span>
+                                                <span class="detalhe-valor">${professorAEE.naturalidade}</span>
                                             </div>
                                         </div>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </c:otherwise>
-                    </c:choose>
-                </tbody>
-            </table>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </tbody>
+        </table>
 
         <!-- Modal Confirmação Exclusão -->
         <div class="modal-overlay" id="modalExcluir">
             <div class="modal-conteudo">
                 <h3>Confirmar Exclusão</h3>
-                <p>Tem certeza que deseja excluir este professor?</p>
-                <form id="formExcluirProfessor"
-                      action="${pageContext.request.contextPath}/templates/aee/professores?acao=excluir"
+                <p>Tem certeza que deseja excluir este professor AEE?</p>
+                <form id="formExcluirProfessorAEE"
+                      action="${pageContext.request.contextPath}/templates/aee/professoresAEE?acao=excluir"
                       method="POST">
                     <input type="hidden" name="siape" id="siapeExcluir">
                     <div class="botoes-modal">
@@ -547,38 +543,40 @@
     <script>
         // Controle dos Modais
         const modais = {
-            novo: document.getElementById('modalNovoProfessor'),
+            novo: document.getElementById('modalNovoProfessorAEE'),
             editar: document.getElementById('modalEditar'),
             excluir: document.getElementById('modalExcluir')
         };
 
-        // Abrir modais
         document.querySelector('.botao-novo-professor').addEventListener('click', () => {
             modais.novo.style.display = 'flex';
         });
 
-        // Função abrirEdicao corrigida
+        // Fechar modais
+        function fecharModal(modal) {
+            modal.style.display = 'none';
+        }
+
         function abrirEdicao(siape) {
-            const linha = document.querySelector(`tr[data-id="${siape}"]`);
-            const detalhes = linha.nextElementSibling.querySelector('.detalhes-content');
-
-            // Preencher formulário com dados corretos
-            document.getElementById('nomeEditar').value = linha.cells[0].textContent;
-            document.getElementById('siapeEditar').value = siape;
-            // ... outros campos ...
-
-            // Mostrar modal
-            document.getElementById('modalEditar').style.display = 'flex';
+            fetch(`${pageContext.request.contextPath}/templates/aee/professoresAEE?acao=editar&siape=${siape}`)
+                .then(response => response.json())
+                .then(professor => {
+                    document.getElementById('nomeEditar').value = professor.nome;
+                    document.getElementById('siapeEditar').value = professor.siape;
+                    document.getElementById('dataNascimentoEditar').value = professor.dataNascimento;
+                    document.getElementById('emailEditar').value = professor.email;
+                    document.getElementById('sexoEditar').value = professor.sexo;
+                    document.getElementById('naturalidadeEditar').value = professor.naturalidade || '';
+                    document.getElementById('telefoneEditar').value = professor.telefone || '';
+                    document.getElementById('especialidadeEditar').value = professor.especialidade;
+                    modais.editar.style.display = 'flex';
+                })
+                .catch(error => console.error('Erro ao carregar dados:', error));
         }
 
         function confirmarExclusao(siape) {
             document.getElementById('siapeExcluir').value = siape;
             modais.excluir.style.display = 'flex';
-        }
-
-        // Fechar modais
-        function fecharModal(modal) {
-            modal.style.display = 'none';
         }
 
         function mostrarErro(mensagem) {

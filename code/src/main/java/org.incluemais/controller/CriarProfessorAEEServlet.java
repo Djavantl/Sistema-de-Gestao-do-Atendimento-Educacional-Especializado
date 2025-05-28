@@ -5,8 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.incluemais.model.dao.ProfessorDAO;
-import org.incluemais.model.entities.Professor;
+import org.incluemais.model.dao.ProfessorAEEDAO;
+import org.incluemais.model.entities.ProfessorAEE;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,10 +19,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet(name = "CriarProfessorServlet", urlPatterns = {"/templates/aee/professores", "/templates/aee/professores/*"})
-public class CriarProfessorServlet extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(CriarProfessorServlet.class.getName());
-    private ProfessorDAO professorDAO;
+@WebServlet(name = "CriarProfessorAEEServlet", urlPatterns = {"/templates/aee/professoresAEE", "/templates/aee/professoresAEE/*"})
+public class CriarProfessorAEEServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(CriarProfessorAEEServlet.class.getName());
+    private ProfessorAEEDAO professorAEEDAO;
 
     @Override
     public void init() throws ServletException {
@@ -31,7 +31,7 @@ public class CriarProfessorServlet extends HttpServlet {
             logger.severe("Conexão não encontrada!");
             throw new ServletException("Banco de dados não disponível");
         }
-        this.professorDAO = new ProfessorDAO(conn);
+        this.professorAEEDAO = new ProfessorAEEDAO(conn);
     }
 
     @Override
@@ -43,16 +43,16 @@ public class CriarProfessorServlet extends HttpServlet {
 
             if ("editar".equals(action)) {
                 String siape = request.getParameter("siape");
-                Professor professor = professorDAO.getBySiape(siape);
+                ProfessorAEE professorAEE = professorAEEDAO.getBySiape(siape);
 
-                if (professor != null) {
-                    request.setAttribute("professor", professor);
-                    request.getRequestDispatcher("/templates/aee/EditarProfessor.jsp").forward(request, response);
+                if (professorAEE != null) {
+                    request.setAttribute("professorAEE", professorAEE);
+                    request.getRequestDispatcher("/templates/aee/EditarProfessorAEE.jsp").forward(request, response);
                 } else {
-                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Professor não encontrado");
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND, "Professor AEE não encontrado");
                 }
             } else {
-                listarProfessores(request, response);
+                listarProfessoresAEE(request, response);
             }
 
         } catch (SQLException e) {
@@ -72,7 +72,7 @@ public class CriarProfessorServlet extends HttpServlet {
             if ("criar".equals(action)) {
                 processarCriacao(request, response);
             } else if ("atualizar".equals(action)) {
-                atualizarProfessor(request, response);
+                atualizarProfessorAEE(request, response);
             } else if ("excluir".equals(action)) {
                 processarExclusao(request, response);
             } else {
@@ -84,38 +84,31 @@ public class CriarProfessorServlet extends HttpServlet {
         }
     }
 
-    private void listarProfessores(HttpServletRequest request, HttpServletResponse response)
+    private void listarProfessoresAEE(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<Professor> professores = professorDAO.getAll();
-        logger.info("Número de professores recuperados: " + professores.size());
-        request.setAttribute("professoresLista", professores);
-        logger.info("Número de professores recuperados DAO: " + professores.size()); // Log 1
+        List<ProfessorAEE> professores = professorAEEDAO.getAll();
+        logger.info("Número de professores AEE recuperados: " + professores.size());
 
-        // Log dos dados recebidos
         professores.forEach(p ->
-                logger.info("Professor: " + p.getNome() + " - " + p.getSiape())
+                logger.info("ProfessorAEE: " + p.getNome() + " - " + p.getSiape())
         );
 
-        request.setAttribute("professoresLista", professores);
-
-        // Log antes do forward
-        logger.info("Encaminhando para JSP: /templates/aee/CriarProfessor.jsp"); // Log 2
-
-        request.getRequestDispatcher("/templates/aee/CriarProfessor.jsp").forward(request, response);
+        request.setAttribute("professoresAEELista", professores);
+        request.getRequestDispatcher("/templates/aee/CriarProfessorAEE.jsp").forward(request, response);
     }
 
     private void exibirFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
         String siape = request.getParameter("siape");
-        Professor professor = professorDAO.getBySiape(siape);
+        ProfessorAEE professorAEE = professorAEEDAO.getBySiape(siape);
 
-        if (professor != null) {
-            request.setAttribute("professor", professor);
-            request.getRequestDispatcher("/templates/aee/CriarProfessor.jsp").forward(request, response);
+        if (professorAEE != null) {
+            request.setAttribute("professorAEE", professorAEE);
+            request.getRequestDispatcher("/templates/aee/EditarProfessorAEE.jsp").forward(request, response);
         } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Professor não encontrado");
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Professor AEE não encontrado");
         }
     }
 
@@ -126,42 +119,40 @@ public class CriarProfessorServlet extends HttpServlet {
 
         if (!erros.isEmpty()) {
             request.setAttribute("erros", erros);
-            request.setAttribute("professor", extrairDadosFormulario(request));
-            request.getRequestDispatcher("/templates/aee/CriarProfessor.jsp").forward(request, response);
+            request.setAttribute("professorAEE", extrairDadosFormulario(request));
+            request.getRequestDispatcher("/templates/aee/CriarProfessorAEE.jsp").forward(request, response);
             return;
         }
 
-        Professor professor = construirProfessor(request);
-        professorDAO.salvarProfessor(professor);
-        response.sendRedirect(request.getContextPath() + "/templates/aee/professores?sucesso=Professor+criado+com+sucesso");
+        ProfessorAEE professor = construirProfessorAEE(request);
+        if(professorAEEDAO.salvarProfessorAEE(professor)) {
+            response.sendRedirect(request.getContextPath() + "/templates/aee/professoresAEE?sucesso=Professor+AEE+criado+com+sucesso");
+        } else {
+            encaminharErro(request, response, "Erro ao salvar professor AEE");
+        }
     }
 
-    private void atualizarProfessor(HttpServletRequest request, HttpServletResponse response)
+    private void atualizarProfessorAEE(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
-            Professor professor = construirProfessor(request);
-            professor.setSiape(request.getParameter("siape"));
-            professorDAO.update(professor);
-            response.sendRedirect(request.getContextPath() + "/templates/aee/professores?sucesso=Professor+atualizado");
-
+        ProfessorAEE professor = construirProfessorAEE(request);
+        professor.setSiape(request.getParameter("siape"));
+        professorAEEDAO.update(professor);
+        response.sendRedirect(request.getContextPath() + "/templates/aee/professoresAEE?sucesso=Professor+AEE+atualizado");
     }
 
     private void processarExclusao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-
         String siape = request.getParameter("siape");
-        System.out.println(siape);
-        System.out.println("entrou em excluir");
         if (siape != null && !siape.isEmpty()) {
-                professorDAO.delete(siape);
-                response.sendRedirect(request.getContextPath() +
-                        "/templates/aee/professores?sucesso=Professor+excluído+com+sucesso");
-
+            professorAEEDAO.delete(siape);
+            response.sendRedirect(request.getContextPath() +
+                    "/templates/aee/professoresAEE?sucesso=Professor+AEE+excluído+com+sucesso");
         }
     }
 
-    private Professor construirProfessor(HttpServletRequest request) throws DateTimeParseException {
-        Professor professor = new Professor();
+    private ProfessorAEE construirProfessorAEE(HttpServletRequest request) throws DateTimeParseException {
+        ProfessorAEE professor = new ProfessorAEE();
 
         professor.setNome(request.getParameter("nome"));
         professor.setDataNascimento(LocalDate.parse(request.getParameter("dataNascimento")));
@@ -202,8 +193,8 @@ public class CriarProfessorServlet extends HttpServlet {
         }
     }
 
-    private Professor extrairDadosFormulario(HttpServletRequest request) {
-        Professor professor = new Professor();
+    private ProfessorAEE extrairDadosFormulario(HttpServletRequest request) {
+        ProfessorAEE professor = new ProfessorAEE();
 
         professor.setNome(request.getParameter("nome"));
         professor.setDataNascimento(parseDate(request.getParameter("dataNascimento")));
@@ -228,6 +219,6 @@ public class CriarProfessorServlet extends HttpServlet {
     private void encaminharErro(HttpServletRequest request, HttpServletResponse response, String mensagem)
             throws ServletException, IOException {
         request.setAttribute("erro", mensagem);
-        request.getRequestDispatcher("/templates/aee/CriarProfessor.jsp").forward(request, response);
+        request.getRequestDispatcher("/templates/aee/CriarProfessorAEE.jsp").forward(request, response);
     }
 }
