@@ -6,8 +6,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Organização de Atendimento</title>
+    <title>Editar Professor AEE</title>
     <style>
+        /* Mesmo estilo do CriarProfessorAEE.jsp */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
         * {
             margin: 0;
             padding: 0;
@@ -141,8 +144,8 @@
         }
 
         .btn-secondary {
-            background-color: #6c757d;
-            color: white;
+            background-color: #e9ecef;
+            color: #495057;
         }
 
         .btn:hover {
@@ -157,58 +160,67 @@
             <h2>Inclui+</h2>
         </div>
         <div class="menu">
-            <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/professor">Professores</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
+            <button class="menu-btn">Estudantes</button>
+            <button class="menu-btn ativo">Professores AEE</button>
+            <button class="menu-btn">Sessões</button>
             <button class="menu-btn">Usuários</button>
         </div>
-     </div>
+    </div>
 
     <div class="container">
         <div class="form-header">
-            <h2>Editar Organização de Atendimento</h2>
+            <h2>Editar Professor AEE</h2>
         </div>
 
-        <form action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST">
+        <form action="${pageContext.request.contextPath}/templates/aee/professoresAEE" method="POST">
             <input type="hidden" name="acao" value="atualizar">
-            <input type="hidden" name="alunoM" value="${aluno.matricula}">
-            <input type="hidden" name="alunoId" value="${aluno.id}">
+            <input type="hidden" name="siape" value="${professorAEE.siape}">
 
             <div class="form-grid">
                 <div class="form-group">
-                    <label for="periodo">Período:</label>
-                    <input type="text" id="periodo" name="periodo" value="${organizacao.periodo}" required>
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" value="${professorAEE.nome}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="duracao">Duração:</label>
-                    <input type="text" id="duracao" name="duracao" value="${organizacao.duracao}" required>
+                    <label for="dataNascimento">Data Nascimento:</label>
+                    <input type="date" id="dataNascimento" name="dataNascimento" value="${professorAEE.dataNascimento}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="frequencia">Frequência:</label>
-                    <input type="text" id="frequencia" name="frequencia" value="${organizacao.frequencia}">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email" value="${professorAEE.email}" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="composicao">Composição:</label>
-                    <input type="text" id="composicao" name="composicao" value="${organizacao.composicao}" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="tipo">Tipo de Atendimento:</label>
-                    <select id="tipo" name="tipo">
-                        <option value="Individual" ${organizacao.tipo eq 'Individual' ? 'selected' : ''}>Individual</option>
-                        <option value="Parceria" ${organizacao.tipo eq 'Parceria' ? 'selected' : ''}>Parceria</option>
-                        <option value="Grupo" ${organizacao.tipo eq 'Grupo' ? 'selected' : ''}>Grupo</option>
+                    <label for="sexo">Sexo:</label>
+                    <select id="sexo" name="sexo" required>
+                        <option value="Masculino" ${professorAEE.sexo eq 'Masculino' ? 'selected' : ''}>Masculino</option>
+                        <option value="Feminino" ${professorAEE.sexo eq 'Feminino' ? 'selected' : ''}>Feminino</option>
+                        <option value="Outro" ${professorAEE.sexo eq 'Outro' ? 'selected' : ''}>Outro</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="naturalidade">Naturalidade:</label>
+                    <input type="text" id="naturalidade" name="naturalidade" value="${professorAEE.naturalidade}">
+                </div>
+
+                <div class="form-group">
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" id="telefone" name="telefone" value="${professorAEE.telefone}">
+                </div>
+
+                <div class="form-group">
+                    <label for="especialidade">Especialidade:</label>
+                    <input type="text" id="especialidade" name="especialidade" value="${professorAEE.especialidade}" required>
                 </div>
             </div>
 
             <div class="button-group">
                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                 <button type="button" class="btn btn-secondary"
-                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${aluno.id}'">
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professoresAEE'">
                     Cancelar
                 </button>
             </div>

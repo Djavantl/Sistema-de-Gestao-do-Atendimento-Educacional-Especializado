@@ -5,22 +5,72 @@ import org.incluemais.model.entities.Professor;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ProfessorDAO {
-    public void insert(Professor professor) {
-        PessoaDAO pessoaDAO = new PessoaDAO();
-        String sql = "INSERT INTO Professor (siape, pessoa_id, especialidade) VALUES (?, ?, ?)";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    private static final Logger logger = Logger.getLogger(AlunoDAO.class.getName());
+    private final Connection conn;
 
-            int pessoaId = pessoaDAO.inserirPessoa(professor);
-            stmt.setString(1, professor.getSiape());
-            stmt.setInt(2, pessoaId);
-            stmt.setString(3, professor.getEspecialidade());
-            stmt.executeUpdate();
+    public ProfessorDAO(Connection connection) {
+        if (connection == null) {
+            throw new IllegalArgumentException("Conexão não pode ser nula");
+        }
+        this.conn = connection;
+    }
+
+    public boolean salvarProfessor(Professor professor) {
+        String sqlPessoa = "INSERT INTO Pessoa (nome, dataNascimento, email, sexo, naturalidade, telefone) VALUES (?, ?, ?, ?, ?, ?)";
+        String sqlProfessor = "INSERT INTO Professor (siape, pessoa_id, especialidade) VALUES (?, ?, ?)";
+        System.out.println("entrou em salvar 1");
+        try {
+            conn.setAutoCommit(false);
+            System.out.println("entrou em salvar");
+            // Inserir na tabela Pessoa
+            int pessoaId = inserirPessoa(professor, sqlPessoa);
+            if (pessoaId == 0) return false;
+
+            // Inserir na tabela Professor
+            try (PreparedStatement stmtProfessor = conn.prepareStatement(sqlProfessor)) {
+                System.out.println("entrou em inserir professor");
+                stmtProfessor.setString(1, professor.getSiape());
+                stmtProfessor.setInt(2, pessoaId);
+                stmtProfessor.setString(3, professor.getEspecialidade());
+
+                if (stmtProfessor.executeUpdate() == 0) {
+                    System.out.println("entrou em rollback");
+                    conn.rollback();
+                    System.out.println("entrou rollback");
+                    return false;
+
+                }
+            }
+
+            conn.commit();
+            return true;
+
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao inserir professor: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Erro ao salvar professor", e);
+            return false;
+        }
+    }
+
+    private int inserirPessoa(Professor professor, String sql) throws SQLException {
+        System.out.println("entrou em inserir");
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, professor.getNome());
+            stmt.setDate(2, Date.valueOf(professor.getDataNascimento()));
+            stmt.setString(3, professor.getEmail());
+            stmt.setString(4, professor.getSexo());
+            stmt.setString(5, professor.getNaturalidade());
+            stmt.setString(6, professor.getTelefone());
+
+            if (stmt.executeUpdate() == 0) return 0;
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                return generatedKeys.next() ? generatedKeys.getInt(1) : 0;
+            }
         }
     }
 
@@ -29,38 +79,36 @@ public class ProfessorDAO {
                 "JOIN Professor pr ON p.id = pr.pessoa_id " +
                 "WHERE pr.siape = ?";
 
-        Professor professor = null;
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
+        try (PreparedStatement stmt = this.conn.prepareStatement(sql)) { // Usa this.conn
             stmt.setString(1, siape);
             try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    professor = new Professor(
-                            rs.getString("nome"),
-                            rs.getDate("dataNascimento").toLocalDate(),
-                            rs.getString("email"),
-                            rs.getString("sexo"),
-                            rs.getString("naturalidade"),
-                            rs.getString("telefone"),
-                            siape,
-                            rs.getString("especialidade")
-                    );
-                }
+                return rs.next() ?
+                        new Professor(
+                                rs.getString("nome"),
+                                rs.getDate("dataNascimento").toLocalDate(),
+                                rs.getString("email"),
+                                rs.getString("sexo"),
+                                rs.getString("naturalidade"),
+                                rs.getString("telefone"),
+                                siape,
+                                rs.getString("especialidade")
+                        ) : null;
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao buscar professor por SIAPE: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Erro ao buscar professor por SIAPE", e);
+            throw new RuntimeException("Erro ao buscar professor por SIAPE", e);
         }
-        return professor;
     }
 
+
+
     public List<Professor> getAll() {
+        logger.info("Executando query para buscar professores");
         String sql = "SELECT p.*, pr.siape, pr.especialidade FROM Pessoa p " +
                 "JOIN Professor pr ON p.id = pr.pessoa_id";
         List<Professor> professores = new ArrayList<>();
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
+        try (PreparedStatement stmt = this.conn.prepareStatement(sql);  // Usa a conexão existente
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
@@ -77,10 +125,12 @@ public class ProfessorDAO {
                 professores.add(professor);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Erro ao listar professores: " + e.getMessage(), e);
+            logger.log(Level.SEVERE, "Erro ao listar professores", e);
+            throw new RuntimeException("Erro ao listar professores", e);
         }
         return professores;
     }
+
 
     public void update(Professor professor) {
         String sqlPessoa = "UPDATE Pessoa SET nome = ?, dataNascimento = ?, email = ?, sexo = ?, naturalidade = ?, telefone = ? " +
@@ -109,14 +159,33 @@ public class ProfessorDAO {
     }
 
     public void delete(String siape) {
-        String sql = "DELETE FROM Professor WHERE siape = ?";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        String sqlDeletePessoa = "DELETE FROM Pessoa WHERE id = (SELECT pessoa_id FROM Professor WHERE siape = ?)";
 
-            stmt.setString(1, siape);
-            stmt.executeUpdate();
+        try {
+            conn.setAutoCommit(false); // Iniciar transação
+
+
+            // 2. Excluir Pessoa (irá cascatear se ON DELETE CASCADE estiver configurado)
+            try (PreparedStatement stmtDelPessoa = conn.prepareStatement(sqlDeletePessoa)) {
+                stmtDelPessoa.setString(1, siape);
+                stmtDelPessoa.executeUpdate();
+            }
+
+            conn.commit(); // Confirmar transação
+
         } catch (SQLException e) {
+            try {
+                conn.rollback(); // Rollback em caso de erro
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Erro ao fazer rollback", ex);
+            }
             throw new RuntimeException("Erro ao deletar professor: " + e.getMessage(), e);
+        } finally {
+            try {
+                conn.setAutoCommit(true); // Restaurar autoCommit
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Erro ao restaurar autoCommit", e);
+            }
         }
     }
 }
