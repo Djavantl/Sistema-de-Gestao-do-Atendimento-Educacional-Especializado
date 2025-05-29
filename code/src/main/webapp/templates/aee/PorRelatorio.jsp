@@ -117,52 +117,6 @@ body {
     background-color: #372e9c;
 }
 
-.form-columns {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.form-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-conteudo label {
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 14px;
-    margin-top: 8px;
-}
-
-.modal-conteudo input,
-.modal-conteudo select,
-.modal-conteudo textarea {
-    width: 100%;
-    padding: 10px 12px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    margin-top: 4px;
-    margin-bottom: 12px;
-    background-color: #fefefe;
-    transition: border-color 0.3s, box-shadow 0.3s;
-}
-
-.modal-conteudo textarea {
-    min-height: 100px;
-    resize: vertical;
-}
-
-.modal-conteudo input:focus,
-.modal-conteudo select:focus,
-.modal-conteudo textarea:focus {
-    border-color: #4D44B5;
-    box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
-    outline: none;
-}
-
 .tabela-relatorios {
     width: 100%;
     border-collapse: collapse;
@@ -240,73 +194,6 @@ body {
     background-color: #138496;
 }
 
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    backdrop-filter: blur(5px);
-    background-color: rgba(0, 0, 0, 0.2);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.modal-conteudo {
-    background-color: #ffffff;
-    padding: 30px;
-    border-radius: 16px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-    width: 700px;
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.modal-conteudo h3 {
-    margin-bottom: 20px;
-    color: #2c3e50;
-    text-align: center;
-}
-
-.botoes-modal {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.botoes-modal button[type="submit"] {
-    background-color: #4D44B5;
-    color: #ffffff;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.botoes-modal button[type="submit"]:hover {
-    background-color: #372e9c;
-}
-
-.botoes-modal button[type="button"] {
-    background-color: #e0e0e0;
-    color: #333;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.botoes-modal button[type="button"]:hover {
-    background-color: #cfcfcf;
-}
-
 @media (max-width: 768px) {
     #titulo h2 {
         margin-left: 20px;
@@ -316,10 +203,6 @@ body {
     .conteudo-principal {
         margin: 60px 20px 20px;
         width: auto;
-    }
-
-    .form-columns {
-        grid-template-columns: 1fr;
     }
 }
 </style>
@@ -343,46 +226,10 @@ body {
 
     <div class="conteudo-principal">
         <div class="linha-superior">
-            <button class="botao-novo-relatorio">+ Novo Relatório</button>
-        </div>
-
-        <!-- Modal Novo Relatório -->
-        <div class="modal-overlay" id="modalNovoRelatorio">
-            <div class="modal-conteudo">
-                <h3>Criar Novo Relatório</h3>
-                <form id="formNovoRelatorio" action="${pageContext.request.contextPath}/relatorios?acao=criar" method="POST">
-                    <div class="form-columns">
-                        <div class="form-column">
-                            <label for="titulo">Título:</label>
-                            <input type="text" id="titulo" name="titulo" required>
-
-                            <label for="dataGeracao">Data de Geração:</label>
-                            <input type="date" id="dataGeracao" name="dataGeracao" required>
-
-                            <label for="alunoMatricula">Matrícula do Aluno:</label>
-                            <input type="text" id="alunoMatricula" name="aluno" required
-                                   placeholder="Digite a matrícula do aluno">
-
-                            <label for="professorSiape">SIAPE do Professor:</label>
-                            <input type="text" id="professorSiape" name="professorAEE"
-                                   placeholder="Digite o SIAPE do professor (opcional)">
-                        </div>
-
-                        <div class="form-column">
-                            <label for="resumo">Resumo:</label>
-                            <textarea id="resumo" name="resumo" required></textarea>
-
-                            <label for="observacoes">Observações:</label>
-                            <textarea id="observacoes" name="observacoes"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="botoes-modal">
-                        <button type="submit">Salvar</button>
-                        <button type="button" onclick="fecharModal(modalNovoRelatorio)">Cancelar</button>
-                    </div>
-                </form>
-            </div>
+            <button class="botao-novo-relatorio"
+                onclick="window.location.href='${pageContext.request.contextPath}/relatorios/novo${not empty param.alunoMatricula ? '?alunoMatricula=' += param.alunoMatricula : ''}'">
+                + Novo Relatório
+            </button>
         </div>
 
         <!-- Tabela de Relatórios -->
@@ -416,55 +263,24 @@ body {
                        </td>
                        <td>
                            <div class="botoes-acoes">
-                               <button class="botao-editar" onclick="abrirEdicao(${relatorio.id})">Editar</button>
+                               <button class="botao-editar"
+                                       onclick="window.location.href='${pageContext.request.contextPath}/relatorios/editar?id=${relatorio.id}'">
+                                   Editar
+                               </button>
                                <button class="botao-detalhes"
-                                   onclick="window.location.href='detalhes-relatorio?id=${relatorio.id}'">Detalhes</button>
-                               <button class="botao-excluir" onclick="confirmarExclusao(${relatorio.id})">Excluir</button>
+                                       onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorio.id}'">
+                                   Detalhes
+                               </button>
+                               <button class="botao-excluir"
+                                       onclick="confirmarExclusao(${relatorio.id})">
+                                   Excluir
+                               </button>
                            </div>
                        </td>
                    </tr>
                </c:forEach>
             </tbody>
         </table>
-
-        <!-- Modal Edição -->
-        <div class="modal-overlay" id="modalEditar">
-            <div class="modal-conteudo">
-                <h3>Editar Relatório</h3>
-                <form id="formEditarRelatorio" action="${pageContext.request.contextPath}/relatorios?acao=atualizar" method="POST">
-                    <input type="hidden" name="id" id="editId">
-
-                    <div class="form-columns">
-                        <div class="form-column">
-                            <label for="editTitulo">Título:</label>
-                            <input type="text" id="editTitulo" name="titulo" required>
-
-                            <label for="editDataGeracao">Data de Geração:</label>
-                            <input type="date" id="editDataGeracao" name="dataGeracao" required>
-
-                            <label for="editAluno">Aluno:</label>
-                            <input type="text" id="editAluno" readonly>
-
-                            <label for="editProfessorAEE">Professor AEE:</label>
-                            <input type="text" id="editProfessorAEE" readonly>
-                        </div>
-
-                        <div class="form-column">
-                            <label for="editResumo">Resumo:</label>
-                            <textarea id="editResumo" name="resumo" required></textarea>
-
-                            <label for="editObservacoes">Observações:</label>
-                            <textarea id="editObservacoes" name="observacoes"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="botoes-modal">
-                        <button type="submit">Salvar</button>
-                        <button type="button" onclick="fecharModal(modalEditar)">Cancelar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
 
         <!-- Modal Confirmação Exclusão -->
         <div class="modal-overlay" id="modalExcluir">
@@ -485,26 +301,11 @@ body {
     <script>
         // Controle dos Modais
         const modais = {
-            novo: document.getElementById('modalNovoRelatorio'),
-            editar: document.getElementById('modalEditar'),
             excluir: document.getElementById('modalExcluir')
         };
 
-        document.querySelector('.botao-novo-relatorio').addEventListener('click', () => {
-            modais.novo.style.display = 'flex';
-        });
-
         function abrirEdicao(id) {
-            // Aqui você precisará implementar a lógica para buscar os dados do relatório
-            // e preencher o formulário de edição
-            console.log("Editando relatório ID:", id);
-
-            // Exemplo de como preencher os campos (substitua por sua lógica real)
-            // document.getElementById('editId').value = id;
-            // document.getElementById('editTitulo').value = "Título do Relatório";
-            // etc...
-
-            modais.editar.style.display = 'flex';
+            window.location.href = '${pageContext.request.contextPath}/relatorios/editar?id=' + id;
         }
 
         function confirmarExclusao(id) {
@@ -517,11 +318,9 @@ body {
         }
 
         window.onclick = function(event) {
-            Object.values(modais).forEach(modal => {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
+            if (event.target === modais.excluir) {
+                modais.excluir.style.display = 'none';
+            }
         }
     </script>
 </body>
