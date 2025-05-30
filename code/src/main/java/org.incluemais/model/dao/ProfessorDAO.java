@@ -132,9 +132,9 @@ public class ProfessorDAO {
                 "WHERE id = (SELECT pessoa_id FROM Professor WHERE siape = ?)";
         String sqlProfessor = "UPDATE Professor SET especialidade = ? WHERE siape = ?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmtPessoa = conn.prepareStatement(sqlPessoa);
-             PreparedStatement stmtProfessor = conn.prepareStatement(sqlProfessor)) {
+        try (
+                PreparedStatement stmtPessoa = conn.prepareStatement(sqlPessoa);
+                PreparedStatement stmtProfessor = conn.prepareStatement(sqlProfessor)) {
 
             stmtPessoa.setString(1, professor.getNome());
             stmtPessoa.setDate(2, Date.valueOf(professor.getDataNascimento()));

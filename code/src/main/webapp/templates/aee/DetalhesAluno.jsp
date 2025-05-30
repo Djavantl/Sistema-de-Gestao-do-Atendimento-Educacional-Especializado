@@ -453,7 +453,7 @@
                 <h3>Relatórios do Aluno</h3>
                 <div>
                     <button class="botao-novo-aluno"
-                            onclick="window.location.href='/templates/aee/PorRelatorio.jsp'">
+                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios?alunoMatricula=${aluno.matricula}'">
                         Mostrar Relatorios
                     </button>
                 </div>
