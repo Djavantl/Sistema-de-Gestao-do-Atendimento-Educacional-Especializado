@@ -49,4 +49,38 @@ public class RecursosComunicacaoEInformacaoDAO {
             }
         }
     }
+
+    public RecursosComunicacaoEInformacao buscarPorId(int id) throws SQLException {
+        String sql = "SELECT * FROM RecursosComunicacaoEInformacao WHERE id = ?";
+        RecursosComunicacaoEInformacao recurso = null;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    recurso = new RecursosComunicacaoEInformacao();
+                    recurso.setId(rs.getInt("id"));
+                    recurso.setComunicacaoAlternativa(rs.getBoolean("comunicacaoAlternativa"));
+                    recurso.setTradutorInterprete(rs.getBoolean("tradutorInterprete"));
+                    recurso.setLeitorTranscritor(rs.getBoolean("leitorTranscritor"));
+                    recurso.setInterpreteOralizador(rs.getBoolean("interpreteOralizador"));
+                    recurso.setGuiaInterprete(rs.getBoolean("guiaInterprete"));
+                    recurso.setMaterialDidaticoBraille(rs.getBoolean("materialDidaticoBraille"));
+                    recurso.setMaterialDidaticoTextoAmpliado(rs.getBoolean("materialDidaticoTextoAmpliado"));
+                    recurso.setMaterialDidaticoRelevo(rs.getBoolean("materialDidaticoRelevo"));
+                    recurso.setLeitorDeTela(rs.getBoolean("leitorDeTela"));
+                    recurso.setFonteTamanhoEspecifico(rs.getBoolean("fonteTamanhoEspecifico"));
+                }
+            }
+        }
+        return recurso;
+    }
+
+    public boolean excluirCI(int id) throws SQLException {
+        String sql = "DELETE FROM RecursosComunicacaoEInformacao WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

@@ -116,6 +116,9 @@ public class ProfessorDAO {
                 );
                 professores.add(professor);
             }
+
+            logger.info("Professores encontrados: " + professores.size());
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao listar professores", e);
             throw new RuntimeException("Erro ao listar professores", e);

@@ -227,20 +227,22 @@ public class AlunoDAO {
 
     public List<Aluno> buscarTodos() throws SQLException {
         String sql = """
-        SELECT p.*, a.* 
-        FROM Aluno a
-        INNER JOIN Pessoa p ON a.pessoa_id = p.id
-        """;
+    SELECT p.*, a.* 
+    FROM Aluno a
+    INNER JOIN Pessoa p ON a.pessoa_id = p.id
+    """;
 
+        List<Aluno> alunos = new ArrayList<>(); // declarar aqui
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             ResultSet rs = stmt.executeQuery();
-            List<Aluno> alunos = new ArrayList<>();
             while (rs.next()) {
                 alunos.add(mapearAluno(rs));
             }
-            return alunos;
         }
+        logger.info("Alunos encontrados: " + alunos.size());
+        return alunos;
     }
+
 
     public Aluno mapearAluno(ResultSet rs) throws SQLException {
         Aluno aluno = new Aluno();

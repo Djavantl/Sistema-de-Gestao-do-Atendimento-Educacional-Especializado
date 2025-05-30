@@ -7,58 +7,18 @@ public class PropostaPedagogica {
     private RecursosPedagogicos recursoP;
     private RecursoFisicoArquitetonico recursoFA;
     private RecursosComunicacaoEInformacao recursoCI;
+    private int planoAEEId;
 
-
-    public PropostaPedagogica(String objetivos, String metodologias) {
-        this.objetivos = objetivos;
-        this.metodologias = metodologias;
+    public PropostaPedagogica() {
     }
 
-    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP) {
-        this.objetivos = objetivos;
-        this.metodologias = metodologias;
-        this.recursoP = recursoP;
-    }
-
-    public PropostaPedagogica(String objetivos, String metodologias, RecursoFisicoArquitetonico recursoFA) {
-        this.objetivos = objetivos;
-        this.metodologias = metodologias;
-        this.recursoFA = recursoFA;
-    }
-
-    public PropostaPedagogica(String objetivos, String metodologias, RecursosComunicacaoEInformacao recursoCI) {
-        this.objetivos = objetivos;
-        this.metodologias = metodologias;
-        this.recursoCI = recursoCI;
-    }
-
-    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA) {
-        this.objetivos = objetivos;
-        this.metodologias = metodologias;
-        this.recursoP = recursoP;
-        this.recursoFA = recursoFA;
-    }
-
-    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI) {
+    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI, int planoAEEId) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.recursoP = recursoP;
         this.recursoFA = recursoFA;
         this.recursoCI = recursoCI;
-    }
-
-    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursosComunicacaoEInformacao recursoCI) {
-        this.objetivos = objetivos;
-        this.metodologias = metodologias;
-        this.recursoP = recursoP;
-        this.recursoCI = recursoCI;
-    }
-
-    public PropostaPedagogica(String objetivos, String metodologias, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI) {
-        this.objetivos = objetivos;
-        this.metodologias = metodologias;
-        this.recursoFA = recursoFA;
-        this.recursoCI = recursoCI;
+        this.planoAEEId = planoAEEId;
     }
 
     public int getId() {
@@ -109,4 +69,11 @@ public class PropostaPedagogica {
         this.recursoCI = recursoCI;
     }
 
+    public int getPlanoAEEId() {
+        return planoAEEId;
+    }
+
+    public void setPlanoAEEId(int planoAEEId) {
+        this.planoAEEId = planoAEEId;
+    }
 }
