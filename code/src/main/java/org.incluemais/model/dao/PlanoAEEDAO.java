@@ -7,7 +7,9 @@ import org.incluemais.model.entities.PropostaPedagogica;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -204,24 +206,47 @@ public class PlanoAEEDAO {
         return metas;
     }
 
-    // Método para listar todos os planos
-    public List<PlanoAEE> listarTodos() throws SQLException {
-        String sql = "SELECT * FROM PlanoAEE";
-        List<PlanoAEE> planos = new ArrayList<>();
+    public List<Map<String, Object>> listarTodosComNomes() throws SQLException {
+        String sql = "SELECT " +
+                "  p.id, " +
+                "  p.dataInicio, " +
+                "  p.recomendacoes, " +
+                "  p.observacoes, " +
+                "  pessoa_aluno.nome AS nomeAluno, " +
+                "  pessoa_professor.nome AS nomeProfessor " +
+                "FROM PlanoAEE p " +
+                "JOIN Aluno a ON p.aluno_matricula = a.matricula " +
+                "JOIN Pessoa pessoa_aluno ON a.pessoa_id = pessoa_aluno.id " +
+                "LEFT JOIN ProfessorAEE pr ON p.professor_siape = pr.siape " +
+                "LEFT JOIN Pessoa pessoa_professor ON pr.pessoa_id = pessoa_professor.id";
+
+        List<Map<String, Object>> planosComNomes = new ArrayList<>();
 
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
-                PlanoAEE plano = new PlanoAEE();
-                plano.setId(rs.getInt("id"));
-                plano.setProfessorSiape(rs.getString("professor_siape"));
-                plano.setAlunoMatricula(rs.getString("aluno_matricula"));
-                plano.setDataInicio(rs.getDate("dataInicio").toLocalDate());
-                plano.setRecomendacoes(rs.getString("recomendacoes"));
-                plano.setObservacoes(rs.getString("observacoes"));
-                planos.add(plano);
+                Map<String, Object> planoMap = new HashMap<>();
+                planoMap.put("id", rs.getInt("id"));
+
+                java.sql.Date sqlDate = rs.getDate("dataInicio");
+                if (sqlDate != null) {
+                    // Converter para java.util.Date
+                    planoMap.put("dataInicio", new java.util.Date(sqlDate.getTime()));
+                } else {
+                    planoMap.put("dataInicio", null);
+                }
+
+                planoMap.put("recomendacoes", rs.getString("recomendacoes"));
+                planoMap.put("observacoes", rs.getString("observacoes"));
+                planoMap.put("nomeAluno", rs.getString("nomeAluno"));
+                planoMap.put("nomeProfessor", rs.getString("nomeProfessor")); // Pode ser nulo
+
+                planosComNomes.add(planoMap);
             }
+        } catch (SQLException e) {
+            System.err.println("Erro na consulta: " + e.getMessage());
+            throw e;
         }
-        return planos;
+        return planosComNomes;
     }
 }
