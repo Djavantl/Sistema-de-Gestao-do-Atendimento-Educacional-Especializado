@@ -153,8 +153,8 @@
         }
 
         .botao-acao {
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 8px 15px; /* Ajuste para melhor proporção */
+            border-radius: 10px; /* Mesmo radius do botão novo */
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -164,13 +164,14 @@
             font-size: 13px;
         }
 
-        .botao-detalhes {
-            background-color: #e9ecef;
-            color: #495057;
+        /* ESTILO ATUALIZADO PARA O BOTÃO DETALHES */
+        .botao-detalhes-plano {
+            background-color: #17a2b8;
+            color: #ffffff; /* Texto branco */
         }
 
-        .botao-detalhes:hover {
-            background-color: #dee2e6;
+        .botao-detalhes-plano:hover {
+            background-color: #138496;
         }
 
         @media (max-width: 768px) {
@@ -259,9 +260,9 @@
                                 <td><fmt:formatDate value="${plano.dataInicio}" pattern="dd/MM/yyyy" /></td>
                                 <td>
                                     <div class="container-acoes">
-                                        <button class="botao-acao botao-detalhes"
-                                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-plano?id=${plano.id}'">
-                                            <i class="fas fa-eye"></i> Detalhes
+                                        <!-- BOTÃO ATUALIZADO COM NOVO ESTILO -->
+                                        <button class="botao-acao botao-detalhes-plano"
+                                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-plano?id=${plano.id}'">Detalhes
                                         </button>
                                     </div>
                                 </td>
