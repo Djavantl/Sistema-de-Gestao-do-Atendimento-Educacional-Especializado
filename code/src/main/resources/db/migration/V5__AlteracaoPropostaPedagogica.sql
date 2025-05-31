@@ -1,0 +1,8 @@
+DROP TABLE IF EXISTS PlanoAEE_PropostaPedagogica;
+
+ALTER TABLE PropostaPedagogica
+ADD COLUMN planoAEE_id INT NOT NULL UNIQUE,
+ADD CONSTRAINT fk_planoAEE
+    FOREIGN KEY (planoAEE_id)
+    REFERENCES PlanoAEE(id)
+    ON DELETE CASCADE;

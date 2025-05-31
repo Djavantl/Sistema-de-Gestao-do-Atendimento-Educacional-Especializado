@@ -244,6 +244,8 @@
             </div>
         </c:if>
             <form action="${pageContext.request.contextPath}/propostas" method="POST">
+            <input type="hidden" name="planoAEEId" value="${param.planoAEEId}">
+
             <!-- Campos principais -->
             <div class="grupo-campos">
                 <div class="campo">
