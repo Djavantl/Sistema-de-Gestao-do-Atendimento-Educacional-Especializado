@@ -80,7 +80,7 @@ public class PlanoAEEServlet extends HttpServlet {
                 int planoId = planoDAO.inserir(novoPlano);
 
                 // Redirecionar para edição com mensagem de sucesso
-                response.sendRedirect(request.getContextPath() + "/templates/aee/editarPlanoAEE?id=" + planoId + "&success=Plano criado com sucesso");
+                response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId);
 
             } catch (SQLException | IllegalArgumentException e) {
                 logger.log(Level.SEVERE, "Erro ao criar plano", e);
