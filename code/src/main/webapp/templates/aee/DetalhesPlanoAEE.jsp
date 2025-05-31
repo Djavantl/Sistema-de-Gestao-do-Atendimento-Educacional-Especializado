@@ -603,11 +603,12 @@
                                     </div>
                                 </div>
                             </c:if>
-                            <div class="info-item">
-                                <label>Observações Recursos</label>
-                                <p>${plano.proposta.observacoes}</p>
-                            </div>
-                        </div>
+                            <c:if test="${not empty plano.proposta.observacoes}">
+                                <div class="info-item">
+                                    <label>Observações Recursos</label>
+                                    <p>${plano.proposta.observacoes}</p>
+                                </div>
+                            </c:if>
                     </c:when>
                     <c:otherwise>
                         <div class="proposta-section">
