@@ -6,11 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propostas Pedagógicas</title>
+    <title>Editar Proposta Pedagógica</title>
     <style>
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-
-        /* Estilos gerais mantidos da página de alunos */
+        /* Estilos mantidos da página de criação */
         * {
             margin: 0;
             padding: 0;
@@ -79,7 +77,6 @@
             background-color: rgba(255, 255, 255, 0.15);
         }
 
-        /* Estilos específicos para Propostas Pedagógicas */
         #titulo h2 {
             color: rgb(12, 12, 97);
             font-size: 28px;
@@ -218,10 +215,10 @@
             background-color: #fefefe;
             transition: border-color 0.3s, box-shadow 0.3s;
         }
-
     </style>
 </head>
-    <!-- Sidebar idêntica à página de alunos -->
+<body>
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
             <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
@@ -229,42 +226,41 @@
         </div>
         <div class="menu">
             <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/professor">Professores</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/professor'">Professores</button>
             <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
             <button class="menu-btn">Usuários</button>
         </div>
     </div>
+
     <div id="titulo">
-        <h2>Propostas Pedagógicas</h2>
+        <h2>Editar Proposta Pedagógica</h2>
     </div>
+
     <div class="conteudo-principal">
-        <!-- Mensagens de Sucesso/Erro -->
-        <c:if test="${not empty propostaId}">
-            <div class="alert-sucesso">
-                ✅ Proposta criada com ID: <strong>${propostaId}</strong>
-            </div>
+        <!-- Mensagens de feedback -->
+        <c:if test="${not empty success}">
+            <div class="alert-sucesso">${success}</div>
         </c:if>
-
         <c:if test="${not empty erro}">
-            <div class="alert-erro">
-                ❌ Erro: ${erro}
-            </div>
+            <div class="alert-erro">${erro}</div>
         </c:if>
-            <form action="${pageContext.request.contextPath}/propostas" method="POST">
-            <input type="hidden" name="planoAEEId" value="${param.planoAEEId}">
 
-             <!-- Campos principais -->
-             <div class="grupo-campos">
-                 <div class="campo">
-                     <label for="objetivos">Objetivos:</label>
-                     <textarea id="objetivos" name="objetivos" required></textarea>
-                 </div>
+        <form action="${pageContext.request.contextPath}/atualizarProposta" method="POST">
+            <input type="hidden" name="propostaId" value="${proposta.id}">
+            <input type="hidden" name="planoId" value="${planoId}">
 
-                 <div class="campo">
-                     <label for="metodologias">Metodologias:</label>
-                     <textarea id="metodologias" name="metodologias" required></textarea>
-                 </div>
-             </div>
+            <!-- Campos principais -->
+            <div class="grupo-campos">
+                <div class="campo">
+                    <label for="objetivos">Objetivos:</label>
+                    <textarea id="objetivos" name="objetivos" required>${proposta.objetivos}</textarea>
+                </div>
+
+                <div class="campo">
+                    <label for="metodologias">Metodologias:</label>
+                    <textarea id="metodologias" name="metodologias" required>${proposta.metodologias}</textarea>
+                </div>
+            </div>
 
             <!-- Recursos Pedagógicos -->
             <div class="secao-recursos">
@@ -272,22 +268,26 @@
                 <div class="grupo-checkbox">
                     <div class="checkbox-item">
                         <input type="checkbox" id="adaptacaoDidaticaAulasAvaliacoes"
-                            name="recursoP_adaptacaoDidaticaAulasAvaliacoes">
+                            name="recursoP_adaptacaoDidaticaAulasAvaliacoes"
+                            ${proposta.recursoP != null && proposta.recursoP.adaptacaoDidaticaAulasAvaliacoes ? 'checked' : ''}>
                         <label for="adaptacaoDidaticaAulasAvaliacoes">Adaptação didática nas aulas e avaliações</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="materialDidaticoAdaptado"
-                            name="recursoP_materialDidaticoAdaptado">
+                            name="recursoP_materialDidaticoAdaptado"
+                            ${proposta.recursoP != null && proposta.recursoP.materialDidaticoAdaptado ? 'checked' : ''}>
                         <label for="materialDidaticoAdaptado">Material didático adaptado</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="usoTecnologiaAssistiva"
-                            name="recursoP_usoTecnologiaAssistiva">
+                            name="recursoP_usoTecnologiaAssistiva"
+                            ${proposta.recursoP != null && proposta.recursoP.usoTecnologiaAssistiva ? 'checked' : ''}>
                         <label for="usoTecnologiaAssistiva">Uso de tecnologia assistiva</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="tempoEmpregadoAtividadesAvaliacoes"
-                            name="recursoP_tempoEmpregadoAtividadesAvaliacoes">
+                            name="recursoP_tempoEmpregadoAtividadesAvaliacoes"
+                            ${proposta.recursoP != null && proposta.recursoP.tempoEmpregadoAtividadesAvaliacoes ? 'checked' : ''}>
                         <label for="tempoEmpregadoAtividadesAvaliacoes">Tempo adicional para atividades/avaliações</label>
                     </div>
                 </div>
@@ -299,34 +299,41 @@
                 <div class="grupo-checkbox">
                     <div class="checkbox-item">
                         <input type="checkbox" id="usoCadeiraDeRodas"
-                            name="recursoFA_usoCadeiraDeRodas">
+                            name="recursoFA_usoCadeiraDeRodas"
+                            ${proposta.recursoFA != null && proposta.recursoFA.usoCadeiraDeRodas ? 'checked' : ''}>
                         <label for="usoCadeiraDeRodas">Uso de cadeira de rodas</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="auxilioTranscricaoEscrita"
-                            name="recursoFA_auxilioTranscricaoEscrita">
+                            name="recursoFA_auxilioTranscricaoEscrita"
+                            ${proposta.recursoFA != null && proposta.recursoFA.auxilioTranscricaoEscrita ? 'checked' : ''}>
                         <label for="auxilioTranscricaoEscrita">Auxílio para transcrição escrita</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="mesaAdaptadaCadeiraDeRodas"
-                            name="recursoFA_mesaAdaptadaCadeiraDeRodas">
+                            name="recursoFA_mesaAdaptadaCadeiraDeRodas"
+                            ${proposta.recursoFA != null && proposta.recursoFA.mesaAdaptadaCadeiraDeRodas ? 'checked' : ''}>
                         <label for="mesaAdaptadaCadeiraDeRodas">Mesa adaptada para cadeira de rodas</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="usoDeMuleta"
-                            name="recursoFA_usoDeMuleta">
+                            name="recursoFA_usoDeMuleta"
+                            ${proposta.recursoFA != null && proposta.recursoFA.usoDeMuleta ? 'checked' : ''}>
                         <label for="usoDeMuleta">Uso de muleta</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="outrosFisicoArquitetonico"
                             name="recursoFA_outrosFisicoArquitetonico"
-                            onchange="toggleOutrosEspecificado(this)">
+                            onchange="toggleOutrosEspecificado(this)"
+                            ${proposta.recursoFA != null && proposta.recursoFA.outrosFisicoArquitetonico ? 'checked' : ''}>
                         <label for="outrosFisicoArquitetonico">Outros recursos</label>
                     </div>
-                    <div class="campo" id="outrosEspecificadoContainer" style="display: none;">
+                    <div class="campo" id="outrosEspecificadoContainer"
+                         style="display: ${proposta.recursoFA != null && proposta.recursoFA.outrosFisicoArquitetonico ? 'block' : 'none'};">
                         <input type="text" id="outrosEspecificado"
                             name="recursoFA_outrosEspecificado"
-                            placeholder="Especificar outros recursos">
+                            placeholder="Especificar outros recursos"
+                            value="${proposta.recursoFA != null ? proposta.recursoFA.outrosEspecificado : ''}">
                     </div>
                 </div>
             </div>
@@ -337,52 +344,62 @@
                 <div class="grupo-checkbox">
                     <div class="checkbox-item">
                         <input type="checkbox" id="comunicacaoAlternativa"
-                            name="recursoCI_comunicacaoAlternativa">
+                            name="recursoCI_comunicacaoAlternativa"
+                            ${proposta.recursoCI != null && proposta.recursoCI.comunicacaoAlternativa ? 'checked' : ''}>
                         <label for="comunicacaoAlternativa">Comunicação alternativa</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="tradutorInterprete"
-                            name="recursoCI_tradutorInterprete">
+                            name="recursoCI_tradutorInterprete"
+                            ${proposta.recursoCI != null && proposta.recursoCI.tradutorInterprete ? 'checked' : ''}>
                         <label for="tradutorInterprete">Tradutor/intérprete</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="leitorTranscritor"
-                            name="recursoCI_leitorTranscritor">
+                            name="recursoCI_leitorTranscritor"
+                            ${proposta.recursoCI != null && proposta.recursoCI.leitorTranscritor ? 'checked' : ''}>
                         <label for="leitorTranscritor">Leitor/transcritor</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="interpreteOralizador"
-                            name="recursoCI_interpreteOralizador">
+                            name="recursoCI_interpreteOralizador"
+                            ${proposta.recursoCI != null && proposta.recursoCI.interpreteOralizador ? 'checked' : ''}>
                         <label for="interpreteOralizador">Intérprete oralizador</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="guiaInterprete"
-                            name="recursoCI_guiaInterprete">
+                            name="recursoCI_guiaInterprete"
+                            ${proposta.recursoCI != null && proposta.recursoCI.guiaInterprete ? 'checked' : ''}>
                         <label for="guiaInterprete">Guia-intérprete</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="materialDidaticoBraille"
-                            name="recursoCI_materialDidaticoBraille">
+                            name="recursoCI_materialDidaticoBraille"
+                            ${proposta.recursoCI != null && proposta.recursoCI.materialDidaticoBraille ? 'checked' : ''}>
                         <label for="materialDidaticoBraille">Material em Braille</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="materialDidaticoTextoAmpliado"
-                            name="recursoCI_materialDidaticoTextoAmpliado">
+                            name="recursoCI_materialDidaticoTextoAmpliado"
+                            ${proposta.recursoCI != null && proposta.recursoCI.materialDidaticoTextoAmpliado ? 'checked' : ''}>
                         <label for="materialDidaticoTextoAmpliado">Texto ampliado</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="materialDidaticoRelevo"
-                            name="recursoCI_materialDidaticoRelevo">
+                            name="recursoCI_materialDidaticoRelevo"
+                            ${proposta.recursoCI != null && proposta.recursoCI.materialDidaticoRelevo ? 'checked' : ''}>
                         <label for="materialDidaticoRelevo">Material em relevo</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="leitorDeTela"
-                            name="recursoCI_leitorDeTela">
+                            name="recursoCI_leitorDeTela"
+                            ${proposta.recursoCI != null && proposta.recursoCI.leitorDeTela ? 'checked' : ''}>
                         <label for="leitorDeTela">Leitor de tela</label>
                     </div>
                     <div class="checkbox-item">
                         <input type="checkbox" id="fonteTamanhoEspecifico"
-                            name="recursoCI_fonteTamanhoEspecifico">
+                            name="recursoCI_fonteTamanhoEspecifico"
+                            ${proposta.recursoCI != null && proposta.recursoCI.fonteTamanhoEspecifico ? 'checked' : ''}>
                         <label for="fonteTamanhoEspecifico">Fonte com tamanho específico</label>
                     </div>
                 </div>
@@ -396,7 +413,7 @@
             </div>
 
             <div class="botoes-acoes">
-                <button type="submit" class="botao-salvar">Salvar Proposta</button>
+                <button type="submit" class="botao-salvar">Atualizar Proposta</button>
                 <button type="button" class="botao-cancelar" onclick="window.history.back()">Cancelar</button>
             </div>
         </form>
@@ -408,4 +425,5 @@
             container.style.display = checkbox.checked ? 'block' : 'none';
         }
     </script>
+</body>
 </html>

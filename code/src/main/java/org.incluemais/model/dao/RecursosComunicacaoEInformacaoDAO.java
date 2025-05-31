@@ -83,4 +83,37 @@ public class RecursosComunicacaoEInformacaoDAO {
             return stmt.executeUpdate() > 0;
         }
     }
+
+    public void atualizar(RecursosComunicacaoEInformacao recurso) throws SQLException {
+        String sql = """
+        UPDATE RecursosComunicacaoEInformacao 
+        SET comunicacaoAlternativa = ?,
+            tradutorInterprete = ?,
+            leitorTranscritor = ?,
+            interpreteOralizador = ?,
+            guiaInterprete = ?,
+            materialDidaticoBraille = ?,
+            materialDidaticoTextoAmpliado = ?,
+            materialDidaticoRelevo = ?,
+            leitorDeTela = ?,
+            fonteTamanhoEspecifico = ?
+        WHERE id = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBoolean(1, recurso.isComunicacaoAlternativa());
+            stmt.setBoolean(2, recurso.isTradutorInterprete());
+            stmt.setBoolean(3, recurso.isLeitorTranscritor());
+            stmt.setBoolean(4, recurso.isInterpreteOralizador());
+            stmt.setBoolean(5, recurso.isGuiaInterprete());
+            stmt.setBoolean(6, recurso.isMaterialDidaticoBraille());
+            stmt.setBoolean(7, recurso.isMaterialDidaticoTextoAmpliado());
+            stmt.setBoolean(8, recurso.isMaterialDidaticoRelevo());
+            stmt.setBoolean(9, recurso.isLeitorDeTela());
+            stmt.setBoolean(10, recurso.isFonteTamanhoEspecifico());
+            stmt.setInt(11, recurso.getId());
+            stmt.executeUpdate();
+        }
+    }
+
 }
