@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -203,34 +204,38 @@
     </div>
 
     <div class="conteudo-principal">
-        <div class="linha-superior"></div>
         <form id="formNovoRelatorio" action="${pageContext.request.contextPath}/relatorios/criar" method="POST">
             <div class="form-columns">
                 <div class="form-column">
                     <input type="hidden" name="acao" value="criar">
-                    <input type="hidden" name="alunoMatricula" value="${alunoMatricula}">
+                    <c:if test="${not empty aluno}">
+                        <input type="hidden" name="alunoMatricula" value="${aluno.matricula}">
+                    </c:if>
 
-                    <!-- Exiba o aluno se necessário -->
+                    <!-- Exibe o aluno pré-selecionado -->
                     <c:if test="${not empty aluno}">
                         <div class="info-item">
                             <label>Aluno:</label>
-                            <p>${aluno.nome} (${aluno.matricula})</p>
+                            <p><strong>${aluno.nome}</strong> (${aluno.matricula})</p>
                         </div>
                     </c:if>
+
+                    <!-- Campo para inserir o SIAPE manualmente -->
+                    <label for="professorSiape">SIAPE do Professor:</label>
+                    <input type="text" id="professorSiape" name="professorSiape" required
+                           placeholder="Digite o SIAPE do professor">
+
+                    <!-- Campo para exibir o nome do professor (será preenchido via AJAX) -->
+                    <div class="info-item" id="professorInfo" style="display: none; margin-top: 10px;">
+                        <label>Professor:</label>
+                        <p id="professorNome"></p>
+                    </div>
 
                     <label for="titulo">Título do Relatório:</label>
                     <input type="text" id="titulo" name="titulo" required>
 
                     <label for="dataGeracao">Data do Relatório:</label>
                     <input type="date" id="dataGeracao" name="dataGeracao" required>
-
-                    <label for="professorResponsavel">Professor Responsável:</label>
-                    <select id="professorResponsavel" name="professorId" required>
-                        <option value="">Selecione...</option>
-                        <c:forEach items="${professores}" var="professor">
-                            <option value="${professor.id}">${professor.nome} (${professor.siape})</option>
-                        </c:forEach>
-                    </select>
 
                     <label for="resumo">Resumo:</label>
                     <textarea id="resumo" name="resumo" required></textarea>
@@ -246,7 +251,7 @@
             <div class="botoes-modal">
                 <button type="submit">Salvar</button>
                 <button type="button" class="botao-voltar"
-                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios${aluno != null && aluno.matricula != null ? '?alunoMatricula=' += aluno.matricula : ''}'">
                     Voltar
                 </button>
             </div>
@@ -254,6 +259,31 @@
     </div>
 
     <script>
+
+    // Busca automática do professor ao digitar o SIAPE
+    document.getElementById('professorSiape').addEventListener('blur', function() {
+        const siape = this.value.trim();
+        if (!siape) return;
+
+        fetch('${pageContext.request.contextPath}/buscarProfessor?siape=' + siape)
+            .then(response => response.json())
+            .then(professor => {
+                const infoDiv = document.getElementById('professorInfo');
+                const nomeSpan = document.getElementById('professorNome');
+
+                if (professor && professor.nome) {
+                    nomeSpan.textContent = professor.nome;
+                    infoDiv.style.display = 'block';
+                } else {
+                    nomeSpan.textContent = '';
+                    infoDiv.style.display = 'none';
+                    alert('Professor não encontrado com este SIAPE');
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar professor:', error);
+            });
+    });
         // Define a data atual como padrão
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];

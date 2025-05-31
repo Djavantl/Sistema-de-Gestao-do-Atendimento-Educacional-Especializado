@@ -29,7 +29,7 @@ public class RelatorioDAO {
             stmt.setDate(2, Date.valueOf(relatorio.getDataGeracao()));
             stmt.setString(3, relatorio.getAluno().getMatricula());
 
-            // Usar SIAPE do professor
+            // Tratar professor nulo
             String siape = relatorio.getProfessorAEE() != null ?
                     relatorio.getProfessorAEE().getSiape() : null;
             stmt.setString(4, siape);
@@ -37,7 +37,11 @@ public class RelatorioDAO {
             stmt.setString(5, relatorio.getResumo());
             stmt.setString(6, relatorio.getObservacoes());
 
-            return stmt.executeUpdate() > 0;
+            // Log para depuração
+            System.out.println("Executando SQL: " + stmt.toString());
+
+            int result = stmt.executeUpdate();
+            return result > 0;
         }
     }
 
@@ -76,22 +80,18 @@ public class RelatorioDAO {
     public List<Relatorio> buscarTodos() throws SQLException {
         List<Relatorio> relatorios = new ArrayList<>();
         String sql = "SELECT r.*, p.nome as aluno_nome, a.matricula, " +
-                "p2.nome as professor_nome, prof.siape " +
+                "p2.nome as professor_nome, prof.siape " +  // Adicione professor_nome
                 "FROM Relatorio r " +
                 "JOIN Aluno a ON r.aluno_matricula = a.matricula " +
                 "JOIN Pessoa p ON a.pessoa_id = p.id " +
                 "LEFT JOIN ProfessorAEE prof ON r.professorAEE_siape = prof.siape " +
-                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id";
-
-        System.out.println("SQL: " + sql);
+                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id";  // Junte Pessoa para o professor
 
         try (PreparedStatement stmt = connection.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 Relatorio relatorio = mapearRelatorio(rs);
-                System.out.println("Relatório encontrado: ID=" + relatorio.getId() +
-                        ", Título=" + relatorio.getTitulo());
                 relatorios.add(relatorio);
             }
         }
@@ -100,13 +100,12 @@ public class RelatorioDAO {
 
     public Relatorio buscarPorId(int id) throws SQLException {
         String sql = "SELECT r.*, p.nome as aluno_nome, a.matricula, " +
-                "p2.nome as professor_nome, prof.siape " +
+                "p2.nome as professor_nome, prof.siape " +  // Adicione professor_nome
                 "FROM Relatorio r " +
                 "JOIN Aluno a ON r.aluno_matricula = a.matricula " +
                 "JOIN Pessoa p ON a.pessoa_id = p.id " +
                 "LEFT JOIN ProfessorAEE prof ON r.professorAEE_siape = prof.siape " +
-                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id " +
-                "WHERE r.id = ?";
+                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id";  // Junte Pessoa para o professor
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -119,67 +118,60 @@ public class RelatorioDAO {
         return null;
     }
 
+    // Método para buscar relatórios por matrícula de aluno
+    public List<Relatorio> buscarPorAlunoMatricula(String matricula) throws SQLException {
+        List<Relatorio> relatorios = new ArrayList<>();
+        String sql = "SELECT r.*, p.nome as aluno_nome, a.matricula, " +
+                "p2.nome as professor_nome, prof.siape " +
+                "FROM Relatorio r " +
+                "JOIN Aluno a ON r.aluno_matricula = a.matricula " +
+                "JOIN Pessoa p ON a.pessoa_id = p.id " +
+                "LEFT JOIN ProfessorAEE prof ON r.professorAEE_siape = prof.siape " +
+                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id " +
+                "WHERE r.aluno_matricula = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    Relatorio relatorio = mapearRelatorio(rs);
+                    relatorios.add(relatorio);
+                }
+            }
+        }
+        System.out.println("Relatórios encontrados: " + relatorios.size());
+        return relatorios;
+    }
+
     private Relatorio mapearRelatorio(ResultSet rs) throws SQLException {
         Relatorio relatorio = new Relatorio();
         relatorio.setId(rs.getInt("id"));
         relatorio.setTitulo(rs.getString("titulo"));
 
-        // Tratamento da data
+        // Data (mantenha sua solução de formatação)
         java.sql.Date sqlDate = rs.getDate("dataGeracao");
         relatorio.setDataGeracao(sqlDate != null ? sqlDate.toLocalDate() : null);
 
         relatorio.setResumo(rs.getString("resumo"));
         relatorio.setObservacoes(rs.getString("observacoes"));
 
-        // Mapear Aluno
+        // Aluno
         Aluno aluno = new Aluno();
         aluno.setMatricula(rs.getString("matricula"));
-        aluno.setNome(rs.getString("aluno_nome")); // Nome vem da tabela Pessoa
+        aluno.setNome(rs.getString("aluno_nome"));
         relatorio.setAluno(aluno);
 
-        // Mapear Professor (opcional)
+        // Professor - CORREÇÃO AQUI
         String siape = rs.getString("siape");
-        if (siape != null) {
+        String professorNome = rs.getString("professor_nome");
+
+        if (siape != null && !siape.isEmpty()) {
             ProfessorAEE professor = new ProfessorAEE();
             professor.setSiape(siape);
-            professor.setNome(rs.getString("professor_nome")); // Nome vem da tabela Pessoa
+            professor.setNome(professorNome != null ? professorNome : "Nome não disponível");
             relatorio.setProfessorAEE(professor);
         }
 
         return relatorio;
-    }
-
-    public List<Relatorio> buscarPorAlunoMatricula(String matricula) throws SQLException {
-        List<Relatorio> relatorios = new ArrayList<>();
-        String sql = "SELECT * FROM Relatorio WHERE aluno_matricula = ?";
-
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, matricula);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Relatorio relatorio = new Relatorio();
-                relatorio.setId(rs.getInt("id"));
-                relatorio.setTitulo(rs.getString("titulo"));
-                relatorio.setDataGeracao(rs.getDate("dataGeracao").toLocalDate());
-
-                // Buscar aluno
-                Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
-                relatorio.setAluno(aluno);
-
-                // Buscar professor pelo SIAPE
-                String siape = rs.getString("professorAEE_siape");
-                if (siape != null) {
-                    ProfessorAEE professor = professorAEEDAO.getBySiape(siape);
-                    relatorio.setProfessorAEE(professor);
-                }
-
-                relatorio.setResumo(rs.getString("resumo"));
-                relatorio.setObservacoes(rs.getString("observacoes"));
-
-                relatorios.add(relatorio);
-            }
-        }
-        return relatorios;
     }
 }
