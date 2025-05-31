@@ -617,8 +617,9 @@
                    class="btn-editar-proposta">
                     <i class="bi bi-pencil me-1"></i> Editar Plano
                 </a>
-                <form action="${pageContext.request.contextPath}/excluirPlanoAEE" method="post"
+                <form action="${pageContext.request.contextPath}/templates/aee/detalhes-plano" method="post"
                       onsubmit="return confirm('Tem certeza que deseja excluir este plano? Esta ação não pode ser desfeita.');">
+                    <input type="hidden" name="action" value="excluirPlano">
                     <input type="hidden" name="planoId" value="${plano.id}">
                     <button type="submit" class="btn-excluir-proposta">
                         <i class="bi bi-trash me-1"></i> Excluir Plano

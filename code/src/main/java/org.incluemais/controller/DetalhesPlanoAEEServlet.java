@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.incluemais.model.connection.DBConnection.getConnection;
+
 @WebServlet(name = "DetalhesPlanoAEEServlet", urlPatterns = {"/templates/aee/detalhes-plano"})
 public class DetalhesPlanoAEEServlet extends HttpServlet {
 
@@ -85,6 +87,51 @@ public class DetalhesPlanoAEEServlet extends HttpServlet {
         } catch (NumberFormatException | SQLException e) {
             logger.log(Level.SEVERE, "Erro ao carregar detalhes do plano", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro interno do servidor");
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String action = request.getParameter("action");
+
+        if ("excluirPlano".equals(action)) {
+            Connection conn = null;
+            try {
+                conn = getConnection();
+                PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
+
+                String idParam = request.getParameter("planoId");
+                if (idParam == null || idParam.isEmpty()) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do plano não fornecido");
+                    return;
+                }
+
+                int planoId = Integer.parseInt(idParam);
+                boolean excluido = planoDAO.excluir(planoId);
+
+                if (excluido) {
+                    response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE?success=Plano+excluído+com+sucesso");
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&erro=Falha+ao+excluir+plano");
+                }
+            } catch (SQLException | NumberFormatException e) {
+                logger.log(Level.SEVERE, "Erro ao excluir plano", e);
+                String idParam = request.getParameter("planoId");
+                response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + idParam + "&erro=Erro+ao+excluir+plano");
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                        logger.warning("Erro ao fechar conexão");
+                    }
+                }
+            }
+        } else {
+            // Se não for ação de exclusão, chama o doGet
+            doGet(request, response);
         }
     }
 }

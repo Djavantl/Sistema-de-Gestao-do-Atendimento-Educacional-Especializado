@@ -17,8 +17,7 @@ import java.sql.SQLException;
 import java.util.logging.Logger;
 import static org.incluemais.model.connection.DBConnection.getConnection;
 
-
-@WebServlet("/propostas")
+@WebServlet(name = "PropostaPedagogicaServlet", urlPatterns = {"/propostas", "/excluirProposta"})
 public class PropostaPedagogicaServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(PropostaPedagogicaServlet.class.getName());
 
@@ -28,7 +27,20 @@ public class PropostaPedagogicaServlet extends HttpServlet {
         request.getRequestDispatcher("/templates/aee/PropostaPedagogica.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String path = request.getServletPath();
+
+        if ("/excluirProposta".equals(path)) {
+            excluirProposta(request, response);
+        } else {
+            criarProposta(request, response);
+        }
+    }
+
+    private void criarProposta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Connection conn = null;
         try {
             conn = getConnection();
@@ -55,8 +67,8 @@ public class PropostaPedagogicaServlet extends HttpServlet {
             // INSERIR usando o DAO (que cuidará dos recursos)
             propostaDAO.inserir(proposta);
 
-            request.setAttribute("propostaId", proposta.getId());
-            response.sendRedirect(request.getContextPath() + "/propostas?success=true");
+            // Redirecionar para a página de detalhes do plano com mensagem de sucesso
+            response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoAEEId + "&success=Proposta+criada+com+sucesso");
 
         } catch (SQLException | NumberFormatException e) {
             logger.log(Level.SEVERE, "Erro ao criar proposta", e);
@@ -66,6 +78,43 @@ public class PropostaPedagogicaServlet extends HttpServlet {
             if (conn != null) {
                 try { conn.close(); }
                 catch (SQLException e) { logger.warning("Erro ao fechar conexão"); }
+            }
+        }
+    }
+
+    private void excluirProposta(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            String propostaIdParam = request.getParameter("propostaId");
+            String planoIdParam = request.getParameter("planoId");
+
+            if (propostaIdParam == null || propostaIdParam.isEmpty() ||
+                    planoIdParam == null || planoIdParam.isEmpty()) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parâmetros inválidos");
+                return;
+            }
+
+            int propostaId = Integer.parseInt(propostaIdParam);
+            int planoId = Integer.parseInt(planoIdParam);
+
+            PropostaPedagogicaDAO propostaDAO = new PropostaPedagogicaDAO(conn);
+            propostaDAO.excluirPropostaComRecursos(propostaId);
+
+            // Redirecionar de volta para a página de detalhes do plano com mensagem de sucesso
+            response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&success=Proposta+excluída+com+sucesso");
+
+        } catch (SQLException | NumberFormatException e) {
+            logger.log(Level.SEVERE, "Erro ao excluir proposta", e);
+            String planoId = request.getParameter("planoId");
+            response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&erro=Erro+ao+excluir+proposta");
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    logger.warning("Erro ao fechar conexão");
+                }
             }
         }
     }
