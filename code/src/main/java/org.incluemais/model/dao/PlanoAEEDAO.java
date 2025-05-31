@@ -75,41 +75,21 @@ public class PlanoAEEDAO {
 
     // Método para atualizar um plano AEE com transação
     public boolean atualizar(PlanoAEE plano) throws SQLException {
-        conn.setAutoCommit(false);
-
-        try {
-            // Atualizar plano principal
-            if (!atualizarPlano(plano)) {
-                return false;
-            }
-
-            if (plano.getProposta() != null) {
-                propostaDAO.atualizar(plano.getProposta());
-            }
-
-            conn.commit();
-            return true;
-        } catch (SQLException e) {
-            conn.rollback();
-            throw e;
-        } finally {
-            conn.setAutoCommit(true);
-        }
-    }
-
-    private boolean atualizarPlano(PlanoAEE plano) throws SQLException {
-        String sql = "UPDATE PlanoAEE SET professor_siape = ?, aluno_matricula = ?, dataInicio = ?, " +
-                "recomendacoes = ?, observacoes = ? WHERE id = ?";
+        String sql = """
+        UPDATE PlanoAEE 
+        SET professor_siape = ?, dataInicio = ?, recomendacoes = ?, observacoes = ?
+        WHERE id = ?
+        """;
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, plano.getProfessorSiape());
-            stmt.setString(2, plano.getAlunoMatricula());
-            stmt.setDate(3, Date.valueOf(plano.getDataInicio()));
-            stmt.setString(4, plano.getRecomendacoes());
-            stmt.setString(5, plano.getObservacoes());
-            stmt.setInt(6, plano.getId());
+            stmt.setDate(2, Date.valueOf(plano.getDataInicio()));
+            stmt.setString(3, plano.getRecomendacoes());
+            stmt.setString(4, plano.getObservacoes());
+            stmt.setInt(5, plano.getId());
 
-            return stmt.executeUpdate() > 0;
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
         }
     }
 

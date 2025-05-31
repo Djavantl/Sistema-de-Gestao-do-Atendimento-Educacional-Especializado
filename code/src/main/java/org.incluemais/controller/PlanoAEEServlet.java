@@ -15,10 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.incluemais.model.connection.DBConnection.getConnection;
 
-@WebServlet(name = "PlanoAEEServlet", urlPatterns = {
-        "/templates/aee/criarPlanoAEE",
-        "/templates/aee/planoAEE/inserir"
-})
+@WebServlet(name = "PlanoAEEServlet",
+        urlPatterns = {"/templates/aee/criarPlanoAEE", "/templates/aee/planoAEE/inserir", "/templates/aee/planoAEE/atualizar"})
+
 public class PlanoAEEServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(PlanoAEEServlet.class.getName());
 
@@ -54,7 +53,9 @@ public class PlanoAEEServlet extends HttpServlet {
 
         String path = request.getServletPath();
 
-        if ("/templates/aee/planoAEE/inserir".equals(path)) {
+        if ("/templates/aee/planoAEE/atualizar".equals(path)) {
+            atualizarPlano(request, response);
+        } else if ("/templates/aee/planoAEE/inserir".equals(path)) {
             Connection conn = null;
             try {
                 conn = getConnection();
@@ -105,7 +106,7 @@ public class PlanoAEEServlet extends HttpServlet {
 
                 } catch (SQLException ex) {
                     logger.log(Level.SEVERE, "Erro ao recarregar dados", ex);
-                    response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE?erro=Erro crítico");
+                    response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE?erro=Erro+crítico");
                 }
             } finally {
                 if (conn != null) {
@@ -114,6 +115,64 @@ public class PlanoAEEServlet extends HttpServlet {
                     } catch (SQLException e) {
                         logger.warning("Erro ao fechar conexão");
                     }
+                }
+            }
+        }
+    }
+
+    // Adicione este método ao PlanoAEEServlet
+    private void atualizarPlano(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
+
+
+            // Obter parâmetros
+            int id = Integer.parseInt(request.getParameter("id"));
+            String siapeProfessor = request.getParameter("professor_siape");
+            LocalDate dataInicio = LocalDate.parse(request.getParameter("dataInicio"));
+            String recomendacoes = request.getParameter("recomendacoes");
+            String observacoes = request.getParameter("observacoes");
+            logger.info("Atualizando plano ID: " + id);
+            logger.info("Professor Siape: " + siapeProfessor);
+            logger.info("Data Início: " + dataInicio);
+            logger.info("Recomendações: " + recomendacoes);
+            logger.info("Observações: " + observacoes);
+            // Buscar plano existente
+            PlanoAEE plano = planoDAO.buscarPorId(id);
+            if (plano == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Plano não encontrado");
+                return;
+            }
+
+            // Atualizar dados
+            plano.setProfessorSiape(siapeProfessor);
+            plano.setDataInicio(dataInicio);
+            plano.setRecomendacoes(recomendacoes);
+            plano.setObservacoes(observacoes);
+
+            // Atualizar no banco
+            boolean atualizado = planoDAO.atualizar(plano);
+
+            if (atualizado) {
+                response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + id + "&success=Plano+atualizado+com+sucesso");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/templates/aee/editarPlanoAEE?id=" + id + "&erro=Falha+ao+atualizar+plano");
+            }
+
+        } catch (SQLException | IllegalArgumentException e) {
+            logger.log(Level.SEVERE, "Erro ao atualizar plano", e);
+            String idParam = request.getParameter("id");
+            response.sendRedirect(request.getContextPath() + "/templates/aee/editarPlanoAEE?id=" + idParam + "&erro=Erro+ao+atualizar+plano");
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    logger.warning("Erro ao fechar conexão");
                 }
             }
         }

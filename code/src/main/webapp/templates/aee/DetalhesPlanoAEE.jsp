@@ -613,7 +613,7 @@
 
             <!-- Botões de ação para o plano -->
             <div class="botoes-acoes">
-                <a href="${pageContext.request.contextPath}/editarPlanoAEE?id=${plano.id}"
+                <a href="${pageContext.request.contextPath}/templates/aee/editarPlanoAEE?id=${plano.id}"
                    class="btn-editar-proposta">
                     <i class="bi bi-pencil me-1"></i> Editar Plano
                 </a>
