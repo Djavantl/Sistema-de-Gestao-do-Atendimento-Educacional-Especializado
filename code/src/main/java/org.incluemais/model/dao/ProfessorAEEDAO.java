@@ -199,4 +199,29 @@ public class ProfessorAEEDAO {
             logger.log(Level.SEVERE, "Erro ao restaurar autoCommit", e);
         }
     }
+
+    public ProfessorAEE getById(int id) throws SQLException {
+        String sql = "SELECT p.*, pa.siape, pa.especialidade FROM Pessoa p " +
+                "JOIN ProfessorAEE pa ON p.id = pa.pessoa_id " +
+                "WHERE p.id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new ProfessorAEE(
+                        rs.getString("nome"),
+                        rs.getDate("dataNascimento").toLocalDate(),
+                        rs.getString("email"),
+                        rs.getString("sexo"),
+                        rs.getString("naturalidade"),
+                        rs.getString("telefone"),
+                        rs.getString("siape"),
+                        rs.getString("especialidade")
+                );
+            }
+            return null;
+        }
+    }
 }

@@ -12,31 +12,32 @@ import java.util.logging.Logger;
 public class RelatorioDAO {
     private static final Logger logger = Logger.getLogger(RelatorioDAO.class.getName());
     private final Connection connection;
+    private AlunoDAO alunoDAO;
+    private ProfessorAEEDAO professorAEEDAO;
 
     public RelatorioDAO(Connection connection) {
         this.connection = connection;
+        this.alunoDAO = new AlunoDAO(connection);
+        this.professorAEEDAO = new ProfessorAEEDAO(connection);
     }
 
-    public void inserir(Relatorio r) throws SQLException {
-        String sql = "INSERT INTO Relatorio (titulo, dataGeracao, aluno_matricula, professorAEE_siape, resumo, observacoes) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+    public boolean inserir(Relatorio relatorio) throws SQLException {
+        String sql = "INSERT INTO Relatorio (titulo, dataGeracao, aluno_matricula, professorAEE_siape, resumo, observacoes) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, r.getTitulo());
-            stmt.setDate(2, Date.valueOf(r.getDataGeracao()));
-            stmt.setString(3, r.getAluno().getMatricula());
+            stmt.setString(1, relatorio.getTitulo());
+            stmt.setDate(2, Date.valueOf(relatorio.getDataGeracao()));
+            stmt.setString(3, relatorio.getAluno().getMatricula());
 
-            // Trata professor opcional
-            if (r.getProfessorAEE() != null) {
-                stmt.setString(4, r.getProfessorAEE().getSiape());
-            } else {
-                stmt.setNull(4, Types.VARCHAR);
-            }
+            // Usar SIAPE do professor
+            String siape = relatorio.getProfessorAEE() != null ?
+                    relatorio.getProfessorAEE().getSiape() : null;
+            stmt.setString(4, siape);
 
-            stmt.setString(5, r.getResumo());
-            stmt.setString(6, r.getObservacoes());
+            stmt.setString(5, relatorio.getResumo());
+            stmt.setString(6, relatorio.getObservacoes());
 
-            stmt.executeUpdate();
+            return stmt.executeUpdate() > 0;
         }
     }
 
@@ -146,5 +147,39 @@ public class RelatorioDAO {
         }
 
         return relatorio;
+    }
+
+    public List<Relatorio> buscarPorAlunoMatricula(String matricula) throws SQLException {
+        List<Relatorio> relatorios = new ArrayList<>();
+        String sql = "SELECT * FROM Relatorio WHERE aluno_matricula = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Relatorio relatorio = new Relatorio();
+                relatorio.setId(rs.getInt("id"));
+                relatorio.setTitulo(rs.getString("titulo"));
+                relatorio.setDataGeracao(rs.getDate("dataGeracao").toLocalDate());
+
+                // Buscar aluno
+                Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+                relatorio.setAluno(aluno);
+
+                // Buscar professor pelo SIAPE
+                String siape = rs.getString("professorAEE_siape");
+                if (siape != null) {
+                    ProfessorAEE professor = professorAEEDAO.getBySiape(siape);
+                    relatorio.setProfessorAEE(professor);
+                }
+
+                relatorio.setResumo(rs.getString("resumo"));
+                relatorio.setObservacoes(rs.getString("observacoes"));
+
+                relatorios.add(relatorio);
+            }
+        }
+        return relatorios;
     }
 }

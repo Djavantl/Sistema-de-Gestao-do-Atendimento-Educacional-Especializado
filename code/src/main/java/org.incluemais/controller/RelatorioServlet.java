@@ -23,12 +23,21 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet(name = "RelatorioServlet", urlPatterns = {"/relatorios", "/relatorios/*"})
+@WebServlet(name = "RelatorioServlet", urlPatterns = {
+        "/relatorios",
+        "/relatorios/novo",
+        "/relatorios/editar",
+        "/relatorios/detalhes",
+        "/relatorios/criar",
+        "/relatorios/atualizar",
+        "/relatorios/excluir"
+})
+
 public class RelatorioServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RelatorioServlet.class.getName());
     private RelatorioDAO relatorioDAO;
     private AlunoDAO alunoDAO;
-    private ProfessorAEEDAO professorDAO;
+    private ProfessorAEEDAO professorAEEDAO;
 
     @Override
     public void init() throws ServletException {
@@ -39,7 +48,7 @@ public class RelatorioServlet extends HttpServlet {
         }
         this.relatorioDAO = new RelatorioDAO(conn);
         this.alunoDAO = new AlunoDAO(conn);
-        this.professorDAO = new ProfessorAEEDAO(conn);
+        this.professorAEEDAO = new ProfessorAEEDAO(conn);
     }
 
     @Override
@@ -50,28 +59,28 @@ public class RelatorioServlet extends HttpServlet {
             String action = request.getParameter("acao");
             String pathInfo = request.getPathInfo();
 
-            // Se for uma requisição para detalhes (ex: /relatorios/detalhes/1)
-            if (pathInfo != null && pathInfo.startsWith("/detalhes")) {
-                String[] parts = pathInfo.split("/");
-                if (parts.length >= 3) {
-                    int id = Integer.parseInt(parts[2]);
-                    exibirDetalhesRelatorio(id, request, response);
+            // Novo caso para criação de relatório com alunoMatricula
+            if (pathInfo != null && pathInfo.startsWith("/novo")) {
+                String alunoMatricula = request.getParameter("alunoMatricula");
+                if (alunoMatricula != null && !alunoMatricula.isEmpty()) {
+                    exibirFormularioCriacaoComAluno(alunoMatricula, request, response);
                     return;
                 }
             }
 
             // Ações padrão via parâmetro acao
-            if ("editar".equals(action)) {
+            if (request.getServletPath().equals("/relatorios/novo")) {
+                exibirFormularioCriacao(request, response);
+            }
+            else if (request.getServletPath().equals("/relatorios/editar")) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 exibirFormularioEdicao(id, request, response);
-            } else if ("novo".equals(action)) {
-                exibirFormularioCriacao(request, response);
-            } else if ("detalhes".equals(action)) {
+            }
+            else if (request.getServletPath().equals("/relatorios/detalhes")) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 exibirDetalhesRelatorio(id, request, response);
-            } else {
-                listarRelatorios(request, response);
             }
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro de banco de dados", e);
             encaminharErro(request, response, "Erro ao acessar dados");
@@ -89,18 +98,34 @@ public class RelatorioServlet extends HttpServlet {
         String action = request.getParameter("acao");
 
         try {
-            if ("criar".equals(action)) {
+            if (request.getServletPath().equals("/relatorios/criar")) {
                 criarRelatorio(request, response);
-            } else if ("atualizar".equals(action)) {
+            }
+            else if (request.getServletPath().equals("/relatorios/atualizar")) {
                 atualizarRelatorio(request, response);
-            } else if ("excluir".equals(action)) {
+            }
+            else if (request.getServletPath().equals("/relatorios/excluir")) {
                 excluirRelatorio(request, response);
-            } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
             }
         } catch (SQLException | DateTimeParseException e) {
             logger.log(Level.SEVERE, "Erro no processamento", e);
             encaminharErro(request, response, "Erro no processamento dos dados");
+        }
+    }
+
+    private void exibirFormularioCriacaoComAluno(String alunoMatricula, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        Aluno aluno = alunoDAO.buscarPorMatricula(alunoMatricula);
+        List<ProfessorAEE> professores = professorAEEDAO.getAll();
+
+        if (aluno != null) {
+            request.setAttribute("aluno", aluno);
+            request.setAttribute("alunoMatricula", alunoMatricula); // Passar matrícula para o JSP
+            request.setAttribute("professores", professores);
+            request.getRequestDispatcher("/templates/aee/NovoRelatorio.jsp").forward(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
         }
     }
 
@@ -117,16 +142,22 @@ public class RelatorioServlet extends HttpServlet {
         }
 
         try {
+            String alunoMatricula = request.getParameter("alunoMatricula");
+            Aluno aluno = alunoDAO.buscarPorMatricula(alunoMatricula);
+
+            if (aluno == null) {
+                throw new ServletException("Aluno não encontrado");
+            }
+
             Relatorio relatorio = construirRelatorio(request);
+            relatorio.setAluno(aluno);
             relatorioDAO.inserir(relatorio);
 
-            // Adicionar o relatório ao aluno
-            relatorio.adicionarAoAluno(relatorio.getAluno(), relatorio);
-
-            listarRelatorios(request, response);
-        } catch (SQLException e) {
+            // Redirecionar para a lista de relatórios do aluno
+            response.sendRedirect(request.getContextPath() + "/relatorios?alunoMatricula=" + alunoMatricula);
+        } catch (SQLException | NumberFormatException e) {
             logger.log(Level.SEVERE, "Erro ao criar relatório", e);
-            request.setAttribute("erro", "Erro ao criar relatório no banco de dados");
+            request.setAttribute("erro", "Erro ao criar relatório: " + e.getMessage());
             exibirFormularioCriacao(request, response);
         }
     }
@@ -178,16 +209,14 @@ public class RelatorioServlet extends HttpServlet {
         relatorio.setTitulo(request.getParameter("titulo"));
         relatorio.setDataGeracao(LocalDate.parse(request.getParameter("dataGeracao")));
 
-        // Buscar aluno e professor no banco
-        String matriculaAluno = request.getParameter("aluno");
-        String siapeProfessor = request.getParameter("professorAEE");
+        // Buscar professor pelo SIAPE, não pelo ID
+        int professorId = Integer.parseInt(request.getParameter("professorId"));
+        ProfessorAEE professor = professorAEEDAO.getById(professorId);
 
-        Aluno aluno = alunoDAO.buscarPorMatricula(matriculaAluno);
-        ProfessorAEE professor = siapeProfessor != null && !siapeProfessor.isEmpty() ?
-                professorDAO.getBySiape(siapeProfessor) : null;
+        if (professor != null) {
+            relatorio.setProfessorAEE(professor);  // Isso deve armazenar o SIAPE internamente
+        }
 
-        relatorio.setAluno(aluno);
-        relatorio.setProfessorAEE(professor);
         relatorio.setResumo(request.getParameter("resumo"));
         relatorio.setObservacoes(request.getParameter("observacoes"));
 
@@ -198,7 +227,16 @@ public class RelatorioServlet extends HttpServlet {
             throws SQLException, ServletException, IOException {
 
         try {
-            List<Relatorio> relatorios = relatorioDAO.buscarTodos();
+            String alunoMatricula = request.getParameter("alunoMatricula");
+            List<Relatorio> relatorios;
+
+            if (alunoMatricula != null && !alunoMatricula.isEmpty()) {
+                relatorios = relatorioDAO.buscarPorAlunoMatricula(alunoMatricula);
+                request.setAttribute("alunoMatricula", alunoMatricula); // Para usar no JSP
+            } else {
+                relatorios = relatorioDAO.buscarTodos();
+            }
+
             request.setAttribute("relatoriosLista", relatorios);
             request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
 
@@ -206,7 +244,6 @@ public class RelatorioServlet extends HttpServlet {
             logger.log(Level.SEVERE, "Erro de banco de dados", e);
             request.setAttribute("erro", "Erro ao carregar relatórios do banco de dados");
             request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
-
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Erro inesperado", e);
             request.setAttribute("erro", "Ocorreu um erro inesperado");
@@ -218,7 +255,7 @@ public class RelatorioServlet extends HttpServlet {
             throws ServletException, IOException, SQLException {
 
         List<Aluno> alunos = alunoDAO.buscarTodos();
-        List<ProfessorAEE> professores = professorDAO.getAll();
+        List<ProfessorAEE> professores = professorAEEDAO.getAll();
 
         request.setAttribute("todosAlunos", alunos);
         request.setAttribute("todosProfessores", professores);
@@ -233,7 +270,7 @@ public class RelatorioServlet extends HttpServlet {
 
         if (relatorio != null) {
             List<Aluno> alunos = alunoDAO.buscarTodos();
-            List<ProfessorAEE> professores = professorDAO.getAll();
+            List<ProfessorAEE> professores = professorAEEDAO.getAll();
 
             request.setAttribute("relatorio", relatorio);
             request.setAttribute("todosAlunos", alunos);
@@ -261,13 +298,11 @@ public class RelatorioServlet extends HttpServlet {
     private Map<String, String> validarCampos(HttpServletRequest request) {
         Map<String, String> erros = new HashMap<>();
 
-        // Validação dos campos obrigatórios
         validarCampoObrigatorio(request, "titulo", "Título", erros);
         validarCampoObrigatorio(request, "dataGeracao", "Data de Geração", erros);
-        validarCampoObrigatorio(request, "aluno", "Aluno", erros);
+        validarCampoObrigatorio(request, "professorId", "Professor Responsável", erros); // Corrigido
         validarCampoObrigatorio(request, "resumo", "Resumo", erros);
 
-        // Validação de formato da data
         try {
             LocalDate.parse(request.getParameter("dataGeracao"));
         } catch (DateTimeParseException e) {
@@ -309,6 +344,4 @@ public class RelatorioServlet extends HttpServlet {
         request.setAttribute("erro", mensagem);
         request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
     }
-
-
 }

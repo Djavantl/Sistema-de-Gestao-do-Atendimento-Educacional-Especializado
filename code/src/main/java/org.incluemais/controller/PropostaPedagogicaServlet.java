@@ -25,7 +25,6 @@ public class PropostaPedagogicaServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Direciona direto para o JSP na sua estrutura
         request.getRequestDispatcher("/templates/aee/PropostaPedagogica.jsp").forward(request, response);
     }
 
@@ -33,28 +32,36 @@ public class PropostaPedagogicaServlet extends HttpServlet {
         Connection conn = null;
         try {
             conn = getConnection();
+            int planoAEEId = Integer.parseInt(request.getParameter("planoAEEId"));
+
+            // Criar DAO primeiro (necessário para persistir recursos)
+            PropostaPedagogicaDAO propostaDAO = new PropostaPedagogicaDAO(conn);
+
+            // Construir recursos
             RecursosPedagogicos recursoP = construirRecursoPedagogico(request);
             RecursoFisicoArquitetonico recursoFA = construirRecursoFisico(request);
             RecursosComunicacaoEInformacao recursoCI = construirRecursoComunicacao(request);
 
+            // Criar a proposta COM OS RECURSOS
             PropostaPedagogica proposta = new PropostaPedagogica(
                     request.getParameter("objetivos"),
                     request.getParameter("metodologias"),
                     recursoP,
                     recursoFA,
-                    recursoCI
+                    recursoCI,
+                    planoAEEId
             );
 
-            PropostaPedagogicaDAO propostaDAO = new PropostaPedagogicaDAO(conn);
+            // INSERIR usando o DAO (que cuidará dos recursos)
             propostaDAO.inserir(proposta);
 
             request.setAttribute("propostaId", proposta.getId());
-            response.sendRedirect(request.getContextPath() + "/propostas");
+            response.sendRedirect(request.getContextPath() + "/propostas?success=true");
 
-        } catch (SQLException e) {
+        } catch (SQLException | NumberFormatException e) {
             logger.log(Level.SEVERE, "Erro ao criar proposta", e);
             request.setAttribute("erro", "Erro ao salvar proposta: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/templates/aee/PropostaPedagogica.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/PropostaPedagogica.jsp").forward(request, response);
         } finally {
             if (conn != null) {
                 try { conn.close(); }

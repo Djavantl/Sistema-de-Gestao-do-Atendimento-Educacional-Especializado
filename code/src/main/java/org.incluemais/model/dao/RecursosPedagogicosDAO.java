@@ -41,4 +41,32 @@ public class RecursosPedagogicosDAO {
             }
         }
     }
+
+    public RecursosPedagogicos buscarPorId(int id) throws SQLException {
+        String sql = "SELECT * FROM RecursosPedagogicos WHERE id = ?";
+        RecursosPedagogicos recurso = null;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    recurso = new RecursosPedagogicos();
+                    recurso.setId(rs.getInt("id"));
+                    recurso.setAdaptacaoDidaticaAulasAvaliacoes(rs.getBoolean("adaptacaoDidaticaAulasAvaliacoes"));
+                    recurso.setMaterialDidaticoAdaptado(rs.getBoolean("materialDidaticoAdaptado"));
+                    recurso.setUsoTecnologiaAssistiva(rs.getBoolean("usoTecnologiaAssistiva"));
+                    recurso.setTempoEmpregadoAtividadesAvaliacoes(rs.getBoolean("tempoEmpregadoAtividadesAvaliacoes"));
+                }
+            }
+        }
+        return recurso;
+    }
+
+    public boolean excluirP(int id) throws SQLException {
+        String sql = "DELETE FROM RecursosPedagogicos WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

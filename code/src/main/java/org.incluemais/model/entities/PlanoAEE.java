@@ -6,22 +6,27 @@ import java.util.List;
 
 public class PlanoAEE {
     private int id;
-    private ProfessorAEE professorResponsavel;
-    private Aluno aluno;
+    private String professorSiape; // pode ser null
+    private String alunoMatricula;
     private LocalDate dataInicio;
-    private List<Meta> metas = new ArrayList<>();
-    private PropostaPedagogica propostaPedagogicas;
     private String recomendacoes;
     private String observacoes;
+    private List<Meta> metas = new ArrayList<>();
+    private PropostaPedagogica proposta;
 
-    public PlanoAEE(ProfessorAEE professor, Aluno aluno, LocalDate dataInicio, String recomendacoes, String observacoes) {
-        this.professorResponsavel = professor;
-        this.aluno = aluno;
+    public PlanoAEE() {
+    }
+
+    public PlanoAEE(String professorSiape, String alunoMatricula, LocalDate dataInicio,
+                    String recomendacoes, String observacoes) {
+        this.professorSiape = professorSiape;
+        this.alunoMatricula = alunoMatricula;
         this.dataInicio = dataInicio;
         this.recomendacoes = recomendacoes;
         this.observacoes = observacoes;
     }
 
+    // Getters e Setters
     public int getId() {
         return id;
     }
@@ -30,20 +35,20 @@ public class PlanoAEE {
         this.id = id;
     }
 
-    public ProfessorAEE getProfessorResponsavel() { return professorResponsavel; }
-
-    public void setProfessorResponsavel(ProfessorAEE professorResponsavel) { this.professorResponsavel = professorResponsavel; }
-
-    public String getObservacoes() {return observacoes; }
-
-    public void setObservacoes(String observacoes) { this.observacoes = observacoes; }
-
-    public Aluno getAluno() {
-        return aluno;
+    public String getProfessorSiape() {
+        return professorSiape;
     }
 
-    public void setAluno(Aluno aluno) {
-        this.aluno = aluno;
+    public void setProfessorSiape(String professorSiape) {
+        this.professorSiape = professorSiape;
+    }
+
+    public String getAlunoMatricula() {
+        return alunoMatricula;
+    }
+
+    public void setAlunoMatricula(String alunoMatricula) {
+        this.alunoMatricula = alunoMatricula;
     }
 
     public LocalDate getDataInicio() {
@@ -54,14 +59,6 @@ public class PlanoAEE {
         this.dataInicio = dataInicio;
     }
 
-    public List<Meta> getMetas() {
-        return metas;
-    }
-
-    public void setMetas(List<Meta> metas) {
-        this.metas = metas;
-    }
-
     public String getRecomendacoes() {
         return recomendacoes;
     }
@@ -70,9 +67,35 @@ public class PlanoAEE {
         this.recomendacoes = recomendacoes;
     }
 
+    public String getObservacoes() {
+        return observacoes;
+    }
 
-    public void adicionarMeta(Meta meta){
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
+    }
+
+    public List<Meta> getMetas() {
+        return metas;
+    }
+
+    public void setMetas(List<Meta> metas) {
+        this.metas = metas;
+    }
+
+    public PropostaPedagogica getProposta() {
+        return proposta;
+    }
+
+    public void setProposta(PropostaPedagogica proposta) {
+        this.proposta = proposta;
+    }
+
+    public void adicionarMeta(Meta meta) {
         this.metas.add(meta);
     }
 
+    public void removerMeta(Meta meta) {
+        this.metas.remove(meta);
+    }
 }

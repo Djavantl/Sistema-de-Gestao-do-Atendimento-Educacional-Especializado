@@ -48,4 +48,34 @@ public class RecursoFisicoArquitetonicoDAO {
             }
         }
     }
+
+    public RecursoFisicoArquitetonico buscarPorId(int id) throws SQLException {
+        String sql = "SELECT * FROM RecursoFisicoArquitetonico WHERE id = ?";
+        RecursoFisicoArquitetonico recurso = null;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    recurso = new RecursoFisicoArquitetonico();
+                    recurso.setId(rs.getInt("id"));
+                    recurso.setUsoCadeiraDeRodas(rs.getBoolean("usoCadeiraDeRodas"));
+                    recurso.setAuxilioTranscricaoEscrita(rs.getBoolean("auxilioTranscricaoEscrita"));
+                    recurso.setMesaAdaptadaCadeiraDeRodas(rs.getBoolean("mesaAdaptadaCadeiraDeRodas"));
+                    recurso.setUsoDeMuleta(rs.getBoolean("usoDeMuleta"));
+                    recurso.setOutrosFisicoArquitetonico(rs.getBoolean("outrosFisicoArquitetonico"));
+                    recurso.setOutrosEspecificado(rs.getString("outrosEspecificado"));
+                }
+            }
+        }
+        return recurso;
+    }
+
+    public boolean excluirFA(int id) throws SQLException {
+        String sql = "DELETE FROM RecursoFisicoArquitetonico WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }
