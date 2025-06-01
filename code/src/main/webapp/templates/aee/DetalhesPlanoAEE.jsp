@@ -470,10 +470,12 @@
                             </c:when>
                         <c:otherwise>
                             <div class="proposta-acoes">
-                                <a href="${pageContext.request.contextPath}/editarProposta?id=${plano.proposta.id}"
-                                   class="btn-editar-proposta">
-                                    <i class="bi bi-pencil me-1"></i> Editar
-                                </a>
+                                <c:if test="${not empty plano.proposta}">
+                                    <a href="${pageContext.request.contextPath}/editarProposta?id=${plano.proposta.id}"
+                                       class="btn-editar-proposta">
+                                        <i class="bi bi-pencil me-1"></i> Editar
+                                    </a>
+                                </c:if>
                                 <form action="${pageContext.request.contextPath}/excluirProposta" method="post"
                                       onsubmit="return confirm('Tem certeza que deseja excluir esta proposta pedagógica?');">
                                     <input type="hidden" name="propostaId" value="${plano.proposta.id}">
@@ -492,7 +494,7 @@
                         <div class="proposta-section">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <label>Objetivos Educacionais</label>
+                                    <label>Objetivos</label>
                                     <p>${plano.proposta.objetivos}</p>
                                 </div>
                                 <div class="info-item">
@@ -601,7 +603,12 @@
                                     </div>
                                 </div>
                             </c:if>
-                        </div>
+                            <c:if test="${not empty plano.proposta.observacoes}">
+                                <div class="info-item">
+                                    <label>Observações Recursos</label>
+                                    <p>${plano.proposta.observacoes}</p>
+                                </div>
+                            </c:if>
                     </c:when>
                     <c:otherwise>
                         <div class="proposta-section">
@@ -613,12 +620,13 @@
 
             <!-- Botões de ação para o plano -->
             <div class="botoes-acoes">
-                <a href="${pageContext.request.contextPath}/editarPlanoAEE?id=${plano.id}"
+                <a href="${pageContext.request.contextPath}/templates/aee/editarPlanoAEE?id=${plano.id}"
                    class="btn-editar-proposta">
                     <i class="bi bi-pencil me-1"></i> Editar Plano
                 </a>
-                <form action="${pageContext.request.contextPath}/excluirPlanoAEE" method="post"
+                <form action="${pageContext.request.contextPath}/templates/aee/detalhes-plano" method="post"
                       onsubmit="return confirm('Tem certeza que deseja excluir este plano? Esta ação não pode ser desfeita.');">
+                    <input type="hidden" name="action" value="excluirPlano">
                     <input type="hidden" name="planoId" value="${plano.id}">
                     <button type="submit" class="btn-excluir-proposta">
                         <i class="bi bi-trash me-1"></i> Excluir Plano

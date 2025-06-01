@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> <!-- ADICIONE ESTA LINHA -->
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -225,62 +226,79 @@ body {
     </div>
 
     <div class="conteudo-principal">
-        <div class="linha-superior">
-            <button class="botao-novo-relatorio"
-                onclick="window.location.href='${pageContext.request.contextPath}/relatorios/novo${not empty param.alunoMatricula ? '?alunoMatricula=' += param.alunoMatricula : ''}'">
-                + Novo Relatório
-            </button>
-        </div>
+            <div class="linha-superior">
+                <button class="botao-novo-relatorio"
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/novo${not empty param.alunoMatricula ? '?alunoMatricula=' += param.alunoMatricula : ''}'">
+                    + Novo Relatório
+                </button>
+            </div>
+
+            <!-- Mensagem de DEBUG -->
+                    <div style="margin-bottom: 20px; color: blue;">
+                        Parâmetro alunoMatricula: ${param.alunoMatricula}<br>
+                        Quantidade de relatórios: ${fn:length(relatoriosLista)}
+                    </div>
 
         <!-- Tabela de Relatórios -->
-        <table class="tabela-relatorios">
-            <thead>
-                <tr>
-                    <th>Título</th>
-                    <th>Aluno</th>
-                    <th>Data</th>
-                    <th>Professor</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-               <c:forEach items="${relatoriosLista}" var="relatorio">
-                   <tr data-id="${relatorio.id}">
-                       <td>${relatorio.titulo}</td>
-                       <td>${relatorio.aluno.nome}</td>
-                       <td>
-                           <fmt:formatDate value="${relatorio.dataGeracao}" pattern="dd/MM/yyyy" />
-                       </td>
-                       <td>
-                           <c:choose>
-                               <c:when test="${not empty relatorio.professorAEE}">
-                                   ${relatorio.professorAEE.nome} (${relatorio.professorAEE.siape})
-                               </c:when>
-                               <c:otherwise>
-                                   Não atribuído
-                               </c:otherwise>
-                           </c:choose>
-                       </td>
-                       <td>
-                           <div class="botoes-acoes">
-                               <button class="botao-editar"
-                                       onclick="window.location.href='${pageContext.request.contextPath}/relatorios/editar?id=${relatorio.id}'">
-                                   Editar
-                               </button>
-                               <button class="botao-detalhes"
-                                       onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorio.id}'">
-                                   Detalhes
-                               </button>
-                               <button class="botao-excluir"
-                                       onclick="confirmarExclusao(${relatorio.id})">
-                                   Excluir
-                               </button>
-                           </div>
-                       </td>
-                   </tr>
-               </c:forEach>
-            </tbody>
-        </table>
+                <table class="tabela-relatorios">
+                    <thead>
+                        <tr>
+                            <th>Título</th>
+                            <th>Aluno</th>
+                            <th>Data</th>
+                            <th>Professor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:choose>
+                            <c:when test="${not empty relatoriosLista}">
+                                <c:forEach items="${relatoriosLista}" var="relatorio">
+                                    <tr data-id="${relatorio.id}">
+                                        <td>${relatorio.titulo}</td>
+                                        <td>${relatorio.aluno.nome}</td>
+                                        <td>
+                                            ${relatorio.dataGeracao.getDayOfMonth()}/${relatorio.dataGeracao.getMonthValue()}/${relatorio.dataGeracao.getYear()}
+                                        </td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${not empty relatorio.professorAEE}">
+                                                    ${relatorio.professorAEE.nome} (${relatorio.professorAEE.siape})
+                                                </c:when>
+                                                <c:otherwise>
+                                                    Não atribuído
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td>
+                                            <div class="botoes-acoes">
+                                                <button class="botao-editar"
+                                                        onclick="window.location.href='${pageContext.request.contextPath}/relatorios/editar?id=${relatorio.id}'">
+                                                    Editar
+                                                </button>
+                                                <button class="botao-detalhes"
+                                                        onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorio.id}'">
+                                                    Detalhes
+                                                </button>
+                                                <button class="botao-excluir"
+                                                        onclick="confirmarExclusao(${relatorio.id})">
+                                                    Excluir
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </c:when>
+                            <c:otherwise>
+                                <tr>
+                                    <td colspan="5" style="text-align: center;">
+                                        Nenhum relatório encontrado
+                                    </td>
+                                </tr>
+                            </c:otherwise>
+                        </c:choose>
+                    </tbody>
+                </table>
 
         <!-- Modal Confirmação Exclusão -->
         <div class="modal-overlay" id="modalExcluir">

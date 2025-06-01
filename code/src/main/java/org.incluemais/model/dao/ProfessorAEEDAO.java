@@ -99,6 +99,37 @@ public class ProfessorAEEDAO {
         }
     }
 
+    public ProfessorAEE buscarPorSiape(String siape) throws SQLException {
+        System.out.println("Buscando professor pelo SIAPE: " + siape); // LOG
+
+        String sql = "SELECT p.*, pa.siape, pa.especialidade " +
+                "FROM Pessoa p " +
+                "JOIN ProfessorAEE pa ON p.id = pa.pessoa_id " +
+                "WHERE pa.siape = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, siape);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    ProfessorAEE prof = new ProfessorAEE(
+                            rs.getString("nome"),
+                            rs.getDate("dataNascimento").toLocalDate(),
+                            rs.getString("email"),
+                            rs.getString("sexo"),
+                            rs.getString("naturalidade"),
+                            rs.getString("telefone"),
+                            rs.getString("siape"),
+                            rs.getString("especialidade")
+                    );
+                    System.out.println("Professor encontrado: " + prof.getNome()); // LOG
+                    return prof;
+                }
+                System.out.println("Nenhum professor encontrado para o SIAPE: " + siape); // LOG
+                return null;
+            }
+        }
+    }
+
     public List<ProfessorAEE> getAll() {
         String sql = "SELECT p.*, pa.siape, pa.especialidade FROM Pessoa p " +
                 "JOIN ProfessorAEE pa ON p.id = pa.pessoa_id";

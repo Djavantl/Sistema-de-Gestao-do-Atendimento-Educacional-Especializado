@@ -262,7 +262,7 @@
                     <div class="campo">
                         <label for="aluno_info">Aluno:</label>
                         <input type="text" id="aluno_info"
-                               value="${plano.aluno.nome} (${plano.aluno.matricula})"
+                               value="${aluno.nome} (${aluno.matricula})"
                                readonly>
                     </div>
 
@@ -284,7 +284,6 @@
 
                 <div class="botoes-acoes">
                     <button type="submit" class="botao-salvar">Atualizar Plano</button>
-                    <button type="button" class="botao-excluir" onclick="confirmarExclusao()">Excluir Plano</button>
                     <button type="button" class="botao-cancelar" onclick="window.history.back()">Cancelar</button>
                 </div>
             </form>
