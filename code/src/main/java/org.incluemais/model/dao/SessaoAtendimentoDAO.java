@@ -19,6 +19,12 @@ public class SessaoAtendimentoDAO {
     }
 
     public void inserir(SessaoAtendimento s) throws SQLException {
+        System.out.println("Inserindo nova sessão:");
+        System.out.println("Aluno: " + s.getAluno().getNome());
+        System.out.println("Data: " + s.getData());
+        System.out.println("Horário: " + s.getHorario());
+        System.out.println("Local: " + s.getLocal());
+
         String sql = "INSERT INTO SessaoAtendimento (aluno_matricula, data, horario, local) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -36,6 +42,24 @@ public class SessaoAtendimentoDAO {
         } catch (SQLException e) {
             throw new SQLException("Erro ao inserir sessão de atendimento: " + e.getMessage(), e);
         }
+    }
+
+    public List<SessaoAtendimento> buscarPorAluno(String matricula) throws SQLException {
+        List<SessaoAtendimento> lista = new ArrayList<>();
+        String sql = "SELECT * FROM SessaoAtendimento WHERE aluno_matricula = ? ORDER BY "
+                + "  CASE WHEN data >= CURDATE() THEN 0 ELSE 1 END, "
+                + "  CASE WHEN data >= CURDATE() THEN data END ASC, "
+                + "  CASE WHEN data < CURDATE() THEN data END DESC;";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(construirSessao(rs));
+                }
+            }
+        }
+        return lista;
     }
 
     public void atualizar(SessaoAtendimento s) throws SQLException {
@@ -84,7 +108,12 @@ public class SessaoAtendimentoDAO {
 
     public List<SessaoAtendimento> listarTodos() throws SQLException {
         List<SessaoAtendimento> lista = new ArrayList<>();
-        String sql = "SELECT *  FROM SessaoAtendimento  ORDER BY  CASE WHEN data >= CURDATE() THEN 0 ELSE 1 END, CASE WHEN data >= CURDATE() THEN data END ASC, CASE WHEN data <  CURDATE() THEN data END DESC;";
+        String sql = "SELECT * FROM SessaoAtendimento "
+                + "WHERE presenca IS NULL "
+                + "ORDER BY "
+                + "  CASE WHEN data >= CURDATE() THEN 0 ELSE 1 END, "
+                + "  CASE WHEN data >= CURDATE() THEN data END ASC, "
+                + "  CASE WHEN data < CURDATE() THEN data END DESC;";
 
         try (Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -103,15 +132,34 @@ public class SessaoAtendimentoDAO {
         LocalDate data = rs.getDate("data").toLocalDate();
         LocalTime horario = rs.getTime("horario").toLocalTime();
         String local = rs.getString("local");
-        boolean presenca = rs.getBoolean("presenca");
+
+        // Log importante para diagnóstico
+        System.out.println("Construindo sessão ID: " + id);
+
+        // Tratar presença de forma mais segura
+        Boolean presenca = null;
+        if (rs.getObject("presenca") != null) {
+            presenca = rs.getBoolean("presenca");
+        }
+
+        // Log do valor da presença
+        System.out.println("Valor de presenca: " + presenca + " (" + (presenca == null ? "null" : presenca.toString()) + ")");
 
         Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
         if (aluno == null) {
-            throw new SQLException("Aluno com matrícula " + matricula + " não encontrado.");
+            // Solução segura em vez de exceção
+            aluno = new Aluno();
+            aluno.setNome("Aluno não encontrado");
+            aluno.setMatricula(matricula);
+            System.err.println("Aluno não encontrado para matrícula: " + matricula);
         }
+        String observacoes = rs.getString("observacoes");
+
         SessaoAtendimento s = new SessaoAtendimento(aluno, data, horario, local);
         s.setId(id);
         s.setPresenca(presenca);
+        s.setObservacoes(observacoes);
         return s;
     }
+
 }

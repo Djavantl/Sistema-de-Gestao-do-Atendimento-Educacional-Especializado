@@ -548,7 +548,7 @@
                                     <div class="container-acoes">
                                         <button class="botao-acao botao-excluir"
                                                 onclick="confirmarDesvinculacao('${prof.siape}')">
-                                            <i class="fas fa-unlink"></i> Remover
+                                            Remover
                                         </button>
                                     </div>
                                 </td>

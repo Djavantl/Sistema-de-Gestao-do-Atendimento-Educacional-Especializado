@@ -492,11 +492,11 @@
                         <th style="width: 180px">Ações</th>
                     </tr>
                     <tr class="linha-filtro">
-                        <th><input type="text" placeholder="Filtrar Nome"></th>
-                        <th><input type="text" placeholder="Filtrar SIAPE"></th>
-                        <th><input type="text" placeholder="Filtrar Email"></th>
-                        <th><input type="text" placeholder="Filtrar Telefone"></th>
-                        <th><input type="text" placeholder="Filtrar Especialidade"></th>
+                        <th><input type="text" placeholder="Nome"></th>
+                        <th><input type="text" placeholder="SIAPE"></th>
+                        <th><input type="text" placeholder="Email"></th>
+                        <th><input type="text" placeholder="Telefone"></th>
+                        <th><input type="text" placeholder="Especialidade"></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -521,13 +521,13 @@
                                         <div class="container-acoes">
                                             <button class="botao-acao botao-editar"
                                                 onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professores?acao=editar&siape=${professor.siape}'">
-                                                <i class="fas fa-edit"></i> Editar
+                                                 Editar
                                             </button>
                                             <button class="botao-acao botao-excluir" onclick="confirmarExclusao('${professor.siape}')">
-                                                <i class="fas fa-trash"></i> Excluir
+                                                Excluir
                                             </button>
                                             <button class="botao-acao botao-detalhes" onclick="toggleDetalhes(this)">
-                                                <i class="fas fa-chevron-down icone-seta"></i> Detalhes
+                                                 Detalhes
                                             </button>
                                         </div>
                                     </td>
