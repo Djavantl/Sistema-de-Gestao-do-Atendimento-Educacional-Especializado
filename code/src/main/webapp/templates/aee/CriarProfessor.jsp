@@ -516,7 +516,7 @@
                                     <td>${professor.siape}</td>
                                     <td>${professor.email}</td>
                                     <td>${professor.telefone}</td>
-                                    <td>${professor.especialidade}</td> <!-- Apenas texto -->
+                                    <td>${professor.especialidade}</td>
                                     <td>
                                         <div class="container-acoes">
                                             <button class="botao-acao botao-editar"
@@ -530,11 +530,6 @@
                                                  Detalhes
                                             </button>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <a href="${pageContext.request.contextPath}/templates/professor/professor-alunos?siape=${professor.siape}">
-                                          Ver Alunos
-                                        </a>
                                     </td>
                                 </tr>
 
