@@ -112,7 +112,7 @@ public class RelatorioServlet extends HttpServlet {
             erros.put("professorSiape", "SIAPE do professor é obrigatório");
         } else {
             try {
-                ProfessorAEE professor = professorAEEDAO.getBySiape(siape);
+                ProfessorAEE professor = professorAEEDAO.buscarPorSiape(siape);
                 if (professor == null) {
                     erros.put("professorSiape", "Professor não encontrado com este SIAPE");
                 }
@@ -136,7 +136,7 @@ public class RelatorioServlet extends HttpServlet {
                 throw new ServletException("Aluno não encontrado");
             }
 
-            ProfessorAEE professor = professorAEEDAO.getBySiape(siape);
+            ProfessorAEE professor = professorAEEDAO.buscarPorSiape(siape);
             Relatorio relatorio = construirRelatorio(request);
             relatorio.setAluno(aluno);
             relatorio.setProfessorAEE(professor);
@@ -212,7 +212,7 @@ public class RelatorioServlet extends HttpServlet {
         String siape = request.getParameter("professorSiape");
 
         if (siape != null && !siape.trim().isEmpty()) {
-            ProfessorAEE professor = professorAEEDAO.getBySiape(siape);
+            ProfessorAEE professor = professorAEEDAO.buscarPorSiape(siape);
             relatorio.setProfessorAEE(professor);
         }
 
@@ -284,12 +284,20 @@ public class RelatorioServlet extends HttpServlet {
     private void exibirDetalhesRelatorio(int id, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
+        System.out.println("Buscando relatório com ID: " + id);
         Relatorio relatorio = relatorioDAO.buscarPorId(id);
 
         if (relatorio != null) {
+            System.out.println("Relatório encontrado: " + relatorio.getTitulo());
             request.setAttribute("relatorio", relatorio);
-            request.getRequestDispatcher("/templates/aee/detalhes-PorRelatorio.jsp").forward(request, response);
+
+            // Verifique o caminho exato
+            String caminhoJSP = "/templates/aee/DetalhesRelatorio.jsp";
+            System.out.println("Encaminhando para: " + caminhoJSP);
+
+            request.getRequestDispatcher(caminhoJSP).forward(request, response);
         } else {
+            System.out.println("Relatório não encontrado para ID: " + id);
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Relatório não encontrado");
         }
     }

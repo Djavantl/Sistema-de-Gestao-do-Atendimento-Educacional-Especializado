@@ -1,6 +1,7 @@
 package org.incluemais.model.dao;
 
 import org.incluemais.model.entities.Aluno;
+import org.incluemais.model.entities.Avaliacao;
 import org.incluemais.model.entities.ProfessorAEE;
 import org.incluemais.model.entities.Relatorio;
 import java.sql.*;
@@ -99,22 +100,27 @@ public class RelatorioDAO {
     }
 
     public Relatorio buscarPorId(int id) throws SQLException {
+        System.out.println("Buscando relatório por ID: " + id);
+
         String sql = "SELECT r.*, p.nome as aluno_nome, a.matricula, " +
-                "p2.nome as professor_nome, prof.siape " +  // Adicione professor_nome
+                "p2.nome as professor_nome, prof.siape " +
                 "FROM Relatorio r " +
                 "JOIN Aluno a ON r.aluno_matricula = a.matricula " +
                 "JOIN Pessoa p ON a.pessoa_id = p.id " +
                 "LEFT JOIN ProfessorAEE prof ON r.professorAEE_siape = prof.siape " +
-                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id";  // Junte Pessoa para o professor
+                "LEFT JOIN Pessoa p2 ON prof.pessoa_id = p2.id " +
+                "WHERE r.id = ?"; // Certifique-se que tem o WHERE!
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, id);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
+                    System.out.println("Relatório encontrado no banco");
                     return mapearRelatorio(rs);
                 }
             }
         }
+        System.out.println("Nenhum relatório encontrado para ID: " + id);
         return null;
     }
 

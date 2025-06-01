@@ -32,7 +32,7 @@ public class BuscarProfessorServlet extends HttpServlet {
         }
 
         try {
-            ProfessorAEE professor = professorAEEDAO.getBySiape(siape);
+            ProfessorAEE professor = professorAEEDAO.buscarPorSiape(siape);
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
