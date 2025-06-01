@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Relatório</title>
     <style>
+        /* Mesmos estilos do DetalhesAluno.jsp para manter consistência */
+
         * {
             margin: 0;
             padding: 0;
@@ -17,10 +19,22 @@
 
         body {
             background-color: #f9f9ff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             overflow-x: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* Cabeçalho de título */
+        #titulo {
+            margin-left: 350px;
+            padding-top: 40px;
+            margin-bottom: 20px;
+        }
+        #titulo h2 {
+            color: rgb(12, 12, 97);
+            font-size: 28px;
+        }
+
+        /* Sidebar igual ao DetalhesAluno */
         .sidebar {
             position: fixed;
             top: 0;
@@ -33,7 +47,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 1000;
         }
 
         .logo {
@@ -82,139 +95,155 @@
             color: #4D44B5;
         }
 
-        #titulo {
-            margin-left: 350px;
-            padding-top: 40px;
-        }
-
-        #titulo h2 {
-            color: rgb(12, 12, 97);
-            font-size: 28px;
-        }
-
+        /* Conteúdo principal */
         .conteudo-principal {
+            margin: 80px 0 40px 350px;
+            width: 70%;
+            padding: 40px;
             background-color: #ffffff;
             border-radius: 20px;
-            padding: 40px;
-            margin: 30px 0 40px 350px;
-            width: 70%;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .detalhes-relatorio {
-            display: grid;
-            gap: 25px;
+        .info-section {
+            margin-bottom: 30px;
         }
 
-        .info-box {
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            padding: 20px;
-            border-left: 4px solid #4D44B5;
-        }
-
-        .info-box h3 {
+        .info-section h3 {
             color: #4D44B5;
             margin-bottom: 15px;
+            border-bottom: 2px solid #4D44B5;
+            padding-bottom: 5px;
         }
 
-        .campo {
-            margin-bottom: 15px;
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: start;
         }
 
-        .campo label {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 14px;
+        .info-item {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .info-item label {
             display: block;
+            color: #6c757d;
+            font-size: 0.9em;
             margin-bottom: 5px;
         }
 
-        .campo .valor {
-            padding: 10px;
-            background-color: #fefefe;
-            border-radius: 8px;
-            border: 1px solid #eaeaea;
-            min-height: 40px;
+        .info-item p {
+            margin: 0;
+            font-size: 1em;
+            color: #2c3e50;
+        }
+
+        /* Botões de ação */
+        .linha-superior {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 30px;
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .botoes-acoes {
-            margin-top: 30px;
             display: flex;
-            gap: 15px;
             justify-content: flex-end;
-            width: 100%;
+            gap: 10px;
+            margin-left: auto;
         }
 
-        .botao-voltar {
-            background-color: #e0e0e0;
-            color: #333;
-            padding: 12px 25px;
-            border-radius: 8px;
+        .botao-novo-aluno {
+            background-color: #4D44B5;
+            color: #ffffff;
             border: none;
+            padding: 10px 22px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 15px;
             transition: background-color 0.3s;
         }
 
-        .botao-voltar:hover {
-            background-color: #d0d0d0;
+        .botao-novo-aluno:hover {
+            background-color: #372e9c;
         }
 
-        /* Novos estilos para avaliações */
-                .avaliacoes-container {
-                    margin-top: 20px;
-                    border-radius: 8px;
-                    overflow: hidden;
-                }
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid transparent;
+        }
 
-                .avaliacao-item {
-                    padding: 15px;
-                    background-color: #fff;
-                }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
 
-                .avaliacao-item.separador {
-                    border-bottom: 2px solid #bfbfbf;
-                }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
 
-                .acoes-avaliacao {
-                    grid-column: 1 / -1;
-                    display: flex;
-                    justify-content: flex-end;
-                    gap: 10px;
-                    padding: 10px 0;
-                    margin-top: 10px;
-                }
+        /* Estilos para lista de avaliações */
+        .avaliacoes-container {
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
 
-                .botao-adicionar {
-                    background-color: #4D44B5;
-                    color: white;
-                    border: none;
-                    padding: 10px 15px;
-                    border-radius: 8px;
-                    cursor: pointer;
-                    margin-bottom: 15px;
-                }
+        .avaliacao-item {
+            padding: 15px;
+            background-color: #fff;
+        }
 
-                .botao-editar-avaliacao {
-                    background-color: #007bff;
-                    color: white;
-                    border: none;
-                    padding: 6px 12px;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 13px;
-                }
+        .avaliacao-item.separador {
+            border-bottom: 2px solid #bfbfbf;
+        }
 
-                .botao-excluir-avaliacao {
-                    background-color: #dc3545;
-                    color: white;
-                    border: none;
-                    padding: 6px 12px;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-size: 13px;
-                }
+        .acoes-avaliacao {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .botao-adicionar {
+            background-color: #4D44B5;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .botao-editar-avaliacao {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .botao-excluir-avaliacao {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+        }
     </style>
 </head>
 <body>
@@ -236,87 +265,83 @@
     </div>
 
     <div class="conteudo-principal">
-
-            <!-- Resumo -->
-            <div class="info-box">
-                <h3>Resumo</h3>
-                <div class="campo">
-                    <div class="valor" style="min-height: 150px;">${relatorio.resumo}</div>
-                </div>
+        <!-- Resumo -->
+        <div class="info-section">
+            <h3>Resumo</h3>
+            <div class="info-item">
+                <p style="min-height: 150px;">${relatorio.resumo}</p>
             </div>
+        </div>
 
-            <!-- Observações -->
-            <div class="info-box">
-                <h3>Observações</h3>
-                <div class="campo">
-                    <div class="valor" style="min-height: 100px;">
-                        <c:choose>
-                            <c:when test="${not empty relatorio.observacoes}">
-                                ${relatorio.observacoes}
-                            </c:when>
-                            <c:otherwise>
-                                Nenhuma observação registrada
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </div>
+        <!-- Observações -->
+        <div class="info-section">
+            <h3>Observações</h3>
+            <div class="info-item">
+                <c:choose>
+                    <c:when test="${not empty relatorio.observacoes}">
+                        <p style="min-height: 100px;">${relatorio.observacoes}</p>
+                    </c:when>
+                    <c:otherwise>
+                        <p style="min-height: 100px;">Nenhuma observação registrada</p>
+                    </c:otherwise>
+                </c:choose>
             </div>
+        </div>
 
-            <!-- Seção de Avaliações -->
-                        <div class="info-box">
-                            <h3>Avaliações</h3>
+        <!-- Avaliações -->
+        <div class="info-section">
+            <h3>Avaliações</h3>
 
-                            <button class="botao-adicionar"
-                                onclick="window.location.href='${pageContext.request.contextPath}/avaliacao?acao=criar&relatorioId=${relatorio.id}'">
-                                Adicionar Avaliação
-                            </button>
+            <button class="botao-adicionar"
+                    onclick="window.location.href='${pageContext.request.contextPath}/avaliacao?acao=criar&relatorioId=${relatorio.id}'">
+                Adicionar Avaliação
+            </button>
 
-                            <c:if test="${not empty relatorio.avaliacoes}">
-                                <div class="avaliacoes-container">
-                                    <c:forEach items="${relatorio.avaliacoes}" var="avaliacao" varStatus="loop">
-                                        <div class="avaliacao-item ${not loop.last ? 'separador' : ''}">
-                                            <div class="info-grid">
-                                                <div class="info-item">
-                                                    <label>Área</label>
-                                                    <div class="valor">${avaliacao.area}</div>
-                                                </div>
-                                                <div class="info-item">
-                                                    <label>Desempenho Verificado</label>
-                                                    <div class="valor">${avaliacao.desempenhoVerificado}</div>
-                                                </div>
-                                                <div class="info-item">
-                                                    <label>Observações</label>
-                                                    <div class="valor">${avaliacao.observacoes}</div>
-                                                </div>
-                                                <div class="acoes-avaliacao">
-                                                    <button class="botao-editar-avaliacao"
-                                                        onclick="window.location.href='${pageContext.request.contextPath}/avaliacao?acao=editar&id=${avaliacao.id}&relatorioId=${relatorio.id}'">
-                                                        Editar
-                                                    </button>
-                                                    <form action="${pageContext.request.contextPath}/avaliacao" method="POST" style="display:inline;">
-                                                        <input type="hidden" name="acao" value="excluir">
-                                                        <input type="hidden" name="id" value="${avaliacao.id}">
-                                                        <input type="hidden" name="relatorioId" value="${relatorio.id}">
-                                                        <button type="submit" class="botao-excluir-avaliacao"
-                                                            onclick="return confirm('Tem certeza que deseja excluir esta avaliação?')">
-                                                            Excluir
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
+            <c:if test="${not empty relatorio.avaliacoes}">
+                <div class="avaliacoes-container">
+                    <c:forEach items="${relatorio.avaliacoes}" var="avaliacao" varStatus="loop">
+                        <div class="avaliacao-item ${not loop.last ? 'separador' : ''}">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Área</label>
+                                    <p>${avaliacao.area}</p>
                                 </div>
-                            </c:if>
+                                <div class="info-item">
+                                    <label>Desempenho Verificado</label>
+                                    <p>${avaliacao.desempenhoVerificado}</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Observações</label>
+                                    <p>${avaliacao.observacoes}</p>
+                                </div>
+                            </div>
+                            <div class="acoes-avaliacao">
+                                <button class="botao-editar-avaliacao"
+                                        onclick="window.location.href='${pageContext.request.contextPath}/avaliacao?acao=editar&id=${avaliacao.id}&relatorioId=${relatorio.id}'">
+                                    Editar
+                                </button>
+                                <form action="${pageContext.request.contextPath}/avaliacao" method="POST" style="display:inline;">
+                                    <input type="hidden" name="acao" value="excluir" />
+                                    <input type="hidden" name="id" value="${avaliacao.id}" />
+                                    <input type="hidden" name="relatorioId" value="${relatorio.id}" />
+                                    <button type="submit" class="botao-excluir-avaliacao"
+                                        onclick="return confirm('Tem certeza que deseja excluir esta avaliação?')">
+                                        Excluir
+                                    </button>
+                                </form>
+                            </div>
                         </div>
+                    </c:forEach>
+                </div>
+            </c:if>
+        </div>
 
-            <!-- Botão Voltar -->
-            <div class="botoes-acoes">
-                <button class="botao-voltar"
-                        onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
-                    Voltar
-                </button>
-            </div>
+        <!-- Botão Voltar -->
+        <div class="linha-superior">
+            <button class="botao-novo-aluno"
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                Voltar
+            </button>
         </div>
     </div>
 </body>
