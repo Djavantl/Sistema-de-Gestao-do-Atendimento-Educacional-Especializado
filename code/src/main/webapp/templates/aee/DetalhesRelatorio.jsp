@@ -339,7 +339,7 @@
         <!-- Botão Voltar -->
         <div class="linha-superior">
             <button class="botao-novo-aluno"
-                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios?alunoMatricula=${relatorio.aluno.matricula}'">
                 Voltar
             </button>
         </div>

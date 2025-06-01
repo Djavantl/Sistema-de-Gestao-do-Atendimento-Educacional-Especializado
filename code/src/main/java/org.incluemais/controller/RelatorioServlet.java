@@ -145,7 +145,7 @@ public class RelatorioServlet extends HttpServlet {
 
             boolean salvou = relatorioDAO.inserir(relatorio);
             if (salvou) {
-                response.sendRedirect(request.getContextPath() + "/relatorios?alunoMatricula=" + alunoMatricula);
+                response.sendRedirect(request.getContextPath() + "/relatorios/detalhes?id=" + relatorio.getId());
             } else {
                 throw new ServletException("Falha ao salvar relatório no banco de dados");
             }
@@ -170,10 +170,42 @@ public class RelatorioServlet extends HttpServlet {
         }
 
         try {
-            Relatorio relatorio = construirRelatorio(request);
+            // Monta um novo objeto Relatorio
+            Relatorio relatorio = new Relatorio();
             relatorio.setId(id);
+
+            // 1) Define o título e data:
+            relatorio.setTitulo(request.getParameter("titulo"));
+            relatorio.setDataGeracao(LocalDate.parse(request.getParameter("dataGeracao")));
+
+            // 2) Lê o alunoMatricula do <select> e busca o objeto Aluno no banco:
+            String alunoMatricula = request.getParameter("alunoMatricula");
+            Aluno aluno = alunoDAO.buscarPorMatricula(alunoMatricula);
+            if (aluno == null) {
+                throw new ServletException("Aluno não encontrado para a matrícula: " + alunoMatricula);
+            }
+            relatorio.setAluno(aluno);
+
+            // 3) Lê o SIAPE do professor (se existir) e busca o ProfessorAEE:
+            String siape = request.getParameter("professorSiape");
+            if (siape != null && !siape.trim().isEmpty()) {
+                ProfessorAEE professor = professorAEEDAO.buscarPorSiape(siape);
+                relatorio.setProfessorAEE(professor);
+            } else {
+                relatorio.setProfessorAEE(null);
+            }
+
+            // 4) Define resumo e observações:
+            relatorio.setResumo(request.getParameter("resumo"));
+            relatorio.setObservacoes(request.getParameter("observacoes"));
+
+            // 5) Chama o DAO para atualizar no banco:
             relatorioDAO.atualizar(relatorio);
-            response.sendRedirect(request.getContextPath() + "/relatorios?sucesso=Relatório+atualizado+com+sucesso");
+
+            // 6) Redireciona de volta para a lista (ou detalhe), conforme sua lógica:
+
+            response.sendRedirect(request.getContextPath() + "/relatorios?alunoMatricula=" + alunoMatricula + "&sucesso=Relatório+atualizado+com+sucesso");
+
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao atualizar relatório", e);
             request.setAttribute("erro", "Erro ao atualizar relatório no banco de dados");
@@ -186,8 +218,21 @@ public class RelatorioServlet extends HttpServlet {
 
         int id = Integer.parseInt(request.getParameter("id"));
         try {
+            // Buscar relatório antes de excluir para obter matrícula do aluno
+            Relatorio relatorio = relatorioDAO.buscarPorId(id);
+            String alunoMatricula = null;
+            if (relatorio != null && relatorio.getAluno() != null) {
+                alunoMatricula = relatorio.getAluno().getMatricula();
+            }
+
             relatorioDAO.deletar(id);
-            response.sendRedirect(request.getContextPath() + "/relatorios?sucesso=Relatório+excluído+com+sucesso");
+
+            String redirectURL = request.getContextPath() + "/relatorios?sucesso=Relatório+excluído+com+sucesso";
+            if (alunoMatricula != null && !alunoMatricula.isEmpty()) {
+                redirectURL += "&alunoMatricula=" + alunoMatricula;
+            }
+
+            response.sendRedirect(redirectURL);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao excluir relatório", e);
             request.setAttribute("erro", "Erro ao excluir relatório do banco de dados");
@@ -215,51 +260,51 @@ public class RelatorioServlet extends HttpServlet {
     private void listarRelatorios(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        try {
-            String alunoMatricula = request.getParameter("alunoMatricula");
-            List<Relatorio> relatorios;
+        String alunoMatricula = request.getParameter("alunoMatricula");
+        List<Relatorio> relatorios;
 
-            if (alunoMatricula != null && !alunoMatricula.isEmpty()) {
-                relatorios = relatorioDAO.buscarPorAlunoMatricula(alunoMatricula);
-                request.setAttribute("alunoMatricula", alunoMatricula);
-            } else {
-                relatorios = relatorioDAO.buscarTodos();
-            }
-
-            logger.info("Número de relatórios encontrados: " + relatorios.size());
-            request.setAttribute("relatoriosLista", relatorios);
-            request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
-
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro de banco de dados", e);
-            request.setAttribute("erro", "Erro ao carregar relatórios do banco de dados");
-            request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
+        if (alunoMatricula != null && !alunoMatricula.isEmpty()) {
+            relatorios = relatorioDAO.buscarPorAlunoMatricula(alunoMatricula);
+            // opcional: passar de volta para o JSP o próprio alunoMatricula, se quiser exibir
+            request.setAttribute("alunoMatricula", alunoMatricula);
+        } else {
+            relatorios = relatorioDAO.buscarTodos();
         }
+
+        request.setAttribute("relatoriosLista", relatorios);
+        request.getRequestDispatcher("/templates/aee/PorRelatorio.jsp").forward(request, response);
     }
 
     private void exibirFormularioCriacao(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        String alunoMatricula = request.getParameter("alunoMatricula");
-        Aluno aluno = null;
-        if (alunoMatricula != null && !alunoMatricula.isEmpty()) {
-            aluno = alunoDAO.buscarPorMatricula(alunoMatricula);
-        }
+        String matricula = request.getParameter("alunoMatricula");
 
+        if (matricula == null || matricula.isEmpty()) {
+            throw new ServletException("Matrícula do aluno não fornecida.");
+        }
+        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
         request.setAttribute("aluno", aluno);
+
+        // Lista todas as opções de alunos para o <select> do JSP
+        List<Aluno> todosAlunos = alunoDAO.buscarTodos();
+        request.setAttribute("alunosLista", todosAlunos);
+
+        request.setAttribute("aluno", aluno);           // Pode ser null para novo
+        request.setAttribute("modo", "criar");
         request.getRequestDispatcher("/templates/aee/NovoRelatorio.jsp").forward(request, response);
     }
 
     private void exibirFormularioEdicao(int id, HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-
         Relatorio relatorio = relatorioDAO.buscarPorId(id);
         if (relatorio != null) {
-            List<ProfessorAEE> professores = professorAEEDAO.getAll();
+            // Busca todos os alunos para preencher o <select>
+            List<Aluno> todosAlunos = alunoDAO.buscarTodos();
+            request.setAttribute("alunosLista", todosAlunos);
+
             request.setAttribute("relatorio", relatorio);
-            request.setAttribute("professores", professores);
-            request.setAttribute("modo", "editar");
-            request.getRequestDispatcher("/templates/aee/NovoRelatorio.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/EditarRelatorio.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Relatório não encontrado");
         }
