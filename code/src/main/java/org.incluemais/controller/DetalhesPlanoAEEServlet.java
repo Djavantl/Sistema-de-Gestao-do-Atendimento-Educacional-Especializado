@@ -120,7 +120,7 @@ public class DetalhesPlanoAEEServlet extends HttpServlet {
                 boolean excluido = planoDAO.excluir(planoId);
 
                 if (excluido) {
-                    response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE?success=Plano+excluído+com+sucesso");
+                    response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE");
                 } else {
                     response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&erro=Falha+ao+excluir+plano");
                 }

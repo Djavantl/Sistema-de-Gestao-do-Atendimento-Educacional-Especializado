@@ -69,4 +69,26 @@ public class RecursosPedagogicosDAO {
             return stmt.executeUpdate() > 0;
         }
     }
+
+    public void atualizar(RecursosPedagogicos recurso) throws SQLException {
+        String sql = """
+        UPDATE RecursosPedagogicos 
+        SET adaptacaoDidaticaAulasAvaliacoes = ?,
+            materialDidaticoAdaptado = ?,
+            usoTecnologiaAssistiva = ?,
+            tempoEmpregadoAtividadesAvaliacoes = ?
+        WHERE id = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBoolean(1, recurso.isAdaptacaoDidaticaAulasAvaliacoes());
+            stmt.setBoolean(2, recurso.isMaterialDidaticoAdaptado());
+            stmt.setBoolean(3, recurso.isUsoTecnologiaAssistiva());
+            stmt.setBoolean(4, recurso.isTempoEmpregadoAtividadesAvaliacoes());
+            stmt.setInt(5, recurso.getId());
+            stmt.executeUpdate();
+        }
+    }
+
+
 }

@@ -78,4 +78,28 @@ public class RecursoFisicoArquitetonicoDAO {
             return stmt.executeUpdate() > 0;
         }
     }
+
+    public void atualizar(RecursoFisicoArquitetonico recurso) throws SQLException {
+        String sql = """
+        UPDATE RecursoFisicoArquitetonico 
+        SET usoCadeiraDeRodas = ?,
+            auxilioTranscricaoEscrita = ?,
+            mesaAdaptadaCadeiraDeRodas = ?,
+            usoDeMuleta = ?,
+            outrosFisicoArquitetonico = ?,
+            outrosEspecificado = ?
+        WHERE id = ?
+        """;
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setBoolean(1, recurso.isUsoCadeiraDeRodas());
+            stmt.setBoolean(2, recurso.isAuxilioTranscricaoEscrita());
+            stmt.setBoolean(3, recurso.isMesaAdaptadaCadeiraDeRodas());
+            stmt.setBoolean(4, recurso.isUsoDeMuleta());
+            stmt.setBoolean(5, recurso.isOutrosFisicoArquitetonico());
+            stmt.setString(6, recurso.getOutrosEspecificado());
+            stmt.setInt(7, recurso.getId());
+            stmt.executeUpdate();
+        }
+    }
 }

@@ -22,16 +22,17 @@ public class PropostaPedagogicaDAO {
     public void inserir(PropostaPedagogica proposta) throws SQLException {
         persistirRecursosAssociados(proposta);
 
-        String sql = "INSERT INTO PropostaPedagogica (objetivos, metodologias, recursoP_id, recursoFA_id, recursoCI_id, planoAEE_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO PropostaPedagogica (objetivos, metodologias, observacoes, recursoP_id, recursoFA_id, recursoCI_id, planoAEE_id) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setString(1, proposta.getObjetivos());
             stmt.setString(2, proposta.getMetodologias());
-            setResourceId(stmt, 3, proposta.getRecursoP());
-            setResourceId(stmt, 4, proposta.getRecursoFA());
-            setResourceId(stmt, 5, proposta.getRecursoCI());
-            stmt.setInt(6, proposta.getPlanoAEEId());
+            stmt.setString(3, proposta.getObservacoes());
+            setResourceId(stmt, 4, proposta.getRecursoP());
+            setResourceId(stmt, 5, proposta.getRecursoFA());
+            setResourceId(stmt, 6, proposta.getRecursoCI());
+            stmt.setInt(7, proposta.getPlanoAEEId());
 
             int affectedRows = stmt.executeUpdate();
 
@@ -61,6 +62,7 @@ public class PropostaPedagogicaDAO {
                     proposta.setId(rs.getInt("id"));
                     proposta.setObjetivos(rs.getString("objetivos"));
                     proposta.setMetodologias(rs.getString("metodologias"));
+                    proposta.setObservacoes(rs.getString("observacoes"));
                     proposta.setPlanoAEEId(rs.getInt("planoAEE_id"));
 
                     int recursoPId = rs.getInt("recursoP_id");
@@ -89,21 +91,35 @@ public class PropostaPedagogicaDAO {
 
     // Método para atualizar proposta existente
     public void atualizar(PropostaPedagogica proposta) throws SQLException {
-        persistirRecursosAssociados(proposta);
+        // Atualizar recursos primeiro
+        atualizarRecursos(proposta);
 
-        String sql = "UPDATE PropostaPedagogica SET objetivos = ?, metodologias = ?, " +
-                "recursoP_id = ?, recursoFA_id = ?, recursoCI_id = ? " +
-                "WHERE id = ?";
+        // Atualizar proposta principal
+        String sql = "UPDATE PropostaPedagogica SET objetivos = ?, metodologias = ?, observacoes = ? WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, proposta.getObjetivos());
             stmt.setString(2, proposta.getMetodologias());
-            setResourceId(stmt, 3, proposta.getRecursoP());
-            setResourceId(stmt, 4, proposta.getRecursoFA());
-            setResourceId(stmt, 5, proposta.getRecursoCI());
-            stmt.setInt(6, proposta.getId());
-
+            stmt.setString(3, proposta.getObservacoes());
+            stmt.setInt(4, proposta.getId());
             stmt.executeUpdate();
+        }
+    }
+
+    private void atualizarRecursos(PropostaPedagogica proposta) throws SQLException {
+        // Atualizar recursos pedagógicos
+        if (proposta.getRecursoP() != null) {
+            recursosPedagogicosDAO.atualizar(proposta.getRecursoP());
+        }
+
+        // Atualizar recursos físicos/arquitetônicos
+        if (proposta.getRecursoFA() != null) {
+            recursoFisicoDAO.atualizar(proposta.getRecursoFA());
+        }
+
+        // Atualizar recursos de comunicação
+        if (proposta.getRecursoCI() != null) {
+            recursoComunicacaoDAO.atualizar(proposta.getRecursoCI());
         }
     }
 
@@ -164,7 +180,7 @@ public class PropostaPedagogicaDAO {
         excluirProposta(propostaId);
     }
 
-    private PropostaPedagogica buscarPorId(int id) throws SQLException {
+    public PropostaPedagogica buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM PropostaPedagogica WHERE id = ?";
         PropostaPedagogica proposta = null;
 
@@ -176,6 +192,7 @@ public class PropostaPedagogicaDAO {
                     proposta.setId(rs.getInt("id"));
                     proposta.setObjetivos(rs.getString("objetivos"));
                     proposta.setMetodologias(rs.getString("metodologias"));
+                    proposta.setObservacoes(rs.getString("observacoes"));
                     proposta.setPlanoAEEId(rs.getInt("planoAEE_id"));
 
                     int recursoPId = rs.getInt("recursoP_id");

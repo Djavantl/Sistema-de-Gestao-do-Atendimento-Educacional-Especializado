@@ -470,10 +470,12 @@
                             </c:when>
                         <c:otherwise>
                             <div class="proposta-acoes">
-                                <a href="${pageContext.request.contextPath}/editarProposta?id=${plano.proposta.id}"
-                                   class="btn-editar-proposta">
-                                    <i class="bi bi-pencil me-1"></i> Editar
-                                </a>
+                                <c:if test="${not empty plano.proposta}">
+                                    <a href="${pageContext.request.contextPath}/editarProposta?id=${plano.proposta.id}"
+                                       class="btn-editar-proposta">
+                                        <i class="bi bi-pencil me-1"></i> Editar
+                                    </a>
+                                </c:if>
                                 <form action="${pageContext.request.contextPath}/excluirProposta" method="post"
                                       onsubmit="return confirm('Tem certeza que deseja excluir esta proposta pedagógica?');">
                                     <input type="hidden" name="propostaId" value="${plano.proposta.id}">
@@ -492,7 +494,7 @@
                         <div class="proposta-section">
                             <div class="info-grid">
                                 <div class="info-item">
-                                    <label>Objetivos Educacionais</label>
+                                    <label>Objetivos</label>
                                     <p>${plano.proposta.objetivos}</p>
                                 </div>
                                 <div class="info-item">
@@ -601,7 +603,12 @@
                                     </div>
                                 </div>
                             </c:if>
-                        </div>
+                            <c:if test="${not empty plano.proposta.observacoes}">
+                                <div class="info-item">
+                                    <label>Observações Recursos</label>
+                                    <p>${plano.proposta.observacoes}</p>
+                                </div>
+                            </c:if>
                     </c:when>
                     <c:otherwise>
                         <div class="proposta-section">

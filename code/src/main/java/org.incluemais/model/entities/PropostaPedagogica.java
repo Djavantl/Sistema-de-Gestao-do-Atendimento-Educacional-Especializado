@@ -4,6 +4,7 @@ public class PropostaPedagogica {
     private int id;
     private String objetivos;
     private String metodologias;
+    private String observacoes;
     private RecursosPedagogicos recursoP;
     private RecursoFisicoArquitetonico recursoFA;
     private RecursosComunicacaoEInformacao recursoCI;
@@ -12,9 +13,21 @@ public class PropostaPedagogica {
     public PropostaPedagogica() {
     }
 
-    public PropostaPedagogica(String objetivos, String metodologias, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI, int planoAEEId) {
+    public PropostaPedagogica(String objetivos, String metodologias, String observacoes, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI, int planoAEEId) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
+        this.observacoes = observacoes;
+        this.recursoP = recursoP;
+        this.recursoFA = recursoFA;
+        this.recursoCI = recursoCI;
+        this.planoAEEId = planoAEEId;
+    }
+
+    public PropostaPedagogica(int id, String objetivos, String metodologias, String observacoes, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI, int planoAEEId) {
+        this.id = id;
+        this.objetivos = objetivos;
+        this.metodologias = metodologias;
+        this.observacoes = observacoes;
         this.recursoP = recursoP;
         this.recursoFA = recursoFA;
         this.recursoCI = recursoCI;
@@ -43,6 +56,14 @@ public class PropostaPedagogica {
 
     public void setMetodologias(String metodologias) {
         this.metodologias = metodologias;
+    }
+
+    public String getObservacoes() {
+        return observacoes;
+    }
+
+    public void setObservacoes(String observacoes) {
+        this.observacoes = observacoes;
     }
 
     public RecursosPedagogicos getRecursoP() {
