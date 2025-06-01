@@ -9,7 +9,7 @@ public class SessaoAtendimento {
     private LocalDate data;
     private LocalTime horario;
     private String local;
-    private boolean presenca;
+    private Boolean presenca;
     private String observacoes;
 
     public SessaoAtendimento(Aluno aluno, LocalDate data, LocalTime horario, String local) {
@@ -17,6 +17,17 @@ public class SessaoAtendimento {
         this.data = data;
         this.horario = horario;
         this.local = local;
+        this.presenca = null;
+        this.observacoes = "";
+    }
+
+    public SessaoAtendimento(Aluno aluno, LocalDate data, LocalTime horario, String local, String obs) {
+        this.aluno = aluno;
+        this.data = data;
+        this.horario = horario;
+        this.local = local;
+        this.presenca = null;
+        this.observacoes = obs;
     }
 
     public int getId() {
@@ -59,11 +70,15 @@ public class SessaoAtendimento {
         this.local = local;
     }
 
-    public boolean isPresenca() {
+    public Boolean getPresenca(){
         return presenca;
     }
 
-    public void setPresenca(boolean presenca) {
+    public Boolean isPresenca() {
+        return presenca;
+    }
+
+    public void setPresenca(Boolean presenca) {
         this.presenca = presenca;
     }
 

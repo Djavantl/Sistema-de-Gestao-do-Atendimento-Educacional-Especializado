@@ -229,9 +229,9 @@
         </div>
         <div class="menu">
             <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/professor">Professores</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/professores'">Professores</button>
             <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
-            <button class="menu-btn">Usuários</button>
+
         </div>
     </div>
     <div id="titulo">

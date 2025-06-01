@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -9,18 +10,21 @@
     <title>Sessões de Atendimento</title>
     <link rel="stylesheet" href="PorSessao.css">
 </head>
-    <style>@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+    <style>
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
     }
-    body{
+
+    body {
         background-color: #f9f9ff;
         overflow-x: hidden; /* impede rolagem horizontal */
     }
 
-    /* No arquivo alunos.css */
+    /* ---------- Sidebar e Navegação ---------- */
     .sidebar {
         position: fixed;
         top: 0;
@@ -78,10 +82,7 @@
         color: #4D44B5;
     }
 
-    .menu-btn:hover {
-        background-color: rgba(255, 255, 255, 0.15);
-    }
-
+    /* ---------- Título da Página ---------- */
     #titulo h2 {
         color: rgb(12, 12, 97);
         font-size: 28px;
@@ -89,6 +90,7 @@
         margin-top: 40px;
     }
 
+    /* ---------- Conteúdo Principal ---------- */
     .conteudo-principal {
         background-color: #ffffff;
         border-radius: 20px;
@@ -98,14 +100,14 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
 
-    /* Linha do botão */
+    /* ---------- Linha do Botão ---------- */
     .linha-superior {
         display: flex;
         justify-content: flex-end;
         margin-bottom: 30px;
     }
 
-    /* Botão Nova Sessão */
+    /* ---------- Botão Nova Sessão ---------- */
     .botao-nova-sessao {
         background-color: #4D44B5;
         color: #ffffff;
@@ -121,6 +123,7 @@
         background-color: #372e9c;
     }
 
+    /* ---------- Estilo de Formulários ---------- */
     form label {
         font-weight: 600;
         color: #2c3e50;
@@ -149,6 +152,7 @@
         outline: none;
     }
 
+    /* ---------- Modal de Conteúdo (Salvar / Cancelar) ---------- */
     .modal-conteudo button[type="submit"] {
         background-color: #4D44B5;
         color: #ffffff;
@@ -180,13 +184,13 @@
         background-color: #cfcfcf;
     }
 
+    /* ---------- Estilo do Status e Ações da Sessão ---------- */
     .sessao-status {
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 12px;
         position: relative;
-
         border-radius: 6px;
         padding: 10px 12px;
         width: 100%;
@@ -194,18 +198,24 @@
     }
 
     .botao-dropdown {
-        background: transparent;
+        background: none;
         border: none;
         cursor: pointer;
-        margin-left: 8px;
+        margin-left: 6px;
+        padding: 0;
     }
 
     .icone-dropdown {
-        width: 14px;
-        height: 14px;
+        width: 12px;
+        height: 12px;
+        transition: transform 0.3s ease;
     }
 
-    /* Botões de ação empilhados à direita */
+    /* Gira o ícone ao expandir */
+    .botao-dropdown.ativo .icone-dropdown {
+        transform: rotate(180deg);
+    }
+
     .botoes-acoes {
         display: flex;
         flex-direction: column;
@@ -239,45 +249,46 @@
         background-color: #c82333;
     }
 
+    /* ---------- Overlay de Modal ---------- */
     .overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      backdrop-filter: blur(5px);
-      background-color: rgba(0, 0, 0, 0.4);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        backdrop-filter: blur(5px);
+        background-color: rgba(0, 0, 0, 0.4);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
     }
 
-    /* Tabela */
+    /* ---------- Estilo da Tabela de Sessões ---------- */
     .tabela-sessoes {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate; /* permite border-spacing */
+        border-spacing: 0 8px;     /* espaço vertical entre linhas */
         font-size: 14px;
         border-radius: 8px;
         overflow: hidden;
     }
 
-    /* Cabeçalho */
     .tabela-sessoes th {
         background-color: #ecf0f1;
         color: #2c3e50;
         text-align: left;
         padding: 14px;
+        border-bottom: none; /* remover borda inferior */
     }
 
-    /* Células */
     .tabela-sessoes td {
         background-color: #ffffff;
         padding: 14px;
-        border-bottom: 1px solid #e0e0e0;
+        border-bottom: none; /* remover borda inferior */
     }
 
-    /* Filtros */
+    /* Filtros na linha de cabeçalho */
     .linha-filtro input,
     .linha-filtro select {
         width: 100%;
@@ -288,7 +299,7 @@
         background-color: #fefefe;
     }
 
-    /* Botão Filtrar */
+    /* Botão Filtrar (se houver) */
     .botao-filtrar {
         background-color: #1abc9c;
         color: white;
@@ -303,6 +314,7 @@
         background-color: #16a085;
     }
 
+    /* Pequeno destaque para status genéricos */
     .presenca-status {
         display: inline-flex;
         align-items: center;
@@ -310,25 +322,7 @@
         font-weight: 500;
     }
 
-    .botao-dropdown {
-        background: none;
-        border: none;
-        padding: 0;
-        margin-left: 6px;
-        cursor: pointer;
-    }
-
-    .icone-dropdown {
-        width: 12px;
-        height: 12px;
-        transition: transform 0.3s ease;
-    }
-
-    /* Gira o ícone ao expandir */
-    .botao-dropdown.ativo .icone-dropdown {
-        transform: rotate(180deg);
-    }
-
+    /* Conteúdo Detalhes (quando expandido) */
     .conteudo-detalhes {
         background-color: #f4f4fc;
         padding: 16px;
@@ -337,6 +331,7 @@
         color: #333;
     }
 
+    /* ---------- Modal de Confirmação ---------- */
     .modal-overlay {
         position: fixed;
         top: 0;
@@ -379,11 +374,7 @@
         background-color: #c0392b;
     }
 
-    .conteudo-detalhes {
-        padding: 8px;
-        font-family: Arial, sans-serif;
-    }
-
+    /* Textarea dentro de Conteúdo Detalhes (forms de observações) */
     .conteudo-detalhes textarea {
         width: 100%;
         min-height: 80px;
@@ -405,7 +396,144 @@
     .conteudo-detalhes textarea::placeholder {
         color: transparent; /* Remove o placeholder */
     }
+
+    /* ---------- Seções de Tabela (Próximas / Passadas) ---------- */
+    .secao-tabela {
+        margin-top: 40px;
+        margin-bottom: 50px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        background-color: #ffffff;
+        position: relative;
+    }
+
+    .cabecalho-secao {
+        background-color: #4D44B5;
+        padding: 15px 25px;
+    }
+
+    .cabecalho-secao h3 {
+        color: white;
+        font-size: 20px;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    /* Primeira seção não precisa de margem-top extra */
+    .secao-tabela:first-child {
+        margin-top: 0;
+    }
+
+    /* Mensagem de “lista vazia” na tabela */
+    .tabela-sessoes td[colspan] {
+        font-size: 16px;
+        color: #666;
+        padding: 30px !important;
+    }
+
+    /* ---------- Contorno nas Linhas Individuais ---------- */
+    /* (apenas nos <td> para formar um contorno completo ao redor da linha) */
+
+    /* Próximas Sessões: borda amarela */
+    .proximas-sessoes .linha-principal td {
+        border-top: 2px solid #FFD700;
+        border-bottom: 2px solid #FFD700;
+    }
+
+    /* Adiciona a borda esquerda e os cantos arredondados apenas na primeira célula */
+    .proximas-sessoes .linha-principal td:first-child {
+        border-left: 2px solid #FFD700;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    /* Adiciona a borda direita e os cantos arredondados apenas na última célula */
+    .proximas-sessoes .linha-principal td:last-child {
+        border-right: 2px solid #FFD700;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    /* Sessões Passadas: borda laranja */
+    .sessoes-passadas .linha-principal td {
+        border-top: 2px solid #FFA500;
+        border-bottom: 2px solid #FFA500;
+    }
+
+    /* Adiciona a borda esquerda e os cantos arredondados apenas na primeira célula */
+    .sessoes-passadas .linha-principal td:first-child {
+        border-left: 2px solid #FFA500;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    /* Adiciona a borda direita e os cantos arredondados apenas na última célula */
+    .sessoes-passadas .linha-principal td:last-child {
+        border-right: 2px solid #FFA500;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+    /* ---------- Nova Seção: Sessões por Aluno ---------- */
+    .sessoes-por-aluno .linha-principal td {
+        border-top: 2px solid #4D44B5;
+        border-bottom: 2px solid #4D44B5;
+    }
+
+    .sessoes-por-aluno .linha-principal td:first-child {
+        border-left: 2px solid #4D44B5;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
+
+    .sessoes-por-aluno .linha-principal td:last-child {
+        border-right: 2px solid #4D44B5;
+        border-top-right-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    .selecionar-aluno-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        background-color: #f4f4fc;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .selecionar-aluno-container label {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 15px;
+    }
+
+    .selecionar-aluno-container select {
+        flex-grow: 1;
+        padding: 8px 12px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #fefefe;
+    }
+
+    .botao-buscar {
+        background-color: #4D44B5;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.3s;
+    }
+
+    .botao-buscar:hover {
+        background-color: #372e9c;
+    }
+
     </style>
+
 <body>
     <div class="sidebar">
         <div class="logo">
@@ -414,9 +542,8 @@
         </div>
         <div class="menu">
             <button class="menu-btn" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/professor">Professores</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/aee/professores'">Professores</button>
             <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
-            <button class="menu-btn">Usuários</button>
         </div>
     </div>
 
@@ -434,13 +561,13 @@
             <div class="modal-conteudo">
                 <h3>Criar Nova Sessão</h3>
                 <form id="formNovaSessao" action="${pageContext.request.contextPath}/templates/aee/sessoes?acao=criar" method="POST">
-                    <label for="aluno">Nome do Aluno:</label><br>
-                    <input type="text" id="aluno" name="aluno" required list="listaAlunos">
-                    <datalist id="listaAlunos">
-                        <c:forEach items="${todosAlunos}" var="aluno">
-                            <option value="${aluno.nome}">
-                        </c:forEach>
-                    </datalist><br><br>
+                     <label for="aluno">Nome do Aluno:</label><br>
+                        <select name="aluno_matricula" id="aluno" required>
+                            <option value="" disabled selected>Selecione um aluno</option>
+                            <c:forEach items="${todosAlunos}" var="aluno">
+                                <option value="${aluno.matricula}">${aluno.nome}</option>
+                            </c:forEach>
+                        </select><br><br>
 
                     <label for="data">Data:</label><br>
                     <input type="date" id="data" name="data" required><br><br>
@@ -459,99 +586,332 @@
             </div>
         </div>
 
-        <!-- Tabela de Sessões -->
-        <table class="tabela-sessoes">
-            <thead>
-                <tr>
-                    <th>Aluno</th>
-                    <th>Data</th>
-                    <th>Horário</th>
-                    <th>Local</th>
-                    <th>Presença</th>
-                </tr>
-                <tr class="linha-filtro">
-                    <th><input type="text" name="filtroAluno" placeholder="Nome do aluno"></th>
-                    <th><input type="date" name="filtroData"></th>
-                    <th><input type="time" name="filtroHorario"></th>
-                    <th><input type="text" name="filtroLocal" placeholder="Local"></th>
-                    <th>
-                        <select name="filtroPresenca">
-                            <option value="">Todos</option>
-                            <option value="true">Presente</option>
-                            <option value="false">Ausente</option>
-                        </select>
-                    </th>
-                </tr>
-            </thead>
+        <!-- Nova Seção: Sessões por Aluno -->
+        <div class="secao-tabela sessoes-por-aluno">
+            <div class="cabecalho-secao">
+                <h3>Sessões por Aluno</h3>
+            </div>
 
-            <tbody>
-                <c:forEach items="${sessoeslista}" var="sessao">
-                    <tr data-id="${sessao.id}" id="linha-${sessao.id}">
-                        <td>${sessao.aluno.nome}</td>
-                        <td>${sessao.data}</td>
-                        <td>${sessao.horario}</td>
-                        <td>${sessao.local}</td>
-                        <td>
-                            <div class="sessao-status">
-                                <span class="${sessao.presenca ? 'texto-presente' : 'texto-ausente'}">
-                                    ${sessao.presenca ? 'Presente' : 'Ausente'}
-                                </span>
-                                <button class="botao-dropdown" onclick="toggleDetalhes(this)">
-                                    <img src="${pageContext.request.contextPath}/static/images/seta.svg" alt="seta" class="icone-dropdown">
-                                </button>
+            <form action="${pageContext.request.contextPath}/templates/aee/sessoes" method="GET">
+                <div class="selecionar-aluno-container">
+                    <label for="alunoSelecionado">Selecione um Aluno:</label>
+                    <select id="alunoSelecionado" name="matriculaAluno">
+                        <option value="" disabled selected>Selecione um aluno</option>
+                        <c:forEach items="${todosAlunos}" var="aluno">
+                            <option value="${aluno.matricula}"
+                                <c:if test="${param.matriculaAluno == aluno.matricula}">selected</c:if>
+                            >
+                                ${aluno.nome}
+                            </option>
+                        </c:forEach>
+                    </select>
+                    <button type="submit" class="botao-buscar">Buscar</button>
+                </div>
+            </form>
 
-                                <div class="botoes-acoes">
-                                    <button class="botao-editar"
-                                            onclick="abrirEdicao(${sessao.id})">Editar</button>
-                                    <button class="botao-excluir"
-                                            onclick="confirmarExclusao(${sessao.id})">Excluir</button>
-                                </div>
-                            </div>
-                        </td>
+            <c:if test="${not empty sessoesPorAluno}">
+                <table class="tabela-sessoes">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Horário</th>
+                            <th>Local</th>
+                            <th>Presença</th>
+                            <th>Observações</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach items="${sessoesPorAluno}" var="sessao">
+                            <tr class="linha-principal"
+                                data-id="${sessao.id}"
+                                data-aluno="${sessao.aluno.nome}">
+                                <td>${sessao.data}</td>
+                                <td>${sessao.horario}</td>
+                                <td>${sessao.local}</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${sessao.presenca == true}">
+                                            <span class="texto-presente">Presente</span>
+                                        </c:when>
+                                        <c:when test="${sessao.presenca == false}">
+                                            <span class="texto-ausente">Ausente</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="texto-pendente">Pendente</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty sessao.observacoes}">
+                                            ${sessao.observacoes}
+                                        </c:when>
+                                        <c:otherwise>
+                                            -
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <div class="botoes-acoes">
+                                        <button class="botao-editar" onclick="abrirEdicaoPorAluno(${sessao.id})">Editar</button>
+                                        <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">Excluir</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </c:if>
+
+            <c:if test="${empty sessoesPorAluno && not empty param.matriculaAluno}">
+                <div style="text-align: center; padding: 20px; font-size: 16px; color: #666;">
+                    Nenhuma sessão encontrada para este aluno
+                </div>
+            </c:if>
+        </div>
+
+        <!-- Seção de Sessões Futuras -->
+        <div class="secao-tabela proximas-sessoes"> <!-- Adicionada classe "proximas-sessoes" -->
+            <div class="cabecalho-secao">
+                <h3>Próximas Sessões</h3>
+            </div>
+
+            <table class="tabela-sessoes">
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Local</th>
+                        <th>Presença</th>
                     </tr>
-                    <tr class="linha-detalhes" style="display: none;">
-                        <td colspan="6">
-                            <div class="conteudo-detalhes">
-                                <p><strong>Observações:</strong> ${sessao.observacoes}</p>
-                            </div>
-                        </td>
+                    <tr class="linha-filtro">
+                        <th><input type="text" name="filtroAluno" placeholder="Nome do aluno"></th>
+                        <th><input type="date" name="filtroData"></th>
+                        <th><input type="time" name="filtroHorario"></th>
+                        <th><input type="text" name="filtroLocal" placeholder="Local"></th>
+                        <th><input type="text" name="filtroPresenca" placeholder="Presenca"></th>
                     </tr>
-                </c:forEach>
-            </tbody>
-        </table>
+                </thead>
 
-        <!-- Modal Edição -->
-        <div class="modal-overlay" id="modalEditar">
+                <tbody>
+                    <c:set var="existemFuturas" value="false" />
+                    <c:forEach items="${sessoeslista}" var="sessao">
+                        <c:if test="${sessao.data >= hoje}">
+                            <c:set var="existemFuturas" value="true" />
+                            <tr class="linha-principal" data-id="${sessao.id}" id="linha-${sessao.id}">
+                                <td>${sessao.aluno.nome}</td>
+                                <td>${sessao.data}</td>
+                                <td>${sessao.horario}</td>
+                                <td>${sessao.local}</td>
+                                <td>
+                                    <div class="sessao-status">
+                                        <c:set var="status" value="Pendente" />
+                                        <c:set var="classe" value="texto-pendente" />
+
+                                        <c:choose>
+                                            <c:when test="${sessao.presenca != null && sessao.presenca == true}">
+                                                <c:set var="status" value="Presente" />
+                                                <c:set var="classe" value="texto-presente" />
+                                            </c:when>
+                                            <c:when test="${sessao.presenca != null && sessao.presenca == false}">
+                                                <c:set var="status" value="Ausente" />
+                                                <c:set var="classe" value="texto-ausente" />
+                                            </c:when>
+                                        </c:choose>
+
+                                        <span class="${classe}">${status}</span>
+                                        <button class="botao-dropdown" onclick="toggleDetalhes(this)">
+                                            <img src="${pageContext.request.contextPath}/static/images/seta.svg" alt="seta" class="icone-dropdown">
+                                        </button>
+
+                                        <div class="botoes-acoes">
+                                            <button class="botao-editar" onclick="abrirEdicao(${sessao.id})">Editar</button>
+                                            <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">Excluir</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="linha-detalhes" style="display: none;">
+                                <td colspan="6">
+                                    <div class="conteudo-detalhes">
+                                        <p><strong>Observações:</strong> ${sessao.observacoes}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+
+                    <c:if test="${not existemFuturas}">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px; font-size: 16px; color: #666;">
+                                Sem sessões marcadas no momento
+                            </td>
+                        </tr>
+                    </c:if>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Seção de Sessões Passadas -->
+        <div class="secao-tabela sessoes-passadas"> <!-- Adicionada classe "sessoes-passadas" -->
+            <div class="cabecalho-secao">
+                <h3>Sessões Desatualizadas</h3>
+            </div>
+
+            <table class="tabela-sessoes">
+                <thead>
+                    <tr>
+                        <th>Aluno</th>
+                        <th>Data</th>
+                        <th>Horário</th>
+                        <th>Local</th>
+                        <th>Presença</th>
+                    </tr>
+                    <tr class="linha-filtro">
+                        <th><input type="text" name="filtroAluno" placeholder="Nome do aluno"></th>
+                        <th><input type="date" name="filtroData"></th>
+                        <th><input type="time" name="filtroHorario"></th>
+                        <th><input type="text" name="filtroLocal" placeholder="Local"></th>
+                        <th><input type="text" name="filtroPresenca" placeholder="Presenca"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <c:set var="existemPassadas" value="false" />
+                    <c:forEach items="${sessoeslista}" var="sessao">
+                        <c:if test="${sessao.data < hoje}">
+                            <c:set var="existemPassadas" value="true" />
+                            <tr class="linha-principal" data-id="${sessao.id}" id="linha-${sessao.id}">
+                                <td>${sessao.aluno.nome}</td>
+                                <td>${sessao.data}</td>
+                                <td>${sessao.horario}</td>
+                                <td>${sessao.local}</td>
+                                <td>
+                                    <div class="sessao-status">
+                                        <c:set var="status" value="Pendente" />
+                                        <c:set var="classe" value="texto-pendente" />
+
+                                        <c:choose>
+                                            <c:when test="${sessao.presenca != null && sessao.presenca == true}">
+                                                <c:set var="status" value="Presente" />
+                                                <c:set var="classe" value="texto-presente" />
+                                            </c:when>
+                                            <c:when test="${sessao.presenca != null && sessao.presenca == false}">
+                                                <c:set var="status" value="Ausente" />
+                                                <c:set var="classe" value="texto-ausente" />
+                                            </c:when>
+                                        </c:choose>
+
+                                        <span class="${classe}">${status}</span>
+                                        <button class="botao-dropdown" onclick="toggleDetalhes(this)">
+                                            <img src="${pageContext.request.contextPath}/static/images/seta.svg" alt="seta" class="icone-dropdown">
+                                        </button>
+
+                                        <div class="botoes-acoes">
+                                            <button class="botao-editar" onclick="abrirEdicao(${sessao.id})">Editar</button>
+                                            <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">Excluir</button>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="linha-detalhes" style="display: none;">
+                                <td colspan="6">
+                                    <div class="conteudo-detalhes">
+                                        <p><strong>Observações:</strong> ${sessao.observacoes}</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:if>
+                    </c:forEach>
+
+                    <c:if test="${not existemPassadas}">
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px; font-size: 16px; color: #666;">
+                                Sem sessões desatualizadas
+                            </td>
+                        </tr>
+                    </c:if>
+                </tbody>
+            </table>
+        </div>
+
+       <!-- Modal Edição -->
+       <div class="modal-overlay" id="modalEditar">
+           <div class="modal-conteudo">
+               <h2>Editar Sessão</h2>
+               <form id="formEditarSessao" action="${pageContext.request.contextPath}/templates/aee/sessoes?acao=atualizar" method="POST">
+                   <input type="hidden" name="id" id="idEditar">
+
+                   <label for="alunoEditar">Aluno:</label><br>
+                   <input type="text" id="alunoEditar" name="aluno" readonly><br><br>
+
+                   <label for="dataEditar">Data:</label><br>
+                   <input type="date" id="dataEditar" name="data" required><br><br>
+
+                   <label for="horarioEditar">Horário:</label><br>
+                   <input type="time" id="horarioEditar" name="horario" required><br><br>
+
+                   <label for="localEditar">Local:</label><br>
+                   <input type="text" id="localEditar" name="local" required><br><br>
+
+                   <label for="presencaEditar">Presença:</label><br>
+                   <select id="presencaEditar" name="presenca">
+                       <option value="true">Presente</option>
+                       <option value="false">Ausente</option>
+                   </select><br><br>
+
+                   <!-- Campo de observações como input text -->
+                   <label for="observacoesEditar">Observações:</label><br>
+                   <input type="text" id="observacoesEditar" name="observacoes"><br><br>
+
+                   <div class="botoes-modal">
+                       <button type="submit">Salvar</button>
+                       <button type="button" onclick="fecharModal(modalEditar)">Cancelar</button>
+                   </div>
+               </form>
+           </div>
+       </div>
+
+        <!-- 1. Modal exclusivo para edição em "Sessões por Aluno" -->
+        <div class="modal-overlay" id="modalEditarPorAluno" style="display: none;">
             <div class="modal-conteudo">
-                <h2>Editar Sessão</h2>
-                <form id="formEditarSessao" action="${pageContext.request.contextPath}/templates/aee/sessoes?acao=atualizar" method="POST">
-                    <input type="hidden" name="id" id="idEditar">
+                <h2>Editar Sessão (por Aluno)</h2>
+                <form id="formEditarPorAluno" action="${pageContext.request.contextPath}/templates/aee/sessoes?acao=atualizar" method="POST">
+                    <!-- === Campos do Formulário === -->
+                    <input type="hidden" name="id" id="idEditarPorAluno">
 
-                    <label for="alunoEditar">Aluno:</label><br>
-                    <input type="text" id="alunoEditar" name="aluno" readonly><br><br>
+                    <label for="alunoEditarPorAluno">Aluno:</label><br>
+                    <input type="text" id="alunoEditarPorAluno" name="aluno" readonly><br><br>
 
-                    <label for="dataEditar">Data:</label><br>
-                    <input type="date" id="dataEditar" name="data" required><br><br>
+                    <label for="dataEditarPorAluno">Data:</label><br>
+                    <input type="date" id="dataEditarPorAluno" name="data" required><br><br>
 
-                    <label for="horarioEditar">Horário:</label><br>
-                    <input type="time" id="horarioEditar" name="horario" required><br><br>
+                    <label for="horarioEditarPorAluno">Horário:</label><br>
+                    <input type="time" id="horarioEditarPorAluno" name="horario" required><br><br>
 
-                    <label for="localEditar">Local:</label><br>
-                    <input type="text" id="localEditar" name="local" required><br><br>
+                    <label for="localEditarPorAluno">Local:</label><br>
+                    <input type="text" id="localEditarPorAluno" name="local" required><br><br>
 
-                    <label for="presencaEditar">Presença:</label><br>
-                    <select id="presencaEditar" name="presenca">
+                    <label for="presencaEditarPorAluno">Presença:</label><br>
+                    <select id="presencaEditarPorAluno" name="presenca">
+                        <option value="">Pendente</option>
                         <option value="true">Presente</option>
                         <option value="false">Ausente</option>
                     </select><br><br>
 
+                    <label for="observacoesEditarPorAluno">Observações:</label><br>
+                    <textarea id="observacoesEditarPorAluno" name="observacoes" rows="4" style="width:100%;"></textarea><br><br>
+
                     <div class="botoes-modal">
                         <button type="submit">Salvar</button>
-                        <button type="button" onclick="fecharModal(modalEditar)">Cancelar</button>
+                        <button type="button" onclick="fecharModalPorAluno()">Cancelar</button>
                     </div>
                 </form>
             </div>
         </div>
+
 
         <!-- Modal Confirmação Exclusão -->
         <div class="modal-overlay" id="modalExcluir">
@@ -577,48 +937,96 @@
             excluir: document.getElementById('modalExcluir')
         };
 
+        const modalPorAluno = document.getElementById('modalEditarPorAluno');
+
         // Abrir modais
         document.querySelector('.botao-nova-sessao').addEventListener('click', () => {
             modais.nova.style.display = 'flex';
         });
 
         function abrirEdicao(id) {
-            console.log("Editando sessão ID:", id);
+                console.log("Editando sessão ID:", id);
 
-            // 1. Encontra a linha da tabela correspondente
-            const linha = document.getElementById("linha-"+id);
-            if (!linha) {
-                console.error("Sessão não encontrada");
-                return;
+                // 1. Encontra a linha da tabela (próximas/passadas) pelo id
+                const linha = document.getElementById("linha-" + id);
+                if (!linha) {
+                    console.error("Sessão não encontrada (linha com id=linha-" + id + ")");
+                    return;
+                }
+
+                // 2. Extrai as células da linha
+                const celulas = linha.cells;
+
+                // 3. Extrai os valores de cada coluna
+                const dados = {
+                    aluno: celulas[0].textContent.trim(),
+                    data: celulas[1].textContent.trim(),    // formato yyyy-MM-dd
+                    horario: celulas[2].textContent.trim(), // formato HH:mm
+                    local: celulas[3].textContent.trim(),
+                    presencaTexto: celulas[4].querySelector('.sessao-status span').textContent.trim()
+                };
+
+                // 4. Converte o texto de presença em valor para <select>
+                let presencaValue = '';
+                if (dados.presencaTexto === "Presente") presencaValue = "true";
+                else if (dados.presencaTexto === "Ausente") presencaValue = "false";
+                // se for "Pendente", deixa presencaValue = '' para não selecionar nada
+
+                // 5. Preenche o formulário de edição
+                document.getElementById('idEditar').value = id;
+                document.getElementById('alunoEditar').value = dados.aluno;
+                document.getElementById('dataEditar').value = dados.data;
+                document.getElementById('horarioEditar').value = dados.horario;
+                document.getElementById('localEditar').value = dados.local;
+                document.getElementById('presencaEditar').value = presencaValue;
+
+                // 6. Limpa o campo de observações (nas tabelas de futuras/passadas não há coluna própria de observações)
+                document.getElementById('observacoesEditar').value = "";
+
+                // 7. Abre o modal de edição
+                modais.editar.style.display = 'flex';
             }
 
-            // 2. Extrai os dados das células
-            const celulas = linha.cells;
-            const dados = {
-                aluno: celulas[0].textContent.trim(),
-                dataBr: celulas[1].textContent.trim(),
-                horario: celulas[2].textContent.trim(),
-                local: celulas[3].textContent.trim(),
-                presenca: celulas[4].querySelector('.sessao-status span').textContent.includes("Presente")
-            };
+        function abrirEdicaoPorAluno(id) {
+                // 1) Localizar a <tr> correta dentro da seção “Sessões por Aluno”
+                const linha = document.querySelector(`.sessoes-por-aluno .linha-principal[data-id="${id}"]`);
+                if (!linha) {
+                    console.error("Não encontrou <tr> com data-id=" + id + " em .sessoes-por-aluno");
+                    return;
+                }
 
-            // 3. Converte a data para o formato yyyy-MM-dd (obrigatório para input type="date")
-            const [dia, mes, ano] = dados.dataBr.split('/');
-            const dataInput = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`;
-            document.getElementById('dataEditar').value = dataInput.trim();
+                // 2) Extrair todas as células da linha
+                const celulas = linha.cells;
 
+                // 3) Ler sempre via textContent (independente de <span> ou não)
+                const nomeAluno = linha.dataset.aluno;                   // vem de data-aluno="..."
+                const dataSessao = celulas[0].textContent.trim();        // coluna 0: Data
+                const horarioSessao = celulas[1].textContent.trim();     // coluna 1: Horário
+                const localSessao = celulas[2].textContent.trim();       // coluna 2: Local
+                const presencaTexto = celulas[3].textContent.trim();     // coluna 3: Presença
+                let observacoesTexto = "";
+                if (celulas[4]) {
+                    observacoesTexto = celulas[4].textContent.trim();    // coluna 4: Observações
+                }
 
-            // 4. Preenche os campos do formulário
-            document.getElementById('idEditar').value = id;
-            document.getElementById('alunoEditar').value = dados.aluno;
-            document.getElementById('dataEditar').value = dataInput;
-            document.getElementById('horarioEditar').value = dados.horario;
-            document.getElementById('localEditar').value = dados.local;
-            document.getElementById('presencaEditar').value = dados.presenca;
+                // 4) Converter "Presente"/"Ausente"/"Pendente" para value do <select>
+                let presencaValue = "";
+                if (presencaTexto === "Presente") presencaValue = "true";
+                else if (presencaTexto === "Ausente") presencaValue = "false";
+                // se for "Pendente" ou texto vazio, deixa presencaValue = "" (seleciona a primeira opção)
 
-            // 5. Abre o modal
-            document.getElementById('modalEditar').style.display = 'flex';
-        }
+                // 5) Preencher campos do formulário dentro do modal
+                document.getElementById('idEditarPorAluno').value = id;
+                document.getElementById('alunoEditarPorAluno').value = nomeAluno;
+                document.getElementById('dataEditarPorAluno').value = dataSessao;
+                document.getElementById('horarioEditarPorAluno').value = horarioSessao;
+                document.getElementById('localEditarPorAluno').value = localSessao;
+                document.getElementById('presencaEditarPorAluno').value = presencaValue;
+                document.getElementById('observacoesEditarPorAluno').value = (observacoesTexto === "-" ? "" : observacoesTexto);
+
+                // 6) Exibir o modal
+                modalPorAluno.style.display = 'flex';
+            }
 
         function confirmarExclusao(id) {
             document.getElementById('idExcluir').value = id;
@@ -630,20 +1038,33 @@
             modal.style.display = 'none';
         }
 
-        // Fechar ao clicar fora
-        window.onclick = function(event) {
-            Object.values(modais).forEach(modal => {
-                if (event.target === modal) {
-                    modal.style.display = 'none';
-                }
-            });
-        }
+       // Fechar ao clicar fora
+       window.onclick = function(event) {
+           Object.values(modais).forEach(modal => {
+               if (event.target === modal) {
+                   fecharModal(modal);
+               }
+           });
+       }
 
         // Controle dos Detalhes
         function toggleDetalhes(botao) {
             const linhaDetalhes = botao.closest('tr').nextElementSibling;
             linhaDetalhes.style.display = linhaDetalhes.style.display === 'none' ? 'table-row' : 'none';
         }
+
+        // Filtro simplificado
+        document.querySelectorAll('.linha-filtro input').forEach(input => {
+            input.addEventListener('input', (e) => {
+                const colIndex = e.target.parentElement.cellIndex;
+                const valor = e.target.value.toLowerCase();
+
+                document.querySelectorAll('.linha-principal').forEach(linha => {
+                    const conteudo = linha.cells[colIndex].textContent.toLowerCase();
+                    linha.style.display = conteudo.includes(valor) ? '' : 'none';
+                });
+            });
+        });
     </script>
 </body>
 </html>

@@ -41,52 +41,47 @@ public class SessaoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-                listarSessoes(request, response);
+            String matriculaAluno = request.getParameter("matriculaAluno");
+
+            if (matriculaAluno != null && !matriculaAluno.isEmpty()) {
+                List<SessaoAtendimento> sessoesPorAluno = sessaoDAO.buscarPorAluno(matriculaAluno);
+                request.setAttribute("sessoesPorAluno", sessoesPorAluno);
+            }
+            listarSessoes(request, response);
 
         } catch (SQLException e) {
             throw new ServletException("Erro de banco de dados", e);
         }
     }
 
-    private void criarSessao(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("Entrou no metodo");
-        String nomeAluno = request.getParameter("aluno");
+    private void criarSessao(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        // Corrigido: obter matrícula em vez de nome
+        String matricula = request.getParameter("aluno_matricula");
         LocalDate data = LocalDate.parse(request.getParameter("data"));
         LocalTime horario = LocalTime.parse(request.getParameter("horario"));
         String local = request.getParameter("local");
 
-        List<Aluno> alunos = alunoDAO.buscarPorNome(nomeAluno);
+        // Buscar aluno por matrícula em vez de nome
+        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
 
-        if (alunos.isEmpty()) {
-            request.setAttribute("erro", "Aluno não encontrado: " + nomeAluno);
-            request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
+        if (aluno == null) {
+            request.setAttribute("erro", "Aluno não encontrado com matrícula: " + matricula);
+            listarSessoes(request, response);
             return;
         }
 
-        if (alunos.size() > 1) {
-            request.setAttribute("alunos", alunos);
-            request.setAttribute("data", data.toString());
-            request.setAttribute("horario", horario.toString());
-            request.setAttribute("local", local);
-            request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
-            return;
-        }
-
-
-        Aluno aluno = alunos.get(0);
-        System.out.println(nomeAluno);
-        System.out.println(data);
-        System.out.println(horario);
-        System.out.println(local);
         SessaoAtendimento sessao = new SessaoAtendimento(aluno, data, horario, local);
 
-        try{
+        try {
             sessaoDAO.inserir(sessao);
-        } catch (SQLException e){
-            System.out.println(e.getMessage());
+            response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?sucesso=Sessão+criada+com+sucesso");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            request.setAttribute("erro", "Erro ao criar sessão: " + e.getMessage());
+            listarSessoes(request, response);
         }
-
-        response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?sucesso=Sessão+criada+com+sucesso");
     }
 
     @Override
@@ -113,23 +108,32 @@ public class SessaoServlet extends HttpServlet {
     private void listarSessoes(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<SessaoAtendimento> sessoes = sessaoDAO.listarTodos();
-        request.setAttribute("sessoeslista", sessoes);
-        request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
-    }
+        try {
+            List<SessaoAtendimento> sessoes = sessaoDAO.listarTodos();
+            System.out.println("Total de sessões encontradas: " + sessoes.size());
 
-    private void exibirFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, ServletException, IOException {
+            for (SessaoAtendimento sessao : sessoes) {
+                System.out.println("Sessão ID: " + sessao.getId()
+                        + " | Aluno: " + sessao.getAluno().getNome()
+                        + " | Presença: " + sessao.isPresenca());
+            }
 
-        int id = Integer.parseInt(request.getParameter("id"));
-        SessaoAtendimento sessao = sessaoDAO.buscarPorId(id);
+            request.setAttribute("sessoeslista", sessoes);
 
-        if (sessao != null) {
-            request.setAttribute("sessao", sessao);
-            request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sessão não encontrada");
+            LocalDate hoje = LocalDate.now();
+            request.setAttribute("hoje", hoje);
+
+            List<Aluno> todosAlunos = alunoDAO.buscarTodos();
+            System.out.println("Total de alunos encontrados: " + todosAlunos.size());
+            request.setAttribute("todosAlunos", todosAlunos);
+
+        } catch (Exception e) {
+            System.err.println("ERRO GRAVE ao carregar sessões:");
+            e.printStackTrace();
+            request.setAttribute("erro", "Falha ao carregar dados: " + e.getMessage());
         }
+
+        request.getRequestDispatcher("/templates/aee/PorSessao.jsp").forward(request, response);
     }
 
     private void atualizarSessao(HttpServletRequest request, HttpServletResponse response)
@@ -139,7 +143,14 @@ public class SessaoServlet extends HttpServlet {
         LocalDate data = LocalDate.parse(request.getParameter("data"));
         LocalTime horario = LocalTime.parse(request.getParameter("horario"));
         String local = request.getParameter("local");
-        boolean presenca = Boolean.parseBoolean(request.getParameter("presenca"));
+
+        String presencaParam = request.getParameter("presenca");
+        Boolean presenca = null;
+
+        if (presencaParam != null && !presencaParam.isEmpty()) {
+            presenca = Boolean.parseBoolean(presencaParam);
+        }
+
         String observacoes = request.getParameter("observacoes");
 
         SessaoAtendimento sessao = sessaoDAO.buscarPorId(id);
