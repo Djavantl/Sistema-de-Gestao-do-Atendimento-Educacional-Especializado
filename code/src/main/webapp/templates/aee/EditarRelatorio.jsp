@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${param.acao == 'editar' ? 'Editar' : 'Criar'} Avaliação</title>
+    <title>Editar Relatório</title>
     <style>
         * {
             margin: 0;
@@ -100,9 +100,15 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .form-avaliacao {
+        .form-plano {
             display: grid;
             gap: 25px;
+        }
+
+        .grupo-campos {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
         }
 
         .campo {
@@ -147,6 +153,7 @@
             display: flex;
             gap: 15px;
             justify-content: flex-end;
+            width: 100%;
         }
 
         .botao-salvar {
@@ -179,14 +186,22 @@
             background-color: #d0d0d0;
         }
 
-        /* Estilo para informações do relatório */
-        .info-relatorio {
+        .info-aluno {
             grid-column: span 2;
             background-color: #f8f9fa;
             border-radius: 8px;
             padding: 15px;
             border-left: 4px solid #4D44B5;
             margin-bottom: 15px;
+        }
+
+        .professor-info {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f0f4f8;
+            border-radius: 8px;
+            border-left: 3px solid #4D44B5;
         }
     </style>
 </head>
@@ -205,54 +220,110 @@
     </div>
 
     <div id="titulo">
-            <h2>${param.acao == 'editar' ? 'Editar' : 'Criar'} Avaliação</h2>
-        </div>
+        <h2>Editar Relatório</h2>
+    </div>
 
-        <div class="conteudo-principal">
-            <form class="form-avaliacao"
-                  action="${pageContext.request.contextPath}/avaliacao"
-                  method="POST">
-                <!-- 1) Ação (criar ou editar) -->
-                <input type="hidden" name="acao" value="${param.acao}" />
+    <div class="conteudo-principal">
+        <form id="formEditarRelatorio" class="form-plano"
+              action="${pageContext.request.contextPath}/relatorios/atualizar" method="POST">
+            <!-- ID oculto para que o servlet saiba qual relatório atualizar -->
+            <input type="hidden" name="id" value="${relatorio.id}" />
+            <!-- Matrícula do aluno atual, para que não venha nula no servidor -->
+            <input type="hidden" name="alunoMatricula" value="${relatorio.aluno.matricula}" />
 
-                <!-- 2) relatorioId deve vir do atributo que o servlet setou -->
-                <input type="hidden" name="relatorioId" value="${relatorioId}" />
+            <c:if test="${not empty relatorio.aluno}">
+                <div class="info-aluno">
+                    <label>Aluno:</label>
+                    <p><strong>${relatorio.aluno.nome}</strong> (${relatorio.aluno.matricula})</p>
+                </div>
+            </c:if>
 
-                <c:if test="${param.acao == 'editar'}">
-                    <input type="hidden" name="id" value="${avaliacao.id}" />
-                </c:if>
-
-                <!-- Campos “Área”, “Desempenho Verificado” e “Observações” -->
+            <div class="grupo-campos">
+                <!-- Título -->
                 <div class="campo">
-                    <label for="area">Área:</label>
-                    <input type="text"
-                           id="area"
-                           name="area"
-                           value="${avaliacao != null ? avaliacao.area : ''}"
-                           required />
+                    <label for="tituloRelatorio">Título do Relatório:</label>
+                    <input type="text" id="tituloRelatorio" name="titulo" required
+                           value="${relatorio.titulo}"/>
                 </div>
 
+                <!-- Data -->
                 <div class="campo">
-                    <label for="desempenhoVerificado">Desempenho Verificado:</label>
-                    <textarea id="desempenhoVerificado"
-                              name="desempenhoVerificado"
-                              required>${avaliacao != null ? avaliacao.desempenhoVerificado : ''}</textarea>
+                    <label for="dataGeracao">Data do Relatório:</label>
+                    <input type="date" id="dataGeracao" name="dataGeracao" required
+                           value="${relatorio.dataGeracao}"/>
                 </div>
+            </div>
 
+            <div class="grupo-campos">
+                <!-- Professor -->
                 <div class="campo">
-                    <label for="observacoes">Observações:</label>
-                    <textarea id="observacoes"
-                              name="observacoes">${avaliacao != null ? avaliacao.observacoes : ''}</textarea>
+                    <label for="professorSiape">SIAPE do Professor:</label>
+                    <input type="text" id="professorSiape" name="professorSiape"
+                           value="${not empty relatorio.professorAEE ? relatorio.professorAEE.siape : ''}"
+                           placeholder="Digite o SIAPE do professor"/>
+                    <div class="professor-info" id="professorInfo">
+                        <label>Professor:</label>
+                        <p id="professorNome"></p>
+                    </div>
                 </div>
+            </div>
 
-                <div class="botoes-acoes">
-                    <button type="submit" class="botao-salvar">Salvar</button>
-                    <button type="button" class="botao-cancelar"
-                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorioId}'">
-                        Voltar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </body>
-    </html>
+            <!-- Campos de texto -->
+            <div class="campo">
+                <label for="resumo">Resumo:</label>
+                <textarea id="resumo" name="resumo" required>${relatorio.resumo}</textarea>
+            </div>
+
+            <div class="campo">
+                <label for="observacoes">Observações:</label>
+                <textarea id="observacoes" name="observacoes">${relatorio.observacoes}</textarea>
+            </div>
+
+            <!-- Botões -->
+            <div class="botoes-acoes">
+                <button type="submit" class="botao-salvar">Salvar Alterações</button>
+                <button type="button" class="botao-cancelar"
+                        onclick="window.location.href='${pageContext.request.contextPath}/relatorios?alunoMatricula=${relatorio.aluno.matricula}'">
+                    Voltar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Se você deseja manter a busca do professor por SIAPE:
+        document.getElementById('professorSiape').addEventListener('blur', function() {
+            const siape = this.value.trim();
+            if (!siape) return;
+
+            fetch('${pageContext.request.contextPath}/buscarProfessor?siape=' + siape)
+                .then(response => response.json())
+                .then(professor => {
+                    const infoDiv = document.getElementById('professorInfo');
+                    const nomeSpan = document.getElementById('professorNome');
+
+                    if (professor && professor.nome) {
+                        nomeSpan.textContent = professor.nome;
+                        infoDiv.style.display = 'block';
+                    } else {
+                        nomeSpan.textContent = '';
+                        infoDiv.style.display = 'none';
+                        alert('Professor não encontrado com este SIAPE');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar professor:', error);
+                });
+        });
+
+        // Define a data atual como padrão, caso não queira sobrescrever o valor já existente
+        document.addEventListener('DOMContentLoaded', function() {
+            const dataInput = document.getElementById('dataGeracao');
+            if (!dataInput.value) {
+                const today = new Date().toISOString().split('T')[0];
+                dataInput.value = today;
+            }
+        });
+    </script>
+</body>
+</html>

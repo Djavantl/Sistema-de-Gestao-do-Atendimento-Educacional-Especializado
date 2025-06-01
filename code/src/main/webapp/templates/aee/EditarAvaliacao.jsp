@@ -6,8 +6,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${param.acao == 'editar' ? 'Editar' : 'Criar'} Avaliação</title>
+    <title>Editar Avaliação</title>
     <style>
+        /* Mesmos estilos usados em CriarAvaliacao.jsp para consistência visual */
+
         * {
             margin: 0;
             padding: 0;
@@ -81,11 +83,12 @@
             color: #4D44B5;
         }
 
+        /* Título */
         #titulo {
             margin-left: 350px;
             padding-top: 40px;
+            margin-bottom: 20px;
         }
-
         #titulo h2 {
             color: rgb(12, 12, 97);
             font-size: 28px;
@@ -118,8 +121,7 @@
         }
 
         .campo input,
-        .campo textarea,
-        .campo select {
+        .campo textarea {
             width: 100%;
             padding: 12px;
             border: 1px solid #ddd;
@@ -130,8 +132,7 @@
         }
 
         .campo input:focus,
-        .campo textarea:focus,
-        .campo select:focus {
+        .campo textarea:focus {
             outline: none;
             border-color: #4D44B5;
             box-shadow: 0 0 0 2px rgba(77, 68, 181, 0.2);
@@ -179,7 +180,7 @@
             background-color: #d0d0d0;
         }
 
-        /* Estilo para informações do relatório */
+        /* Estilo para informações do relatório no topo (opcional) */
         .info-relatorio {
             grid-column: span 2;
             background-color: #f8f9fa;
@@ -205,54 +206,45 @@
     </div>
 
     <div id="titulo">
-            <h2>${param.acao == 'editar' ? 'Editar' : 'Criar'} Avaliação</h2>
-        </div>
+        <h2>Editar Avaliação</h2>
+    </div>
 
-        <div class="conteudo-principal">
-            <form class="form-avaliacao"
-                  action="${pageContext.request.contextPath}/avaliacao"
-                  method="POST">
-                <!-- 1) Ação (criar ou editar) -->
-                <input type="hidden" name="acao" value="${param.acao}" />
+    <div class="conteudo-principal">
+        <form class="form-avaliacao" action="${pageContext.request.contextPath}/avaliacao" method="POST">
+            <input type="hidden" name="acao" value="${acao}" />
+            <input type="hidden" name="relatorioId" value="${relatorioId}" />
+            <input type="hidden" name="id" value="${avaliacao.id}" />
 
-                <!-- 2) relatorioId deve vir do atributo que o servlet setou -->
-                <input type="hidden" name="relatorioId" value="${relatorioId}" />
+            <div class="campo">
+                <label for="area">Área:</label>
+                <input type="text"
+                       id="area"
+                       name="area"
+                       value="${avaliacao.area}"
+                       required />
+            </div>
 
-                <c:if test="${param.acao == 'editar'}">
-                    <input type="hidden" name="id" value="${avaliacao.id}" />
-                </c:if>
+            <div class="campo">
+                <label for="desempenhoVerificado">Desempenho Verificado:</label>
+                <textarea id="desempenhoVerificado"
+                          name="desempenhoVerificado"
+                          required>${avaliacao.desempenhoVerificado}</textarea>
+            </div>
 
-                <!-- Campos “Área”, “Desempenho Verificado” e “Observações” -->
-                <div class="campo">
-                    <label for="area">Área:</label>
-                    <input type="text"
-                           id="area"
-                           name="area"
-                           value="${avaliacao != null ? avaliacao.area : ''}"
-                           required />
-                </div>
+            <div class="campo">
+                <label for="observacoes">Observações:</label>
+                <textarea id="observacoes"
+                          name="observacoes">${avaliacao.observacoes}</textarea>
+            </div>
 
-                <div class="campo">
-                    <label for="desempenhoVerificado">Desempenho Verificado:</label>
-                    <textarea id="desempenhoVerificado"
-                              name="desempenhoVerificado"
-                              required>${avaliacao != null ? avaliacao.desempenhoVerificado : ''}</textarea>
-                </div>
-
-                <div class="campo">
-                    <label for="observacoes">Observações:</label>
-                    <textarea id="observacoes"
-                              name="observacoes">${avaliacao != null ? avaliacao.observacoes : ''}</textarea>
-                </div>
-
-                <div class="botoes-acoes">
-                    <button type="submit" class="botao-salvar">Salvar</button>
-                    <button type="button" class="botao-cancelar"
-                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorioId}'">
-                        Voltar
-                    </button>
-                </div>
-            </form>
-        </div>
-    </body>
-    </html>
+            <div class="botoes-acoes">
+                <button type="submit" class="botao-salvar">Salvar Alterações</button>
+                <button type="button" class="botao-cancelar"
+                        onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorioId}'">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

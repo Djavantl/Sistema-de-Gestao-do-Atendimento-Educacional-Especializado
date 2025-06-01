@@ -6,7 +6,16 @@ public class Avaliacao {
     private String desempenhoVerificado;
     private String observacoes;
 
+    public Avaliacao() { }
+
     public Avaliacao(String area, String desempenhoVerificado, String observacoes) {
+        this.area = area;
+        this.desempenhoVerificado = desempenhoVerificado;
+        this.observacoes = observacoes;
+    }
+
+    public Avaliacao(int id, String area, String desempenhoVerificado, String observacoes) {
+        this.id = id;
         this.area = area;
         this.desempenhoVerificado = desempenhoVerificado;
         this.observacoes = observacoes;

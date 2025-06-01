@@ -23,6 +23,7 @@ public class AlunoDAO {
         this.conn = connection;
     }
 
+
     // Método único para inserção
     public boolean salvarAluno(Aluno aluno) {
         String sqlPessoa = "INSERT INTO Pessoa (nome, dataNascimento, email, sexo, naturalidade, telefone) VALUES (?, ?, ?, ?, ?, ?)";

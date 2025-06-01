@@ -11,24 +11,43 @@ import org.incluemais.model.entities.Avaliacao;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-@WebServlet(name = "AvaliacaoServlet", urlPatterns = {
-        "/avaliacao"
-})
+@WebServlet(name = "AvaliacaoServlet", urlPatterns = {"/avaliacao"})
 public class AvaliacaoServlet extends HttpServlet {
-    private static final Logger logger = Logger.getLogger(AvaliacaoServlet.class.getName()); // Declaração correta do logger
     private AvaliacaoDAO avaliacaoDAO;
 
     @Override
     public void init() throws ServletException {
         Connection conn = (Connection) getServletContext().getAttribute("conexao");
-        if (conn == null) {
-            throw new ServletException("Conexão não disponível");
-        }
         this.avaliacaoDAO = new AvaliacaoDAO(conn);
     }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String acao = request.getParameter("acao");
+        String relatorioIdParam = request.getParameter("relatorioId");
+        int relatorioId = Integer.parseInt(relatorioIdParam);
+
+        if ("editar".equals(acao)) {
+            int id = Integer.parseInt(request.getParameter("id"));
+            Avaliacao avaliacao = null;
+            try {
+                avaliacao = avaliacaoDAO.buscarPorId(id);
+            } catch (SQLException e) {
+                throw new ServletException(e);
+            }
+            request.setAttribute("avaliacao", avaliacao);
+            request.setAttribute("acao", "editar");
+        } else if ("criar".equals(acao)) {
+            request.setAttribute("acao", "criar");
+        }
+        // repassa relatorioId para o JSP
+        request.setAttribute("relatorioId", relatorioId);
+        request.getRequestDispatcher("/templates/aee/EditarAvaliacao.jsp")
+                .forward(request, response);
+    }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -36,15 +55,22 @@ public class AvaliacaoServlet extends HttpServlet {
 
         request.setCharacterEncoding("UTF-8");
         String acao = request.getParameter("acao");
-        int relatorioId = 0;
+        String relatorioIdParam = request.getParameter("relatorioId");
 
-        try {
-            relatorioId = Integer.parseInt(request.getParameter("relatorioId"));
-        } catch (NumberFormatException e) {
-            logger.log(Level.SEVERE, "ID do relatório inválido", e);
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do relatório inválido");
+        if (relatorioIdParam == null || relatorioIdParam.isBlank()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "relatorioId não foi enviado no formulário.");
             return;
         }
+
+        int relatorioId;
+        try {
+            relatorioId = Integer.parseInt(relatorioIdParam);
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "relatorioId inválido: " + relatorioIdParam);
+            return;
+        }
+
+        System.out.println(">> AvaliacaoServlet.doPost: ação=" + acao + ", relatorioId=" + relatorioId);
 
         try {
             if ("criar".equals(acao)) {
@@ -54,28 +80,46 @@ public class AvaliacaoServlet extends HttpServlet {
             } else if ("excluir".equals(acao)) {
                 excluirAvaliacao(request, response, relatorioId);
             } else {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação desconhecida: " + acao);
             }
-        } catch (SQLException | NumberFormatException e) {
-            logger.log(Level.SEVERE, "Erro no processamento", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro no servidor");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro no banco de dados: " + e.getMessage());
         }
     }
+
 
     private void criarAvaliacao(HttpServletRequest request, HttpServletResponse response, int relatorioId)
             throws SQLException, IOException {
 
-        Avaliacao avaliacao = new Avaliacao(
-                request.getParameter("area"),
-                request.getParameter("desempenhoVerificado"),
-                request.getParameter("observacoes")
-        );
+        String area = request.getParameter("area");
+        String desempenho = request.getParameter("desempenhoVerificado");
+        String observacoes = request.getParameter("observacoes");
 
-        if (avaliacaoDAO.inserir(avaliacao, relatorioId)) {
+        // Validação básica de campos obrigatórios
+        if (area == null || area.isBlank() || desempenho == null || desempenho.isBlank()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Área e Desempenho Verificado são obrigatórios");
+            return;
+        }
+
+        // (Opcional) Verificar se o relatório existe antes de inserir
+        if (!avaliacaoDAO.relatorioExiste(relatorioId)) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Não existe relatório com id=" + relatorioId);
+            return;
+        }
+
+        System.out.println(">> criarAvaliacao: area=" + area
+                + ", desempenho=" + desempenho
+                + ", observacoes=" + observacoes
+                + ", relatorioId=" + relatorioId);
+
+        Avaliacao avaliacao = new Avaliacao(area, desempenho, observacoes);
+        boolean ok = avaliacaoDAO.inserir(avaliacao, relatorioId);
+
+        if (ok) {
             response.sendRedirect(request.getContextPath() + "/relatorios/detalhes?id=" + relatorioId);
         } else {
-            logger.log(Level.WARNING, "Falha ao criar avaliação para relatório ID: " + relatorioId);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Falha ao criar avaliação");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Não foi possível inserir a avaliação.");
         }
     }
 
@@ -93,9 +137,6 @@ public class AvaliacaoServlet extends HttpServlet {
 
         if (avaliacaoDAO.atualizar(avaliacao)) {
             response.sendRedirect(request.getContextPath() + "/relatorios/detalhes?id=" + relatorioId);
-        } else {
-            logger.log(Level.WARNING, "Falha ao atualizar avaliação ID: " + id);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Falha ao atualizar avaliação");
         }
     }
 
@@ -106,35 +147,6 @@ public class AvaliacaoServlet extends HttpServlet {
 
         if (avaliacaoDAO.excluir(id)) {
             response.sendRedirect(request.getContextPath() + "/relatorios/detalhes?id=" + relatorioId);
-        } else {
-            logger.log(Level.WARNING, "Falha ao excluir avaliação ID: " + id);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Falha ao excluir avaliação");
-        }
-    }
-
-    // Adicione este método se precisar lidar com requisições GET (para edição)
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String acao = request.getParameter("acao");
-
-        if ("editar".equals(acao)) {
-            int id = Integer.parseInt(request.getParameter("id"));
-            try {
-                Avaliacao avaliacao = avaliacaoDAO.buscarPorId(id);
-                request.setAttribute("avaliacao", avaliacao);
-                request.setAttribute("acao", "editar");
-                request.getRequestDispatcher("/templates/aee/CriarAvaliacao.jsp").forward(request, response);
-            } catch (SQLException e) {
-                logger.log(Level.SEVERE, "Erro ao buscar avaliação", e);
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            }
-        } else if ("criar".equals(acao)) {
-            request.setAttribute("acao", "criar");
-            request.getRequestDispatcher("/templates/aee/CriarAvaliacao.jsp").forward(request, response);
-        } else {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");
         }
     }
 }
