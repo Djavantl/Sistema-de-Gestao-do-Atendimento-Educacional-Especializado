@@ -403,7 +403,7 @@
 
         <div class="menu">
             <button class="menu-btn ativo"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/telaInicialProfessorAEE'">
                 <img src="${pageContext.request.contextPath}/static/images/inicio.svg" alt="Início" />
                 Início
             </button>

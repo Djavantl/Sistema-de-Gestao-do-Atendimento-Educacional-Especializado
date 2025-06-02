@@ -7,14 +7,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.incluemais.model.dao.AlunoDAO;
-import org.incluemais.model.dao.DeficienciaDAO;
 import org.incluemais.model.entities.Aluno;
 
 import java.io.IOException;
 import java.sql.Connection;
 
 @WebServlet(name = "TelaInicialServlet", urlPatterns = {"/telaInicialAluno"})
-public class PaginaInicialServlet extends HttpServlet {
+public class TelaInicialAlunoServlet extends HttpServlet {
     private AlunoDAO alunoDAO;
 
     @Override
