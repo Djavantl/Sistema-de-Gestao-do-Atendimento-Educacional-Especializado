@@ -6,9 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organização de Atendimento</title>
+    <title>Minhas Informações</title>
     <style>
-        /* Reset e estilos globais */
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +16,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Body com gradiente roxo (igual à primeira página) */
+        /* Body Background (igual à primeira página) */
         body {
             background: #E6E6FA;
             color: #333;
@@ -25,7 +25,9 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar (estilo da primeira página) */
+        /* ---------------------------------------------
+           Sidebar (estilos reaproveitados da primeira página)
+           --------------------------------------------- */
         .sidebar {
             position: fixed;
             top: 0;
@@ -49,10 +51,10 @@
         }
 
         .logo img {
-             width: 80px;
-             height: 80px;
-             object-fit: contain;
-         }
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
 
         .logo h2 {
             color: #ffffff;
@@ -98,7 +100,7 @@
             width: 70%;
             padding: 40px;
             background: white;
-            border-radius: 20px;
+            border-radius: 10px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
             z-index: 10;
@@ -145,13 +147,9 @@
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(200px, 1fr));
+            grid-template-columns: repeat(4, minmax(200px, 1fr));
             gap: 15px;
             align-items: start;
-        }
-
-        .info-item.span-2 {
-            grid-column: span 2;
         }
 
         .info-item {
@@ -171,6 +169,19 @@
             margin: 0;
             font-size: 1em;
             color: #2c3e50;
+        }
+
+        .deficiencias-container {
+            margin-top: 20px;
+        }
+
+        .deficiencia-item {
+            padding: 15px;
+            background-color: #fff;
+        }
+
+        .deficiencia-item.separador {
+            border-bottom: 2px solid #bfbfbf;
         }
 
         /* Elementos Decorativos */
@@ -243,6 +254,10 @@
                 font-size: 15px;
             }
         }
+
+        .info-item.span-2 {
+            grid-column: span 2;
+        }
     </style>
 </head>
 <body>
@@ -263,11 +278,11 @@
                 onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
                  Início
             </button>
-            <button class="menu-btn"
+            <button class="menu-btn ativo"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-informacoes?matricula=${matricula}'">
                 Minhas Informações
             </button>
-            <button class="menu-btn ativo"
+            <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/MinhaOrganizacao?matricula=${matricula}'">
                 Minha Organização
             </button>
@@ -282,25 +297,60 @@
         </div>
     </div>
 
-    <!-- Conteúdo Principal (estrutura mantida intacta) -->
+    <!-- Conteúdo Principal -->
     <div class="conteudo-principal">
         <div id="titulo">
-            <h2>Organização de Atendimento</h2>
+            <h2>Minhas Informações</h2>
         </div>
 
         <div class="detalhes-header">
             <div></div>
             <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">Voltar</button>
         </div>
-        <input type="hidden" id="matriculaHidden" value="${matricula}" />
 
         <div class="detalhes-content">
+            <!-- Informações Pessoais -->
             <div class="info-section">
-                <h3>Dados do Aluno</h3>
+                <h3>Informações Pessoais</h3>
                 <div class="info-grid">
                     <div class="info-item span-2">
-                        <label>Nome</label>
+                        <label>Nome Completo</label>
                         <p>${aluno.nome}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Data de Nascimento</label>
+                        <p>${aluno.dataNascimento}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Sexo</label>
+                        <p>${aluno.sexo}</p>
+                    </div>
+                    <div class="info-item span-2">
+                        <label>Email</label>
+                        <p>${aluno.email}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Telefone</label>
+                        <p>${aluno.telefone}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Naturalidade</label>
+                        <p>${aluno.naturalidade}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Informações Acadêmicas -->
+            <div class="info-section">
+                <h3>Informações Acadêmicas</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Matrícula</label>
+                        <p>${aluno.matricula}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Curso</label>
+                        <p>${aluno.curso}</p>
                     </div>
                     <div class="info-item">
                         <label>Turma</label>
@@ -309,45 +359,61 @@
                 </div>
             </div>
 
+            <!-- Contatos -->
             <div class="info-section">
-                <h3>Organização de Atendimento</h3>
+                <h3>Contatos</h3>
+                <div class="info-grid">
+                    <div class="info-item span-2">
+                        <label>Responsável</label>
+                        <p>${aluno.responsavel}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Tel. Responsável</label>
+                        <p>${aluno.telResponsavel}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Tel. Trabalho</label>
+                        <p>${aluno.telTrabalho}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Condições do Aluno -->
+            <div class="info-section">
+                <h3>Condições do Aluno</h3>
                 <c:choose>
-                    <c:when test="${not empty organizacao}">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <label>Período</label>
-                                <p>${organizacao.periodo}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Duração</label>
-                                <p>${organizacao.duracao}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Frequência</label>
-                                <p>${organizacao.frequencia}</p>
-                            </div>
-                            <div class="info-item span-2">
-                                <label>Composição</label>
-                                <p>${organizacao.composicao}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Tipo</label>
-                                <p>${organizacao.tipo}</p>
-                            </div>
+                    <c:when test="${not empty deficiencias}">
+                        <div class="deficiencias-container">
+                            <c:forEach items="${deficiencias}" var="deficiencia" varStatus="loop">
+                                <div class="deficiencia-item ${not loop.last ? 'separador' : ''}">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <label>Nome</label>
+                                            <p>${deficiencia.nome}</p>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Descrição</label>
+                                            <p>${deficiencia.descricao}</p>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>Grau</label>
+                                            <p>${deficiencia.grauSeveridade}</p>
+                                        </div>
+                                        <div class="info-item">
+                                            <label>CID</label>
+                                            <p>${deficiencia.cid}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <p>Nenhuma organização de atendimento cadastrada.</p>
+                        <p>Nenhuma condição especial cadastrada.</p>
                     </c:otherwise>
                 </c:choose>
             </div>
         </div>
     </div>
-    <script>
-        // Botão Voltar corrigido
-        document.querySelector('.botao-voltar').onclick = function() {
-            window.location.href = '${pageContext.request.contextPath}/telaInicialAluno';
-        };
-    </script>
 </body>
 </html>

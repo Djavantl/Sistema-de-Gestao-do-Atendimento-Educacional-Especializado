@@ -4,263 +4,528 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo ao AEE+ | Painel do Professor</title>
     <style>
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        /* Body Background */
         body {
-            background: linear-gradient(135deg, #1E1E2F, #0F0F1A);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-            color: #fff;
+            background-color: #E6E6FA;
+            color: #333;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
+        /* ---------------------------------------------
+           Sidebar
+           --------------------------------------------- */
         .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 250px;
-            background: linear-gradient(180deg, #1E1E2F, #0F0F1A);
-            padding: 30px 20px;
+            height: 100%;
+            background: #4D44B5;
+            color: white;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.6);
-            border-right: 1px solid rgba(255,255,255,0.1);
+            align-items: center;
         }
 
         .logo {
-            text-align: center;
-            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
         }
 
         .logo img {
             width: 80px;
-            margin-bottom: 10px;
-            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .logo h2 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
         }
 
         .menu {
+            width: 100%;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 30px;
+            margin-top: 40px;
         }
 
         .menu-btn {
+            background-color: transparent;
+            color: #ffffff;
+            border: none;
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 20px;
-            background: linear-gradient(135deg, #242533, #42404f);
-            border: none;
-            border-radius: 8px;
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            text-align: left;
-        }
-
-        .menu-btn img {
-            width: 20px;
-            height: 20px;
         }
 
         .menu-btn:hover {
-            background: linear-gradient(135deg, #7E74FF, #6457FF);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 10px rgba(0,0,0,0.4);
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .menu-btn.ativo {
-            background: linear-gradient(135deg, #9D8CFF, #7A6FFF);
-            color: #fff;
+            background-color: #f9f9ff;
+            color: #4D44B5;
         }
 
-        .content {
-            flex: 1;
-            padding: 50px;
-            overflow-y: auto;
+        .menu-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1); /* Garante ícones brancos */
+        }
+
+        .menu-btn.ativo img {
+            filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
+        }
+
+        /* ---------------------------------------------
+           Conteúdo Principal
+           --------------------------------------------- */
+        .conteudo-principal {
+            margin-left: 280px; /* deixa espaço para sidebar */
+            padding: 40px 60px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 30px;
         }
 
-        .content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #fff;
-            background: linear-gradient(90deg, #6C63FF, #5145CD);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .sobre-aee {
-            background: rgba(30, 30, 47, 0.9);
-            border-radius: 16px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-        }
-
-        .sobre-aee h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 8px;
-            color: #fff;
-        }
-
-        .sobre-aee p {
-            color: #ccc;
-            line-height: 1.6;
-            font-size: 0.95rem;
-        }
-
-        .content-layout {
+        .header {
             display: flex;
-            flex-direction: column; /* empilha os cards verticalmente */
-            align-items: flex-start; /* alinha os cards à esquerda */
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
+            color: #4D44B5;
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.2;
+            max-width: 600px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .user-info p {
+            color: #4D44B5;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user-info .funcao {
+            font-size: 16px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* Cards de Conteúdo */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 colunas na primeira fileira */
             gap: 30px;
-            margin-top: 0; /* já tem margem no .content, pode ser 0 aqui */
-
-            position: relative;
-            border-radius: 12px;
-            padding: 0;
-            box-shadow: none;
-            min-height: auto;
-            background: none;
+            margin-top: 20px;
         }
 
-        /* Oculta a seção de imagem, já que não queremos ela ao lado */
-        .image-section {
-            display: none;
-        }
-
-        .main-content {
-            flex: 1 1 100%;
+        /* Container para segunda fileira */
+        .second-row {
+            grid-column: 1 / -1;
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            width: 100%; /* ocupa a largura completa */
+            justify-content: center;
+            gap: 30px;
+            margin-top: 0;
+        }
+
+        .second-row .card {
+            width: calc(33.333% - 15px); /* Mantém mesma largura dos cards de cima */
         }
 
         .card {
-            background: rgba(30, 30, 47, 0.9);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
 
-        .card h2 {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: #fff;
-            border-bottom: 1px solid rgba(255,255,255,0.2);
-            padding-bottom: 10px;
+        .card-icon {
+            width: 70px;
+            height: 70px;
+            background: #4D44B5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon img {
+            width: 40px;
+            height: 40px;
+            filter: brightness(0) invert(1);
+        }
+
+        .card h3 {
+            color: #4D44B5;
+            font-size: 24px;
+            margin-bottom: 15px;
         }
 
         .card p {
-            color: #ccc;
+            color: #555;
             line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .card-btn {
+            background: #4D44B5;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            margin-top: auto;
+            width: fit-content;
+        }
+
+        .card-btn:hover {
+            background: #372e9c;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.4);
+        }
+
+        /* Mensagem de Boas-vindas */
+        .welcome-message {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-message h2 {
+            color: #4D44B5;
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .welcome-message p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #FFD700 0%, #FFD700 100%);
+            background-repeat: no-repeat;
+            background-size: 100% 40%;
+            background-position: 0 85%;
+            padding: 0 5px;
+            font-weight: 600;
+        }
+
+        /* Elementos Decorativos */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 215, 0, 0.15);
+            top: -150px;
+            right: -150px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(77, 68, 181, 0.15);
+            bottom: -100px;
+            right: 200px;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            bottom: 100px;
+            left: 350px;
+        }
+
+        /* Rodapé */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #4D44B5;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        /* Responsividade */
+        @media (max-width: 1200px) {
+            .cards-container {
+                grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas médias */
+            }
+
+            .second-row {
+                flex-wrap: wrap;
+            }
+
+            .second-row .card {
+                width: calc(50% - 15px);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .conteudo-principal {
+                margin-left: 220px;
+                padding: 30px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr; /* 1 coluna em telas pequenas */
+            }
+
+            .second-row {
+                flex-direction: column;
+            }
+
+            .second-row .card {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .conteudo-principal {
+                margin-left: 0;
+                padding: 25px;
+            }
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin-top: 20px;
+                gap: 10px;
+            }
+
+            .menu-btn {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
         }
     </style>
 </head>
-
 <body>
+    <!-- Elementos decorativos -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+
+    <!-- Sidebar -->
     <div class="sidebar">
-        <div>
-            <div class="logo">
-                <img src="${pageContext.request.contextPath}/static/images/logo1.svg" alt="Logo" />
-            </div>
-            <div class="menu">
-                <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/TelaInicial.jsp'">
-                    <img src="${pageContext.request.contextPath}/static/images/inicio.svg" alt="Início" />
-                    Início
-                </button>
-                <button class="menu-btn" onclick="window.location.href='/templates/aee/alunos'">
-                    <img src="${pageContext.request.contextPath}/static/images/aluno.svg" alt="Estudantes" />
-                    Estudantes
-                </button>
-                <button class="menu-btn" onclick="window.location.href='/templates/aee/professores'">
-                    <img src="${pageContext.request.contextPath}/static/images/professor.svg" alt="Professores" />
-                    Professores
-                </button>
-                <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">
-                    <img src="${pageContext.request.contextPath}/static/images/sessoes.svg" alt="Sessões" />
-                    Sessões
-                </button>
-                <button class="menu-btn" onclick="window.location.href='/templates/aee/planosAEE'">
-                    <img src="${pageContext.request.contextPath}/static/images/planoaee.svg" alt="Planos AEE" />
-                    Planos AEE
-                </button>
-                <button class="menu-btn" onclick="window.location.href='/templates/aee/relatorios'">
-                    <img src="${pageContext.request.contextPath}/static/images/relatorios.svg" alt="Relatórios" />
-                    Relatórios
-                </button>
-            </div>
+        <div class="logo">
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+            <h2>AEE +</h2>
+        </div>
+
+        <div class="menu">
+            <button class="menu-btn ativo"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                <img src="${pageContext.request.contextPath}/static/images/inicio.svg" alt="Início" />
+                Início
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                <img src="${pageContext.request.contextPath}/static/images/aluno.svg" alt="Estudantes" />
+                Estudantes
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professores'">
+                <img src="${pageContext.request.contextPath}/static/images/professor.svg" alt="Professores" />
+                Professores
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                <img src="${pageContext.request.contextPath}/static/images/sessoes.svg" alt="Sessões" />
+                Sessões
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                <img src="${pageContext.request.contextPath}/static/images/planoaee.svg" alt="Planos AEE" />
+                Planos AEE
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/relatorios'">
+                <img src="${pageContext.request.contextPath}/static/images/relatorios.svg" alt="Relatórios" />
+                Relatórios
+            </button>
         </div>
     </div>
 
-    <div class="content">
-        <h1>Bem-vindo ao AEE+</h1>
-
-        <div class="sobre-aee">
-            <h2>Sobre o AEE+</h2>
-            <p>O Sistema de Gestão do Atendimento Educacional Especializado (AEE+) foi criado para facilitar o acompanhamento
-                e a organização dos processos relacionados ao atendimento de alunos com necessidades educacionais específicas.
-                Com uma interface intuitiva, o sistema permite gerenciar estudantes, professores, sessões, planos personalizados
-                e relatórios, garantindo uma abordagem inclusiva, eficiente e centrada no desenvolvimento individual de cada aluno.
-                Dessa forma, o AEE+ contribui para uma educação mais acessível e de qualidade para todos.</p>
+    <!-- Conteúdo Principal -->
+    <div class="conteudo-principal">
+        <div class="header">
+            <div class="titulo">
+                <h1>Painel de Controle do Professor AEE<br></h1>
+            </div>
+            <div class="user-info">
+                <p>Bem-vindo(a), Professor!</p>
+                <div class="funcao">${nome}</div>
+            </div>
         </div>
 
-        <div class="content-layout">
-            <div class="image-section">
-                <!-- oculto -->
+        <!-- Mensagem de Boas-vindas -->
+        <div class="welcome-message">
+            <h2>🌟 Olá, Professor(a)!</h2>
+            <p>Estamos felizes em tê-lo(a) aqui no seu espaço de gestão educacional especializada. Este é o lugar onde você gerencia todo o ecossistema de suporte para seus estudantes.</p>
+            <p>O Atendimento Educacional Especializado (AEE) é uma ferramenta poderosa para <span class="highlight">potencializar o desenvolvimento</span> de cada estudante, valorizando suas habilidades únicas.</p>
+            <p>Utilize este painel para gerenciar estudantes, acompanhar sessões, criar planos educacionais personalizados e gerar relatórios detalhados sobre o progresso dos alunos.</p>
+        </div>
+
+        <!-- Cards de Conteúdo -->
+        <div class="cards-container">
+            <!-- Primeira fileira com 3 cards -->
+            <div class="card">
+                <div class="card-icon">
+                    <img src="${pageContext.request.contextPath}/static/images/aluno.svg" alt="Estudantes">
+                </div>
+                <h3>Gestão de Estudantes</h3>
+                <p>Acompanhe e gerencie informações importantes sobre os estudantes atendidos no programa AEE.</p>
+                <button class="card-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                    Gerenciar <i>→</i>
+                </button>
             </div>
 
-            <div class="main-content">
+            <div class="card">
+                <div class="card-icon">
+                    <img src="${pageContext.request.contextPath}/static/images/professor.svg" alt="Professores">
+                </div>
+                <h3>Gestão de Professores</h3>
+                <p>Cadastre e mantenha atualizado o quadro de professores responsáveis pelo atendimento especializado.</p>
+                <button class="card-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professores'">
+                    Gerenciar <i>→</i>
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="card-icon">
+                    <img src="${pageContext.request.contextPath}/static/images/sessoes.svg" alt="Sessões">
+                </div>
+                <h3>Sessões de Atendimento</h3>
+                <p>Organize e registre as sessões realizadas, garantindo a qualidade e o acompanhamento contínuo.</p>
+                <button class="card-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                    Gerenciar <i>→</i>
+                </button>
+            </div>
+
+            <!-- Segunda fileira com 2 cards centralizados -->
+            <div class="second-row">
                 <div class="card">
-                    <h2>Gestão de Estudantes</h2>
-                    <p>Acompanhe e gerencie informações importantes sobre os estudantes atendidos no programa AEE.</p>
+                    <div class="card-icon">
+                        <img src="${pageContext.request.contextPath}/static/images/planoaee.svg" alt="Planos">
+                    </div>
+                    <h3>Planos AEE</h3>
+                    <p>Gerencie os planos personalizados de atendimento educacional especializado para cada estudante.</p>
+                    <button class="card-btn"
+                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                        Gerenciar <i>→</i>
+                    </button>
                 </div>
 
                 <div class="card">
-                    <h2>Gestão de Professores</h2>
-                    <p>Cadastre e mantenha atualizado o quadro de professores responsáveis pelo atendimento especializado.</p>
-                </div>
-
-                <div class="card">
-                    <h2>Sessões de Atendimento</h2>
-                    <p>Organize e registre as sessões realizadas, garantindo a qualidade e o acompanhamento contínuo.</p>
-                </div>
-
-                <div class="card">
-                    <h2>Planos AEE</h2>
-                    <p>Gerencie os planos personalizados de atendimento educacional especializado, assegurando que cada estudante receba o suporte necessário para seu desenvolvimento.</p>
-                </div>
-
-                <div class="card">
-                    <h2>Relatórios</h2>
-                    <p>Crie, visualize e acompanhe relatórios detalhados sobre o progresso dos estudantes e a eficácia das intervenções realizadas no programa AEE.</p>
+                    <div class="card-icon">
+                        <img src="${pageContext.request.contextPath}/static/images/relatorios.svg" alt="Relatórios">
+                    </div>
+                    <h3>Relatórios</h3>
+                    <p>Crie, visualize e acompanhe relatórios detalhados sobre o progresso dos estudantes.</p>
+                    <button class="card-btn"
+                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/relatorios'">
+                        Gerar <i>→</i>
+                    </button>
                 </div>
             </div>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
         </div>
     </div>
 </body>

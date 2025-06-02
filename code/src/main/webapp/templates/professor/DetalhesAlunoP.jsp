@@ -43,8 +43,8 @@
         }
 
         .logo img {
-            width: 40px;
-            height: 40px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
         }
 
@@ -206,7 +206,7 @@
 <body>
     <div class="sidebar">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo" />
             <h2>Inclui+</h2>
         </div>
         <div class="menu">

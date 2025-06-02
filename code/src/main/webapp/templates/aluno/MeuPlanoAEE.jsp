@@ -8,30 +8,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Meu Plano AEE</title>
     <style>
+    /* Reset e estilos globais */
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+    /* Body com gradiente roxo (igual à primeira página) */
     body {
-        background-color: #f9f9ff;
+        background: #E6E6FA;
+        color: #333;
+        min-height: 100vh;
+        position: relative;
         overflow-x: hidden;
     }
 
-    #titulo h2 {
-        color: rgb(12, 12, 97);
-        font-size: 28px;
-        margin-left: 350px;
-        margin-top: 40px;
-    }
-
-    .conteudo-principal {
-        margin: 80px 0 40px 350px;
-        width: 70%;
-        padding: 40px;
-    }
-
+    /* Sidebar (estilo da primeira página) */
     .sidebar {
         position: fixed;
         top: 0;
@@ -44,6 +38,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        z-index: 100;
     }
 
     .logo {
@@ -54,9 +49,15 @@
     }
 
     .logo img {
-        width: 40px;
-        height: 40px;
+        width: 80px;
+        height: 80px;
         object-fit: contain;
+    }
+
+    .logo h2 {
+        color: #ffffff;
+        font-size: 24px;
+        font-weight: 700;
     }
 
     .menu {
@@ -77,6 +78,9 @@
         border-radius: 12px;
         cursor: pointer;
         transition: background-color 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
     .menu-btn:hover {
@@ -86,6 +90,50 @@
     .menu-btn.ativo {
         background-color: #f9f9ff;
         color: #4D44B5;
+    }
+
+    /* Conteúdo Principal */
+    .conteudo-principal {
+        margin: 80px 0 40px 350px;
+        width: 70%;
+        padding: 40px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 10;
+    }
+
+    #titulo {
+        margin-bottom: 30px;
+    }
+
+    #titulo h2 {
+        color: #4D44B5;
+        font-size: 28px;
+        margin-bottom: 10px;
+    }
+
+    .detalhes-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .botao-voltar {
+        background-color: #4D44B5;
+        color: #ffffff;
+        border: none;
+        padding: 10px 22px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 15px;
+        transition: background-color 0.3s;
+    }
+
+    .botao-voltar:hover {
+        background-color: #372e9c;
     }
 
     .info-section {
@@ -105,10 +153,14 @@
 
     .info-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(4, minmax(250px, 1fr));
         gap: 20px;
         align-items: start;
         margin-bottom: 20px;
+    }
+
+    .info-item.span-2 {
+        grid-column: span 2;
     }
 
     .info-item {
@@ -211,258 +263,369 @@
         background-color: #d4edda;
         color: #155724;
     }
+
+    /* Elementos Decorativos */
+    .decorative-circle {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .circle-1 {
+        width: 300px;
+        height: 300px;
+        background: rgba(255, 215, 0, 0.15);
+        top: -150px;
+        right: -150px;
+    }
+
+    .circle-2 {
+        width: 200px;
+        height: 200px;
+        background: rgba(77, 68, 181, 0.15);
+        bottom: -100px;
+        right: 200px;
+    }
+
+    .circle-3 {
+        width: 150px;
+        height: 150px;
+        background: rgba(255, 255, 255, 0.1);
+        bottom: 100px;
+        left: 350px;
+    }
+
+    /* Responsividade */
+    @media (max-width: 992px) {
+        .sidebar {
+            width: 220px;
+        }
+
+        .conteudo-principal {
+            margin-left: 240px;
+            width: calc(100% - 260px);
+            padding: 30px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            padding: 20px;
+        }
+
+        .conteudo-principal {
+            margin: 30px auto;
+            width: 90%;
+            padding: 25px;
+        }
+
+        .menu {
+            flex-direction: row;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .menu-btn {
+            padding: 12px 15px;
+            font-size: 15px;
+        }
+    }
     </style>
 </head>
 <body>
+    <!-- Elementos decorativos -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+
+    <!-- Sidebar (igual à primeira página) -->
     <div class="sidebar">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
-            <h2>Inclui+</h2>
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+            <h2>AEE +</h2>
         </div>
+
         <div class="menu">
-            <button class="menu-btn ativo">Meu Plano AEE</button>
-            <button class="menu-btn" onclick="window.location.href='/aluno/sessoes'">Minhas Sessões</button>
-            <button class="menu-btn" onclick="window.location.href='/aluno/perfil'">Meu Perfil</button>
+            <button class="menu-btn"
+                onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
+                 Início
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-informacoes?matricula=${matricula}'">
+                Minhas Informações
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/MinhaOrganizacao?matricula=${matricula}'">
+                Minha Organização
+            </button>
+            <button class="menu-btn ativo"
+                    onclick="window.location.href='${pageContext.request.contextPath}/meu-plano?matricula=${matricula}'">
+                 Meu Plano AEE
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='#'">
+                Meus Relatórios
+            </button>
         </div>
     </div>
 
     <c:if test="${semPlano}">
-        <div class="info-section">
-            <h3>Meu Plano AEE</h3>
-            <p>Você ainda não possui um plano AEE cadastrado.</p>
+        <div class="conteudo-principal">
+            <div class="detalhes-header">
+                <div></div>
+                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">Voltar</button>
+            </div>
+
+            <div class="info-section">
+                <h3>Meu Plano AEE</h3>
+                <p>Você ainda não possui um plano AEE cadastrado.</p>
+            </div>
         </div>
     </c:if>
 
     <c:if test="${not semPlano}">
-        <div id="titulo">
-            <h2>Meu Plano de Acompanhamento Educacional Especializado</h2>
-        </div>
+        <div class="conteudo-principal">
+            <div class="detalhes-header">
+                <div id="titulo">
+                    <h2>Meu Plano de Acompanhamento Educacional Especializado</h2>
+                </div>
+                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">Voltar</button>
+            </div>
 
-        <div class="plano-detalhes">
-            <!-- Detalhes do plano AEE -->
+            <div class="plano-detalhes">
+                <!-- Informações do Plano -->
+                <div class="info-section">
+                    <h3>Informações do Plano</h3>
+                    <div class="info-grid">
+                        <div class="info-item span-2">
+                            <label>Aluno</label>
+                            <p>${aluno.nome}</p>
+                        </div>
+                        <div class="info-item span-2">
+                            <label>Professor Responsável</label>
+                            <p>
+                                <c:choose>
+                                    <c:when test="${not empty professor}">
+                                        ${professor.nome}
+                                    </c:when>
+                                    <c:otherwise>
+                                        Não atribuído
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+                        </div>
+                        <div class="info-item">
+                            <label>Data de Início</label>
+                            <p>${plano.dataInicio}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Curso/Turma</label>
+                            <p>${aluno.curso} - ${aluno.turma}</p>
+                        </div>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Recomendações</label>
+                        <p>${empty plano.recomendacoes ? 'Nenhuma recomendação' : plano.recomendacoes}</p>
+                    </div>
+
+                    <div class="info-item">
+                        <label>Observações</label>
+                        <p>${empty plano.observacoes ? 'Nenhuma observação' : plano.observacoes}</p>
+                    </div>
+                </div>
+
+                <!-- Metas do Plano -->
+                <div class="info-section">
+                    <h3>Metas do Plano</h3>
+
+                    <c:choose>
+                        <c:when test="${not empty plano.metas && !plano.metas.isEmpty()}">
+                            <table class="metas-table">
+                                <thead>
+                                    <tr>
+                                        <th>Descrição</th>
+                                        <th>Status</th>
+                                        <th>Progresso</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="${plano.metas}" var="meta">
+                                        <tr>
+                                            <td>${meta.descricao}</td>
+                                            <td>
+                                                <span class="status-badge
+                                                    ${meta.status == 'Pendente' ? 'status-pendente' :
+                                                      meta.status == 'Em Andamento' ? 'status-andamento' :
+                                                      'status-concluido'}">
+                                                    ${meta.status}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <c:if test="${not empty meta.progresso}">
+                                                    ${meta.progresso}%
+                                                </c:if>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="meta-section">
+                                <i class="bi bi-info-circle"></i> Nenhuma meta definida para este plano.
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+
+                <!-- Proposta Pedagógica -->
+                <div class="info-section">
+                    <h3>Proposta Pedagógica</h3>
+
+                    <c:choose>
+                        <c:when test="${not empty plano.proposta}">
+                            <div class="proposta-section">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label>Objetivos</label>
+                                        <p>${plano.proposta.objetivos}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Metodologias</label>
+                                        <p>${plano.proposta.metodologias}</p>
+                                    </div>
+                                </div>
+
+                                <!-- Recursos Pedagógicos -->
+                                <c:if test="${not empty plano.proposta.recursoP}">
+                                    <div class="recursos-grid">
+                                        <div class="recurso-categoria">
+                                            <h5>Recursos Pedagógicos</h5>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoP.adaptacaoDidaticaAulasAvaliacoes ? 'checked' : ''} disabled>
+                                                <label>Adaptação didática para aulas e avaliações</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoP.materialDidaticoAdaptado ? 'checked' : ''} disabled>
+                                                <label>Material didático adaptado</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoP.usoTecnologiaAssistiva ? 'checked' : ''} disabled>
+                                                <label>Uso de tecnologia assistiva</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoP.tempoEmpregadoAtividadesAvaliacoes ? 'checked' : ''} disabled>
+                                                <label>Tempo adicional para atividades/avaliações</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+
+                                <!-- Recursos Físicos/Arquitetônicos -->
+                                <c:if test="${not empty plano.proposta.recursoFA}">
+                                    <div class="recursos-grid">
+                                        <div class="recurso-categoria">
+                                            <h5>Recursos Físicos/Arquitetônicos</h5>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoFA.usoCadeiraDeRodas ? 'checked' : ''} disabled>
+                                                <label>Uso de cadeira de rodas</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoFA.auxilioTranscricaoEscrita ? 'checked' : ''} disabled>
+                                                <label>Auxílio para transcrição escrita</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoFA.mesaAdaptadaCadeiraDeRodas ? 'checked' : ''} disabled>
+                                                <label>Mesa adaptada para cadeira de rodas</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoFA.usoDeMuleta ? 'checked' : ''} disabled>
+                                                <label>Uso de muleta</label>
+                                            </div>
+                                            <c:if test="${plano.proposta.recursoFA.outrosFisicoArquitetonico}">
+                                                <div class="recurso-item">
+                                                    <label>Outros recursos:</label>
+                                                    <p>${plano.proposta.recursoFA.outrosEspecificado}</p>
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                    </div>
+                                </c:if>
+
+                                <!-- Recursos de Comunicação -->
+                                <c:if test="${not empty plano.proposta.recursoCI}">
+                                    <div class="recursos-grid">
+                                        <div class="recurso-categoria">
+                                            <h5>Recursos de Comunicação e Informação</h5>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.comunicacaoAlternativa ? 'checked' : ''} disabled>
+                                                <label>Comunicação alternativa</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.tradutorInterprete ? 'checked' : ''} disabled>
+                                                <label>Tradutor/intérprete</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.leitorTranscritor ? 'checked' : ''} disabled>
+                                                <label>Leitor/transcritor</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.interpreteOralizador ? 'checked' : ''} disabled>
+                                                <label>Intérprete/oralizador</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.guiaInterprete ? 'checked' : ''} disabled>
+                                                <label>Guia-intérprete</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoBraille ? 'checked' : ''} disabled>
+                                                <label>Material em Braille</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoTextoAmpliado ? 'checked' : ''} disabled>
+                                                <label>Texto ampliado</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoRelevo ? 'checked' : ''} disabled>
+                                                <label>Material em relevo</label>
+                                            </div>
+                                            <div class="recurso-item">
+                                                <input type="checkbox" ${plano.proposta.recursoCI.leitorDeTela ? 'checked' : ''} disabled>
+                                                <label>Leitor de tela</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty plano.proposta.observacoes}">
+                                    <div class="info-item">
+                                        <label>Observações Recursos</label>
+                                        <p>${plano.proposta.observacoes}</p>
+                                    </div>
+                                </c:if>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="proposta-section">
+                                <i class="bi bi-info-circle"></i> Nenhuma proposta pedagógica cadastrada para este plano.
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
         </div>
     </c:if>
-
-    <div class="conteudo-principal">
-        <!-- Informações do Plano -->
-        <div class="info-section">
-            <h3>Informações do Plano</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <label>Aluno</label>
-                    <p>${aluno.nome} (Matrícula: ${aluno.matricula})</p>
-                </div>
-                <div class="info-item">
-                    <label>Professor Responsável</label>
-                    <p>
-                        <c:choose>
-                            <c:when test="${not empty professor}">
-                                ${professor.nome}
-                            </c:when>
-                            <c:otherwise>
-                                Não atribuído
-                            </c:otherwise>
-                        </c:choose>
-                    </p>
-                </div>
-                <div class="info-item">
-                    <label>Data de Início</label>
-                    <p>${plano.dataInicio}</p>
-                </div>
-                <div class="info-item">
-                    <label>Curso/Turma</label>
-                    <p>${aluno.curso} - ${aluno.turma}</p>
-                </div>
-            </div>
-
-            <div class="info-item">
-                <label>Recomendações</label>
-                <p>${empty plano.recomendacoes ? 'Nenhuma recomendação' : plano.recomendacoes}</p>
-            </div>
-
-            <div class="info-item">
-                <label>Observações</label>
-                <p>${empty plano.observacoes ? 'Nenhuma observação' : plano.observacoes}</p>
-            </div>
-
-        <!-- Metas do Plano -->
-        <div class="info-section">
-            <h3>Metas do Plano</h3>
-
-            <c:choose>
-                <c:when test="${not empty plano.metas && !plano.metas.isEmpty()}">
-                    <table class="metas-table">
-                        <thead>
-                            <tr>
-                                <th>Descrição</th>
-                                <th>Status</th>
-                                <th>Progresso</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach items="${plano.metas}" var="meta">
-                                <tr>
-                                    <td>${meta.descricao}</td>
-                                    <td>
-                                        <span class="status-badge
-                                            ${meta.status == 'Pendente' ? 'status-pendente' :
-                                              meta.status == 'Em Andamento' ? 'status-andamento' :
-                                              'status-concluido'}">
-                                            ${meta.status}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <c:if test="${not empty meta.progresso}">
-                                            ${meta.progresso}%
-                                        </c:if>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </c:when>
-                <c:otherwise>
-                    <div class="meta-section">
-                        <i class="bi bi-info-circle"></i> Nenhuma meta definida para este plano.
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
-
-        <!-- Proposta Pedagógica -->
-        <div class="info-section">
-            <h3>Proposta Pedagógica</h3>
-
-            <c:choose>
-                <c:when test="${not empty plano.proposta}">
-                    <div class="proposta-section">
-                        <div class="info-grid">
-                            <div class="info-item">
-                                <label>Objetivos</label>
-                                <p>${plano.proposta.objetivos}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Metodologias</label>
-                                <p>${plano.proposta.metodologias}</p>
-                            </div>
-                        </div>
-
-                        <!-- Recursos Pedagógicos -->
-                        <c:if test="${not empty plano.proposta.recursoP}">
-                            <div class="recursos-grid">
-                                <div class="recurso-categoria">
-                                    <h5>Recursos Pedagógicos</h5>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoP.adaptacaoDidaticaAulasAvaliacoes ? 'checked' : ''} disabled>
-                                        <label>Adaptação didática para aulas e avaliações</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoP.materialDidaticoAdaptado ? 'checked' : ''} disabled>
-                                        <label>Material didático adaptado</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoP.usoTecnologiaAssistiva ? 'checked' : ''} disabled>
-                                        <label>Uso de tecnologia assistiva</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoP.tempoEmpregadoAtividadesAvaliacoes ? 'checked' : ''} disabled>
-                                        <label>Tempo adicional para atividades/avaliações</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:if>
-
-                        <!-- Recursos Físicos/Arquitetônicos -->
-                        <c:if test="${not empty plano.proposta.recursoFA}">
-                            <div class="recursos-grid">
-                                <div class="recurso-categoria">
-                                    <h5>Recursos Físicos/Arquitetônicos</h5>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoFA.usoCadeiraDeRodas ? 'checked' : ''} disabled>
-                                        <label>Uso de cadeira de rodas</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoFA.auxilioTranscricaoEscrita ? 'checked' : ''} disabled>
-                                        <label>Auxílio para transcrição escrita</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoFA.mesaAdaptadaCadeiraDeRodas ? 'checked' : ''} disabled>
-                                        <label>Mesa adaptada para cadeira de rodas</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoFA.usoDeMuleta ? 'checked' : ''} disabled>
-                                        <label>Uso de muleta</label>
-                                    </div>
-                                    <c:if test="${plano.proposta.recursoFA.outrosFisicoArquitetonico}">
-                                        <div class="recurso-item">
-                                            <label>Outros recursos:</label>
-                                            <p>${plano.proposta.recursoFA.outrosEspecificado}</p>
-                                        </div>
-                                    </c:if>
-                                </div>
-                            </div>
-                        </c:if>
-
-                        <!-- Recursos de Comunicação -->
-                        <c:if test="${not empty plano.proposta.recursoCI}">
-                            <div class="recursos-grid">
-                                <div class="recurso-categoria">
-                                    <h5>Recursos de Comunicação e Informação</h5>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.comunicacaoAlternativa ? 'checked' : ''} disabled>
-                                        <label>Comunicação alternativa</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.tradutorInterprete ? 'checked' : ''} disabled>
-                                        <label>Tradutor/intérprete</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.leitorTranscritor ? 'checked' : ''} disabled>
-                                        <label>Leitor/transcritor</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.interpreteOralizador ? 'checked' : ''} disabled>
-                                        <label>Intérprete/oralizador</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.guiaInterprete ? 'checked' : ''} disabled>
-                                        <label>Guia-intérprete</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoBraille ? 'checked' : ''} disabled>
-                                        <label>Material em Braille</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoTextoAmpliado ? 'checked' : ''} disabled>
-                                        <label>Texto ampliado</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoRelevo ? 'checked' : ''} disabled>
-                                        <label>Material em relevo</label>
-                                    </div>
-                                    <div class="recurso-item">
-                                        <input type="checkbox" ${plano.proposta.recursoCI.leitorDeTela ? 'checked' : ''} disabled>
-                                        <label>Leitor de tela</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:if>
-                        <c:if test="${not empty plano.proposta.observacoes}">
-                            <div class="info-item">
-                                <label>Observações Recursos</label>
-                                <p>${plano.proposta.observacoes}</p>
-                            </div>
-                        </c:if>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="proposta-section">
-                        <i class="bi bi-info-circle"></i> Nenhuma proposta pedagógica cadastrada para este plano.
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Função para o botão Voltar
+        document.querySelectorAll('.botao-voltar').forEach(button => {
+            button.onclick = function() {
+                window.location.href = '${pageContext.request.contextPath}/telaInicialAluno';
+            };
+        });
+    </script>
 </body>
 </html>

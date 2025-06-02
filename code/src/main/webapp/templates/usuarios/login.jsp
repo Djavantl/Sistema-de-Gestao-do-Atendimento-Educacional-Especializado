@@ -45,8 +45,8 @@
         }
 
         .logo img {
-            width: 40px;
-            height: 40px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
         }
 
@@ -236,7 +236,7 @@
     <!-- Cabeçalho com logo e nome do sistema -->
     <header class="cabecalho">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo Inclui+">
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo Inclui+">
             <h1>AEE+</h1>
         </div>
     </header>

@@ -77,6 +77,7 @@ public class MeuPlanoAEEServlet extends HttpServlet {
             request.setAttribute("plano", plano);
             request.setAttribute("aluno", aluno);
             request.setAttribute("professor", professor);
+            request.setAttribute("matricula", matricula);
 
             request.getRequestDispatcher("/templates/aluno/MeuPlanoAEE.jsp").forward(request, response);
 
