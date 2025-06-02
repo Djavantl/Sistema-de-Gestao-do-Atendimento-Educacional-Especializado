@@ -404,32 +404,27 @@
         <div class="menu">
             <button class="menu-btn ativo"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
-                <img src="${pageContext.request.contextPath}/static/images/inicio.svg" alt="Início" />
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
                 Início
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
-                <img src="${pageContext.request.contextPath}/static/images/aluno.svg" alt="Estudantes" />
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
                 Estudantes
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professores'">
-                <img src="${pageContext.request.contextPath}/static/images/professor.svg" alt="Professores" />
-                Professores
-            </button>
-            <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
-                <img src="${pageContext.request.contextPath}/static/images/sessoes.svg" alt="Sessões" />
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
                 Sessões
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
-                <img src="${pageContext.request.contextPath}/static/images/planoaee.svg" alt="Planos AEE" />
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
                 Planos AEE
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/relatorios'">
-                <img src="${pageContext.request.contextPath}/static/images/relatorios.svg" alt="Relatórios" />
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
                 Relatórios
             </button>
         </div>
@@ -469,19 +464,6 @@
                     Gerenciar <i>→</i>
                 </button>
             </div>
-
-            <div class="card">
-                <div class="card-icon">
-                    <img src="${pageContext.request.contextPath}/static/images/professor.svg" alt="Professores">
-                </div>
-                <h3>Gestão de Professores</h3>
-                <p>Cadastre e mantenha atualizado o quadro de professores responsáveis pelo atendimento especializado.</p>
-                <button class="card-btn"
-                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professores'">
-                    Gerenciar <i>→</i>
-                </button>
-            </div>
-
             <div class="card">
                 <div class="card-icon">
                     <img src="${pageContext.request.contextPath}/static/images/sessoes.svg" alt="Sessões">
@@ -498,7 +480,7 @@
             <div class="second-row">
                 <div class="card">
                     <div class="card-icon">
-                        <img src="${pageContext.request.contextPath}/static/images/planoaee.svg" alt="Planos">
+                        <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos">
                     </div>
                     <h3>Planos AEE</h3>
                     <p>Gerencie os planos personalizados de atendimento educacional especializado para cada estudante.</p>
@@ -510,13 +492,13 @@
 
                 <div class="card">
                     <div class="card-icon">
-                        <img src="${pageContext.request.contextPath}/static/images/relatorios.svg" alt="Relatórios">
+                        <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios">
                     </div>
                     <h3>Relatórios</h3>
-                    <p>Crie, visualize e acompanhe relatórios detalhados sobre o progresso dos estudantes.</p>
+                    <p>Visualize e acompanhe relatórios detalhados sobre o progresso dos estudantes.</p>
                     <button class="card-btn"
-                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/relatorios'">
-                        Gerar <i>→</i>
+                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                        Relatorios <i>→</i>
                     </button>
                 </div>
             </div>
