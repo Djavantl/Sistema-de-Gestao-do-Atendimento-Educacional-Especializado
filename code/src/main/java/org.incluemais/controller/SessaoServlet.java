@@ -41,10 +41,14 @@ public class SessaoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String matriculaAluno = request.getParameter("matriculaAluno");
+            String action = request.getParameter("action");
 
-            if (matriculaAluno != null && !matriculaAluno.isEmpty()) {
+            if ("editar".equals(action)) {
+                carregarPaginaEdicao(request, response);
+            } else {
+                String matriculaAluno = request.getParameter("matriculaAluno");
                 List<SessaoAtendimento> sessoesPorAluno = sessaoDAO.buscarPorAluno(matriculaAluno);
+
                 request.setAttribute("sessoesPorAluno", sessoesPorAluno);
             }
             listarSessoes(request, response);
@@ -54,18 +58,32 @@ public class SessaoServlet extends HttpServlet {
         }
     }
 
+    private void carregarPaginaEdicao(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        SessaoAtendimento sessao = sessaoDAO.buscarPorId(id);
+
+        if (sessao == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sessão não encontrada");
+            return;
+        }
+
+        request.setAttribute("sessao", sessao);
+        request.getRequestDispatcher("/templates/aee/EditarSessao.jsp").forward(request, response);
+    }
+
+
     private void criarSessao(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        // Corrigido: obter matrícula em vez de nome
+        // Obter matrícula em vez de nome
         String matricula = request.getParameter("aluno_matricula");
         LocalDate data = LocalDate.parse(request.getParameter("data"));
         LocalTime horario = LocalTime.parse(request.getParameter("horario"));
         String local = request.getParameter("local");
 
-        // Buscar aluno por matrícula em vez de nome
+        // Buscar aluno por matrícula
         Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
-
         if (aluno == null) {
             request.setAttribute("erro", "Aluno não encontrado com matrícula: " + matricula);
             listarSessoes(request, response);
@@ -73,10 +91,12 @@ public class SessaoServlet extends HttpServlet {
         }
 
         SessaoAtendimento sessao = new SessaoAtendimento(aluno, data, horario, local);
-
         try {
             sessaoDAO.inserir(sessao);
-            response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?sucesso=Sessão+criada+com+sucesso");
+            // Redireciona para listagem com filtro por matrícula (mesma lógica do atualizar)
+            response.sendRedirect(request.getContextPath()
+                    + "/templates/aee/sessoes?matriculaAluno=" + matricula
+                    + "&sucesso=Sessão+criada+com+sucesso");
         } catch (SQLException e) {
             e.printStackTrace();
             request.setAttribute("erro", "Erro ao criar sessão: " + e.getMessage());
@@ -152,6 +172,7 @@ public class SessaoServlet extends HttpServlet {
         }
 
         String observacoes = request.getParameter("observacoes");
+        String alunoMatricula = request.getParameter("alunoMatricula");
 
         SessaoAtendimento sessao = sessaoDAO.buscarPorId(id);
         sessao.setData(data);
@@ -161,15 +182,24 @@ public class SessaoServlet extends HttpServlet {
         sessao.setObservacoes(observacoes);
 
         sessaoDAO.atualizar(sessao);
-        response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?sucesso=Sessão+atualizada+com+sucesso");
+        response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?matriculaAluno=" + alunoMatricula);
     }
 
     private void excluirSessao(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        System.out.println("entrou em excluir");
         int id = Integer.parseInt(request.getParameter("id"));
+
+        // Primeiro, pegar a sessão para extrair a matrícula do aluno antes de deletar
+        SessaoAtendimento sessaoParaExcluir = sessaoDAO.buscarPorId(id);
+        String matricula = sessaoParaExcluir.getAluno().getMatricula();
+
+        // Agora exclui
         sessaoDAO.deletar(id);
-        response.sendRedirect(request.getContextPath() + "/templates/aee/sessoes?sucesso=Sessão+excluída+com+sucesso");
+
+        // Redireciona para listagem com filtro por matrícula (mesma lógica do atualizar)
+        response.sendRedirect(request.getContextPath()
+                + "/templates/aee/sessoes?matriculaAluno=" + matricula
+                + "&sucesso=Sessão+excluída+com+sucesso");
     }
 
 

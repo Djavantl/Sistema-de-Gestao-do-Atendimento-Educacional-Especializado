@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import jakarta.servlet.http.HttpSession;
 import org.incluemais.model.dao.AlunoDAO;
 import org.incluemais.model.dao.AvaliacaoDAO;
 import org.incluemais.model.dao.ProfessorAEEDAO;
@@ -32,7 +33,9 @@ import java.util.logging.Logger;
         "/relatorios/detalhes",
         "/relatorios/criar",
         "/relatorios/atualizar",
-        "/relatorios/excluir"
+        "/relatorios/excluir",
+        "/meus-relatorios",
+        "/relatorios/meus-detalhes"
 })
 public class RelatorioServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RelatorioServlet.class.getName());
@@ -69,6 +72,11 @@ public class RelatorioServlet extends HttpServlet {
             } else if (path.equals("/relatorios/detalhes")) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 exibirDetalhesRelatorio(id, request, response);
+            } else if (path.equals("/meus-relatorios")) {
+                listarMeusRelatorios(request, response);
+            } else if (path.equals("/relatorios/meus-detalhes")) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                exibirDetalhesMeuRelatorio(id, request, response);
             }
 
         } catch (SQLException e) {
@@ -98,6 +106,40 @@ public class RelatorioServlet extends HttpServlet {
         } catch (SQLException | DateTimeParseException e) {
             logger.log(Level.SEVERE, "Erro no processamento", e);
             encaminharErro(request, response, "Erro no processamento dos dados");
+        }
+    }
+
+    private void listarMeusRelatorios(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        // Obter a matrícula do aluno logado da sessão
+        HttpSession session = request.getSession();
+        String matriculaSessao = (String) session.getAttribute("identificacao"); // Alterado para "identificacao"
+
+        if (matriculaSessao == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+
+        // Filtrar relatórios apenas do aluno logado
+        List<Relatorio> relatorios = relatorioDAO.buscarPorAlunoMatricula(matriculaSessao);
+
+        request.setAttribute("relatoriosLista", relatorios);
+        request.getRequestDispatcher("/templates/aluno/MeusRelatorios.jsp").forward(request, response);
+        logger.info("Matrícula da sessão: " + matriculaSessao);
+        logger.info("Número de relatórios encontrados: " + relatorios.size());
+    }
+
+    private void exibirDetalhesMeuRelatorio(int id, HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        Relatorio relatorio = relatorioDAO.buscarPorId(id);
+
+        if (relatorio != null) {
+            request.setAttribute("relatorio", relatorio);
+            request.getRequestDispatcher("/templates/aluno/DetalhesMeusRelatorios.jsp").forward(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Relatório não encontrado");
         }
     }
 
