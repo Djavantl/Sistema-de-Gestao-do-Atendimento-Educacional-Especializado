@@ -654,7 +654,10 @@
                                 </td>
                                 <td>
                                     <div class="botoes-acoes">
-                                        <button class="botao-editar" onclick="abrirEdicaoPorAluno(${sessao.id})">Editar</button>
+                                        <button class="botao-editar"
+                                                onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes?action=editar&id=${sessao.id}'">
+                                            Editar
+                                        </button>
                                         <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">Excluir</button>
                                     </div>
                                 </td>
@@ -727,7 +730,10 @@
                                         </button>
 
                                         <div class="botoes-acoes">
-                                            <button class="botao-editar" onclick="abrirEdicao(${sessao.id})">Editar</button>
+                                            <button class="botao-editar"
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes?action=editar&id=${sessao.id}'">
+                                                Editar
+                                            </button>
                                             <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">Excluir</button>
                                         </div>
                                     </div>
@@ -810,7 +816,10 @@
                                         </button>
 
                                         <div class="botoes-acoes">
-                                            <button class="botao-editar" onclick="abrirEdicao(${sessao.id})">Editar</button>
+                                            <button class="botao-editar"
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes?action=editar&id=${sessao.id}'">
+                                                Editar
+                                            </button>
                                             <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">Excluir</button>
                                         </div>
                                     </div>

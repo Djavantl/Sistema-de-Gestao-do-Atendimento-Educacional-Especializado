@@ -61,7 +61,8 @@ public class LoginServlet extends HttpServlet {
                 usuarioAlunoDAO = new UsuarioAlunoDAO(conn);
                 autenticado = usuarioAlunoDAO.verificarCredenciais(identificacao, senha);
                 tipoUsuario = "aluno";
-                redirectPage = "/templates/aee/alunos";
+                redirectPage = request.getContextPath() + "/telaInicialAluno";
+                System.out.println("Redirecionando aluno para: " + redirectPage);
             }
             else if ("professor".equals(tipo)) {
                 usuarioProfessorDAO = new UsuarioProfessorDAO(conn);
