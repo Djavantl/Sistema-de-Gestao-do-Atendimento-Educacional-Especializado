@@ -6,9 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bem-vindo ao AEE+ | Painel do Professor</title>
+    <title>Editar Avaliação</title>
     <style>
-        /* Reset */
+        /* ======================== RESET E BASE ======================== */
         * {
             margin: 0;
             padding: 0;
@@ -16,7 +16,6 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Body Background */
         body {
             background-color: #E6E6FA;
             color: #333;
@@ -25,9 +24,7 @@
             overflow-x: hidden;
         }
 
-        /* ---------------------------------------------
-           Sidebar
-           --------------------------------------------- */
+        /* ======================== SIDEBAR ======================== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -40,6 +37,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            z-index: 100;
         }
 
         .logo {
@@ -96,18 +94,16 @@
         .menu-btn img {
             width: 24px;
             height: 24px;
-            filter: brightness(0) invert(1); /* Garante ícones brancos */
+            filter: brightness(0) invert(1);
         }
 
         .menu-btn.ativo img {
             filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
         }
 
-        /* ---------------------------------------------
-           Conteúdo Principal
-           --------------------------------------------- */
+        /* ======================== CONTEÚDO PRINCIPAL ======================== */
         .conteudo-principal {
-            margin-left: 280px; /* deixa espaço para sidebar */
+            margin-left: 280px;
             padding: 40px 60px;
             min-height: 100vh;
             display: flex;
@@ -128,7 +124,6 @@
             font-weight: 800;
             line-height: 1.2;
             max-width: 600px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
         .user-info {
@@ -153,131 +148,99 @@
             font-weight: 500;
         }
 
-        /* Cards de Conteúdo */
-        .cards-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 3 colunas na primeira fileira */
-            gap: 30px;
-            margin-top: 20px;
-        }
-
-        /* Container para segunda fileira */
-        .second-row {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            margin-top: 0;
-        }
-
-        .second-row .card {
-            width: calc(33.333% - 15px); /* Mantém mesma largura dos cards de cima */
-        }
-
-        .card {
+        /* ======================== FORMULÁRIO ======================== */
+        .conteudo-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-        }
-
-        .card-icon {
-            width: 70px;
-            height: 70px;
-            background: #4D44B5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-
-        .card-icon img {
-            width: 40px;
-            height: 40px;
-            filter: brightness(0) invert(1);
-        }
-
-        .card h3 {
-            color: #4D44B5;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .card p {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 20px;
-            flex-grow: 1;
-        }
-
-        .card-btn {
-            background: #4D44B5;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            margin-top: auto;
-            width: fit-content;
-        }
-
-        .card-btn:hover {
-            background: #372e9c;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.4);
-        }
-
-        /* Mensagem de Boas-vindas */
-        .welcome-message {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 40px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
         }
 
-        .welcome-message h2 {
-            color: #4D44B5;
-            font-size: 28px;
-            margin-bottom: 20px;
+        .form-avaliacao {
+            display: grid;
+            gap: 25px;
+        }
+
+        .campo {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            flex-direction: column;
         }
 
-        .welcome-message p {
-            color: #555;
-            line-height: 1.8;
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-
-        .highlight {
-            background: linear-gradient(120deg, #FFD700 0%, #FFD700 100%);
-            background-repeat: no-repeat;
-            background-size: 100% 40%;
-            background-position: 0 85%;
-            padding: 0 5px;
+        .campo label {
             font-weight: 600;
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 8px;
         }
 
-        /* Elementos Decorativos */
+        .campo input,
+        .campo textarea {
+            padding: 12px 16px;
+            font-size: 15px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .campo input:focus,
+        .campo textarea:focus {
+            border-color: #4D44B5;
+            box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
+            outline: none;
+        }
+
+        .campo textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .botoes-acoes {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .botao-salvar {
+            background-color: #4D44B5;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .botao-salvar:hover {
+            background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.3);
+        }
+
+        .botao-cancelar {
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .botao-cancelar:hover {
+            background-color: #cfcfcf;
+            transform: translateY(-2px);
+        }
+
+        /* ======================== ELEMENTOS DECORATIVOS ======================== */
         .decorative-circle {
             position: absolute;
             border-radius: 50%;
@@ -308,30 +271,16 @@
             left: 350px;
         }
 
-        /* Rodapé */
+        /* ======================== RODAPÉ ======================== */
         .footer {
             text-align: center;
             padding: 30px;
             color: #4D44B5;
             font-size: 14px;
-            margin-top: auto;
+            margin-top: 40px;
         }
 
-        /* Responsividade */
-        @media (max-width: 1200px) {
-            .cards-container {
-                grid-template-columns: repeat(2, 1fr); /* 2 colunas em telas médias */
-            }
-
-            .second-row {
-                flex-wrap: wrap;
-            }
-
-            .second-row .card {
-                width: calc(50% - 15px);
-            }
-        }
-
+        /* ======================== RESPONSIVIDADE ======================== */
         @media (max-width: 992px) {
             .sidebar {
                 width: 220px;
@@ -346,18 +295,6 @@
                 flex-direction: column;
                 gap: 20px;
                 align-items: flex-start;
-            }
-
-            .cards-container {
-                grid-template-columns: 1fr; /* 1 coluna em telas pequenas */
-            }
-
-            .second-row {
-                flex-direction: column;
-            }
-
-            .second-row .card {
-                width: 100%;
             }
         }
 
@@ -402,7 +339,7 @@
         </div>
 
         <div class="menu">
-            <button class="menu-btn ativo"
+            <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
                 Início
@@ -422,7 +359,7 @@
                 <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
                 Planos AEE
             </button>
-            <button class="menu-btn"
+            <button class="menu-btn ativo"
                     onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
                 Relatórios
@@ -434,7 +371,7 @@
     <div class="conteudo-principal">
         <div class="header">
             <div class="titulo">
-                <h1>Painel de Controle do Professor AEE<br></h1>
+                <h1>Avaliação</h1>
             </div>
             <div class="user-info">
                 <p>Bem-vindo(a), Professor!</p>
@@ -442,72 +379,48 @@
             </div>
         </div>
 
-        <!-- Mensagem de Boas-vindas -->
-        <div class="welcome-message">
-            <h2>🌟 Olá, Professor(a)!</h2>
-            <p>Estamos felizes em tê-lo(a) aqui no seu espaço de gestão educacional especializada. Este é o lugar onde você gerencia todo o ecossistema de suporte para seus estudantes.</p>
-            <p>O Atendimento Educacional Especializado (AEE) é uma ferramenta poderosa para <span class="highlight">potencializar o desenvolvimento</span> de cada estudante, valorizando suas habilidades únicas.</p>
-            <p>Utilize este painel para gerenciar estudantes, acompanhar sessões, criar planos educacionais personalizados e gerar relatórios detalhados sobre o progresso dos alunos.</p>
-        </div>
+        <div class="conteudo-container">
+            <form class="form-avaliacao" action="${pageContext.request.contextPath}/avaliacao" method="POST">
+                <input type="hidden" name="acao" value="${acao}" />
+                <input type="hidden" name="relatorioId" value="${relatorioId}" />
+                <input type="hidden" name="id" value="${avaliacao.id}" />
 
-        <!-- Cards de Conteúdo -->
-        <div class="cards-container">
-            <!-- Primeira fileira com 3 cards -->
-            <div class="card">
-                <div class="card-icon">
-                    <img src="${pageContext.request.contextPath}/static/images/aluno.svg" alt="Estudantes">
+                <div class="campo">
+                    <label for="area">Área:</label>
+                    <input type="text"
+                           id="area"
+                           name="area"
+                           value="${avaliacao.area}"
+                           required />
                 </div>
-                <h3>Gestão de Estudantes</h3>
-                <p>Acompanhe e gerencie informações importantes sobre os estudantes atendidos no programa AEE.</p>
-                <button class="card-btn"
-                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
-                    Gerenciar <i>→</i>
-                </button>
-            </div>
-            <div class="card">
-                <div class="card-icon">
-                    <img src="${pageContext.request.contextPath}/static/images/sessoes.svg" alt="Sessões">
-                </div>
-                <h3>Sessões de Atendimento</h3>
-                <p>Organize e registre as sessões realizadas, garantindo a qualidade e o acompanhamento contínuo.</p>
-                <button class="card-btn"
-                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
-                    Gerenciar <i>→</i>
-                </button>
-            </div>
 
-            <!-- Segunda fileira com 2 cards centralizados -->
-            <div class="second-row">
-                <div class="card">
-                    <div class="card-icon">
-                        <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos">
-                    </div>
-                    <h3>Planos AEE</h3>
-                    <p>Gerencie os planos personalizados de atendimento educacional especializado para cada estudante.</p>
-                    <button class="card-btn"
-                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
-                        Gerenciar <i>→</i>
+                <div class="campo">
+                    <label for="desempenhoVerificado">Desempenho Verificado:</label>
+                    <textarea id="desempenhoVerificado"
+                              name="desempenhoVerificado"
+                              required>${avaliacao.desempenhoVerificado}</textarea>
+                </div>
+
+                <div class="campo">
+                    <label for="observacoes">Observações:</label>
+                    <textarea id="observacoes"
+                              name="observacoes">${avaliacao.observacoes}</textarea>
+                </div>
+
+                <div class="botoes-acoes">
+                    <button type="submit" class="botao-salvar">Salvar</button>
+                    <button type="button" class="botao-cancelar"
+                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorioId}'">
+                        Cancelar
                     </button>
                 </div>
-
-                <div class="card">
-                    <div class="card-icon">
-                        <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios">
-                    </div>
-                    <h3>Relatórios</h3>
-                    <p>Visualize e acompanhe relatórios detalhados sobre o progresso dos estudantes.</p>
-                    <button class="card-btn"
-                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
-                        Relatorios <i>→</i>
-                    </button>
-                </div>
-            </div>
+            </form>
         </div>
 
         <!-- Rodapé -->
         <div class="footer">
             <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
-            <p>Desenvolvido com ❤ para promover uma educação inclusiva e transformadora</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
         </div>
     </div>
 </body>

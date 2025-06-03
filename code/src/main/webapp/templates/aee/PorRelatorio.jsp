@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> <!-- já inserido -->
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -10,32 +9,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relatórios</title>
     <style>
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-
+        /* ======================== RESET E BASE ======================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-        body {
-            background-color: #f9f9ff;
-            overflow-x: hidden;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        body {
+            background-color: #E6E6FA;
+            color: #333;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* ======================== SIDEBAR ======================== */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #4D44B5;
+            background: #4D44B5;
             color: white;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .logo {
@@ -46,9 +49,15 @@
         }
 
         .logo img {
-            width: 40px;
-            height: 40px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
+        }
+
+        .logo h2 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
         }
 
         .menu {
@@ -69,6 +78,9 @@
             border-radius: 12px;
             cursor: pointer;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .menu-btn:hover {
@@ -80,257 +92,531 @@
             color: #4D44B5;
         }
 
-        #titulo h2 {
-            color: rgb(12, 12, 97);
-            font-size: 28px;
-            margin-left: 350px;
-            margin-top: 40px;
+        .menu-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
         }
 
+        .menu-btn.ativo img {
+            filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
+        }
+
+        /* ======================== CONTEÚDO PRINCIPAL ======================== */
         .conteudo-principal {
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 40px;
-            margin: 80px 0 40px 350px;
-            width: 70%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-left: 280px;
+            padding: 40px 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
+            color: #4D44B5;
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.2;
+            max-width: 600px;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .user-info p {
+            color: #4D44B5;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user-info .funcao {
+            font-size: 16px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* ======================== TABELA ======================== */
         .linha-superior {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .botao-novo-relatorio {
             background-color: #4D44B5;
-            color: #ffffff;
+            color: #fff;
             border: none;
-            padding: 10px 22px;
-            border-radius: 10px;
+            padding: 12px 22px;
+            border-radius: 12px;
             cursor: pointer;
-            font-size: 15px;
-            transition: background-color 0.3s;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(77, 68, 181, 0.3);
         }
 
         .botao-novo-relatorio:hover {
             background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(77, 68, 181, 0.4);
+        }
+
+        .conteudo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
         .tabela-relatorios {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
-            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 16px;
+            border-radius: 12px;
             overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .tabela-relatorios th {
-            background-color: #ecf0f1;
-            color: #2c3e50;
+            background-color: #4D44B5;
+            color: white;
             text-align: left;
-            padding: 14px;
+            padding: 16px 20px;
+            font-weight: 600;
         }
 
         .tabela-relatorios td {
-            background-color: #ffffff;
-            padding: 14px;
-            border-bottom: 1px solid #e0e0e0;
+            background-color: #fff;
+            padding: 14px 20px;
+            border-bottom: 1px solid #f0f0f0;
         }
 
-        .linha-filtro input {
-            width: 100%;
-            padding: 8px;
-            font-size: 13px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background-color: #fefefe;
+        .tabela-relatorios tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tabela-relatorios tr:hover td {
+            background-color: #f9f9ff;
         }
 
         .botoes-acoes {
             display: flex;
-            gap: 8px;
+            gap: 10px;
+        }
+
+        .botao-detalhes {
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .botao-detalhes:hover {
+            background-color: #d0d0d0;
+            transform: translateY(-2px);
         }
 
         .botao-editar {
-            background-color: #007bff;
-            color: white;
+            background-color: #6a5fcc;
+            color: #fff;
             border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .botao-editar:hover {
+            background-color: #554bbd;
+            transform: translateY(-2px);
         }
 
         .botao-excluir {
             background-color: #dc3545;
-            color: white;
+            color: #fff;
             border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 10px;
             cursor: pointer;
-            font-size: 13px;
-        }
-
-        .botao-detalhes {
-            background-color: #17a2b8;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .botao-editar:hover {
-            background-color: #0056b3;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
 
         .botao-excluir:hover {
             background-color: #c82333;
+            transform: translateY(-2px);
         }
 
-        .botao-detalhes:hover {
-            background-color: #138496;
+        /* ======================== MODAIS ======================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.3);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
         }
 
-        @media (max-width: 768px) {
-            #titulo h2 {
-                margin-left: 20px;
-                margin-top: 20px;
+        .modal-conteudo {
+            background-color: #fff;
+            border-radius: 20px;
+            width: 650px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-conteudo h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #4D44B5;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        /* Modal Exclusão aprimorado */
+        #modalExcluir .modal-conteudo {
+            text-align: center;
+            padding: 40px;
+        }
+
+        #modalExcluir p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        #modalExcluir .botoes-modal {
+            justify-content: center;
+        }
+
+        .botoes-modal {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .botoes-modal button[type="submit"] {
+            background-color: #4D44B5;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .botoes-modal button[type="submit"]:hover {
+            background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.3);
+        }
+
+        .botoes-modal button[type="button"] {
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .botoes-modal button[type="button"]:hover {
+            background-color: #cfcfcf;
+            transform: translateY(-2px);
+        }
+
+        /* ======================== ELEMENTOS DECORATIVOS ======================== */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 215, 0, 0.15);
+            top: -150px;
+            right: -150px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(77, 68, 181, 0.15);
+            bottom: -100px;
+            right: 200px;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            bottom: 100px;
+            left: 350px;
+        }
+
+        /* ======================== RODAPÉ ======================== */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #4D44B5;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        /* ======================== RESPONSIVIDADE ======================== */
+        @media (max-width: 1200px) {
+            .conteudo-principal {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
             }
 
             .conteudo-principal {
-                margin: 60px 20px 20px;
-                width: auto;
+                margin-left: 220px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .conteudo-principal {
+                margin-left: 0;
+                padding: 25px;
+            }
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin-top: 20px;
+                gap: 10px;
+            }
+
+            .menu-btn {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+
+            .botoes-acoes {
+                flex-wrap: wrap;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Elementos decorativos -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
-            <h2>Inclui+</h2>
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+            <h2>AEE +</h2>
         </div>
+
         <div class="menu">
-            <button class="menu-btn">Estudantes</button>
-            <button class="menu-btn">Professores</button>
-            <button class="menu-btn">Sessões</button>
-            <button class="menu-btn ativo">Relatórios</button>
-        </div>
-    </div>
-
-    <div id="titulo">
-        <h2>Relatórios</h2>
-    </div>
-
-    <div class="conteudo-principal">
-        <div class="linha-superior">
-            <button class="botao-novo-relatorio"
-                onclick="window.location.href='${pageContext.request.contextPath}/relatorios/novo<c:if test="${not empty param.alunoMatricula}">?alunoMatricula=${param.alunoMatricula}</c:if>'">
-                + Novo Relatório
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                Início
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                Estudantes
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                Sessões
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                Planos AEE
+            </button>
+            <button class="menu-btn ativo"
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                Relatórios
             </button>
         </div>
+    </div>
 
-        <!-- Tabela de Relatórios -->
-        <table class="tabela-relatorios">
-            <thead>
-                <tr>
-                    <th>Título</th>
-                    <th>Aluno</th>
-                    <th>Data</th>
-                    <th>Professor</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <c:choose>
-                    <c:when test="${not empty relatoriosLista}">
-                        <c:forEach items="${relatoriosLista}" var="relatorio">
-                            <tr data-id="${relatorio.id}">
-                                <td>${relatorio.titulo}</td>
-                                <td>${relatorio.aluno.nome}</td>
-                                <td>
-                                    ${relatorio.dataGeracao.dayOfMonth}/${relatorio.dataGeracao.monthValue}/${relatorio.dataGeracao.year}
-                                </td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${not empty relatorio.professorAEE}">
-                                            ${relatorio.professorAEE.nome} (${relatorio.professorAEE.siape})
-                                        </c:when>
-                                        <c:otherwise>
-                                            Não atribuído
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <div class="botoes-acoes">
-                                        <!-- Botão Editar -->
-                                        <button class="botao-editar"
-                                                onclick="window.location.href='${pageContext.request.contextPath}/relatorios/editar?id=${relatorio.id}'">
-                                            Editar
-                                        </button>
+    <!-- Conteúdo Principal -->
+    <div class="conteudo-principal">
+        <div class="header">
+            <div class="titulo">
+                <h1>Relatórios</h1>
+            </div>
+            <div class="user-info">
+                <p>Bem-vindo(a), Professor!</p>
+                <div class="funcao">${nome}</div>
+            </div>
+        </div>
 
-                                        <!-- Botão Detalhes -->
-                                        <button class="botao-detalhes"
-                                                onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorio.id}'">
-                                            Detalhes
-                                        </button>
+        <div class="conteudo-container">
+            <div class="linha-superior">
+                <button class="botao-novo-relatorio"
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/novo<c:if test="${not empty param.alunoMatricula}">?alunoMatricula=${param.alunoMatricula}</c:if>'">
+                    + Novo Relatório
+                </button>
+            </div>
 
-                                        <!-- Botão Excluir (abre modal) -->
-                                        <button class="botao-excluir"
-                                                onclick="confirmarExclusao(${relatorio.id})">
-                                            Excluir
-                                        </button>
-                                    </div>
+            <!-- Tabela de Relatórios -->
+            <table class="tabela-relatorios">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Aluno</th>
+                        <th>Data</th>
+                        <th>Professor</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:choose>
+                        <c:when test="${not empty relatoriosLista}">
+                            <c:forEach items="${relatoriosLista}" var="relatorio">
+                                <tr data-id="${relatorio.id}">
+                                    <td>${relatorio.titulo}</td>
+                                    <td>${relatorio.aluno.nome}</td>
+                                    <td>
+                                        ${relatorio.dataGeracao.dayOfMonth}/${relatorio.dataGeracao.monthValue}/${relatorio.dataGeracao.year}
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty relatorio.professorAEE}">
+                                                ${relatorio.professorAEE.nome} (${relatorio.professorAEE.siape})
+                                            </c:when>
+                                            <c:otherwise>
+                                                Não atribuído
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <div class="botoes-acoes">
+                                            <!-- Botão Editar -->
+                                            <button class="botao-editar"
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/editar?id=${relatorio.id}'">
+                                                Editar
+                                            </button>
+
+                                            <!-- Botão Detalhes -->
+                                            <button class="botao-detalhes"
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorio.id}'">
+                                                Detalhes
+                                            </button>
+
+                                            <!-- Botão Excluir -->
+                                            <button class="botao-excluir"
+                                                    onclick="confirmarExclusao(${relatorio.id})">
+                                                Excluir
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <tr>
+                                <td colspan="5" style="text-align: center;">
+                                    Nenhum relatório encontrado
                                 </td>
                             </tr>
-                        </c:forEach>
-                    </c:when>
-                    <c:otherwise>
-                        <tr>
-                            <td colspan="5" style="text-align: center;">
-                                Nenhum relatório encontrado
-                            </td>
-                        </tr>
-                    </c:otherwise>
-                </c:choose>
-            </tbody>
-        </table>
+                        </c:otherwise>
+                    </c:choose>
+                </tbody>
+            </table>
 
-        <!-- Modal de Confirmação de Exclusão -->
-        <div class="modal-overlay" id="modalExcluir" style="display: none;
-             position: fixed; top:0; left:0; width:100%; height:100%;
-             background: rgba(0,0,0,0.5); justify-content: center; align-items: center;">
-            <div class="modal-conteudo" style="background: white; padding: 20px; border-radius: 8px; width: 300px;">
-                <h3>Confirmar Exclusão</h3>
-                <p>Tem certeza que deseja excluir este relatório?</p>
-                <form id="formExcluirRelatorio" action="${pageContext.request.contextPath}/relatorios/excluir" method="POST">
-                    <input type="hidden" name="id" id="idExcluir">
-                    <div class="botoes-modal" style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px;">
-                        <button type="submit" style="background-color: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
-                            Confirmar
-                        </button>
-                        <button type="button" onclick="fecharModal(modais.excluir)"
-                                style="background-color: #e0e0e0; color: #333; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer;">
-                            Cancelar
-                        </button>
-                    </div>
-                </form>
+            <!-- Modal de Confirmação de Exclusão -->
+            <div class="modal-overlay" id="modalExcluir">
+                <div class="modal-conteudo">
+                    <h3>Confirmar Exclusão</h3>
+                    <p>Tem certeza que deseja excluir este relatório? Esta ação não pode ser desfeita.</p>
+                    <form id="formExcluirRelatorio" action="${pageContext.request.contextPath}/relatorios/excluir" method="POST">
+                        <input type="hidden" name="id" id="idExcluir">
+                        <div class="botoes-modal">
+                            <button type="submit">Confirmar Exclusão</button>
+                            <button type="button" onclick="fecharModal(modalExcluir)">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
         </div>
     </div>
 
     <script>
-        // Referência ao modal e suas funções
-        const modais = {
-            excluir: document.getElementById('modalExcluir')
-        };
+        // Controle dos Modais
+        const modalExcluir = document.getElementById('modalExcluir');
 
         function confirmarExclusao(id) {
             document.getElementById('idExcluir').value = id;
-            modais.excluir.style.display = 'flex';
+            modalExcluir.style.display = 'flex';
         }
 
         function fecharModal(modal) {
@@ -338,8 +624,8 @@
         }
 
         window.onclick = function(event) {
-            if (event.target === modais.excluir) {
-                modais.excluir.style.display = 'none';
+            if (event.target === modalExcluir) {
+                modalExcluir.style.display = 'none';
             }
         }
     </script>

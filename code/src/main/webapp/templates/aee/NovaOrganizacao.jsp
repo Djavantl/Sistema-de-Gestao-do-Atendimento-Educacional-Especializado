@@ -8,31 +8,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Organização de Atendimento</title>
     <style>
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
-
+        /* ======================== RESET E BASE ======================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f9f9ff;
+            background-color: #E6E6FA;
+            color: #333;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
+        /* ======================== SIDEBAR ======================== */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #4D44B5;
+            background: #4D44B5;
             color: white;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .logo {
@@ -43,9 +48,15 @@
         }
 
         .logo img {
-            width: 40px;
-            height: 40px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
+        }
+
+        .logo h2 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
         }
 
         .menu {
@@ -66,6 +77,13 @@
             border-radius: 12px;
             cursor: pointer;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-btn:hover {
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .menu-btn.ativo {
@@ -73,169 +91,362 @@
             color: #4D44B5;
         }
 
-        .menu-btn:hover {
-            background-color: rgba(255, 255, 255, 0.15);
+        .menu-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
         }
 
-        #titulo h2 {
-            color: rgb(12, 12, 97);
-            font-size: 28px;
-            margin-left: 350px;
-            margin-top: 40px;
+        .menu-btn.ativo img {
+            filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
         }
 
+        /* ======================== CONTEÚDO PRINCIPAL ======================== */
         .conteudo-principal {
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 40px;
-            margin: 80px auto 40px; /* Alterado para centralizar */
-            width: 40%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-left: 280px;
+            padding: 40px 60px;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        .linha-superior {
+        .header {
             display: flex;
-            justify-content: flex-end;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
             margin-bottom: 30px;
         }
 
-        .form-columns {
-            display: grid;
-            grid-template-columns: 1fr; /* Alterado para uma coluna */
-            gap: 20px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 500px; /* Largura máxima do formulário */
+        .titulo h1 {
+            color: #4D44B5;
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.2;
+            max-width: 600px;
         }
 
-        .form-column {
+        .user-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .user-info p {
+            color: #4D44B5;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user-info .funcao {
+            font-size: 16px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* ======================== FORMULÁRIO ORGANIZAÇÃO ======================== */
+        .conteudo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .titulo-form {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #4D44B5;
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .input-group {
             display: flex;
             flex-direction: column;
+            margin-bottom: 20px;
         }
 
-        label {
+        .input-group label {
             font-weight: 600;
-            color: #2c3e50;
-            font-size: 14px;
-            margin-top: 8px;
+            margin-bottom: 8px;
+            font-size: 15px;
+            color: #555;
         }
 
-        input, select {
-            width: 100%;
-            padding: 10px 12px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-top: 4px;
-            margin-bottom: 12px;
-            background-color: #fefefe;
-            transition: border-color 0.3s, box-shadow 0.3s;
+        .input-group input,
+        .input-group select {
+            padding: 12px 16px;
+            font-size: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
         }
 
-        input:focus, select:focus {
+        .input-group input:focus,
+        .input-group select:focus {
             border-color: #4D44B5;
             box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
             outline: none;
         }
 
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
         .botoes-modal {
             display: flex;
-            justify-content: center; /* Alterado para centralizar */
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
         }
 
-        button[type="submit"] {
+        .botao-salvar {
             background-color: #4D44B5;
-            color: #ffffff;
+            color: #fff;
             border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
 
-        button[type="submit"]:hover {
+        .botao-salvar:hover {
             background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.3);
         }
 
         .botao-voltar {
             background-color: #e0e0e0;
             color: #333;
             border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
+            padding: 12px 28px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         .botao-voltar:hover {
-            background-color: #372e9c;
+            background-color: #cfcfcf;
+            transform: translateY(-2px);
+        }
+
+        /* ======================== ELEMENTOS DECORATIVOS ======================== */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 215, 0, 0.15);
+            top: -150px;
+            right: -150px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(77, 68, 181, 0.15);
+            bottom: -100px;
+            right: 200px;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            bottom: 100px;
+            left: 350px;
+        }
+
+        /* ======================== RODAPÉ ======================== */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #4D44B5;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        /* ======================== RESPONSIVIDADE ======================== */
+        @media (max-width: 1200px) {
+            .conteudo-principal {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .conteudo-principal {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .conteudo-principal {
+                margin-left: 0;
+                padding: 25px;
+            }
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin-top: 20px;
+                gap: 10px;
+            }
+
+            .menu-btn {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Elementos decorativos -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
-            <h2>Inclui+</h2>
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+            <h2>AEE +</h2>
         </div>
+
         <div class="menu">
-            <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/professores'">Professores</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
-
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                Início
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                Estudantes
+            </button>
+            <button class="menu-btn ativo"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                Sessões
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                Planos AEE
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                Relatórios
+            </button>
         </div>
     </div>
 
-    <div id="titulo">
-        <h2>Criar Organização de Atendimento</h2>
-    </div>
-
+    <!-- Conteúdo Principal -->
     <div class="conteudo-principal">
-        <div class="linha-superior"></div>
-        <form id="formNovaOrganizacao" action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST">
-            <div class>
-                <div class>
+        <div class="header">
+            <div class="titulo">
+                <h1>Criar Organização de Atendimento</h1>
+            </div>
+            <div class="user-info">
+                <p>Bem-vindo(a), Professor!</p>
+                <div class="funcao">${nome}</div>
+            </div>
+        </div>
+
+        <div class="conteudo-container">
+            <h2 class="titulo-form">Organização de Atendimento</h2>
+
+            <form id="formNovaOrganizacao" action="${pageContext.request.contextPath}/templates/aee/organizacao" method="POST">
+                <div class="form-grid">
                     <input type="hidden" name="acao" value="criar">
                     <input type="hidden" name="id" value="${param.id}">
                     <input type="hidden" name="matricula" value="${param.matricula}">
                     <input type="hidden" name="alunoId" value="${aluno.id}">
 
-                    <label for="periodo">Período:</label>
-                    <input type="text" id="periodo" name="periodo" required>
+                    <div class="input-group full-width">
+                        <label for="periodo">Período:</label>
+                        <input type="text" id="periodo" name="periodo" required>
+                    </div>
 
-                    <label for="duracao">Duração:</label>
-                    <input type="text" id="duracao" name="duracao" required>
+                    <div class="input-group">
+                        <label for="duracao">Duração:</label>
+                        <input type="text" id="duracao" name="duracao" required>
+                    </div>
 
-                    <label for="frequencia">Frequência:</label>
-                    <input type="text" id="frequencia" name="frequencia">
+                    <div class="input-group">
+                        <label for="frequencia">Frequência:</label>
+                        <input type="text" id="frequencia" name="frequencia">
+                    </div>
 
-                    <label for="composicao">Composição:</label>
-                    <input type="text" id="composicao" name="composicao" required>
+                    <div class="input-group">
+                        <label for="composicao">Composição:</label>
+                        <input type="text" id="composicao" name="composicao" required>
+                    </div>
 
-                    <label for="tipo">Tipo de atendimento:</label>
-                    <select id="tipo" name="tipo">
-                        <option value="Individual">Individual</option>
-                        <option value="Parceria">Parceria</option>
-                        <option value="Grupo">Grupo</option>
-                    </select>
+                    <div class="input-group full-width">
+                        <label for="tipo">Tipo de atendimento:</label>
+                        <select id="tipo" name="tipo">
+                            <option value="Individual">Individual</option>
+                            <option value="Parceria">Parceria</option>
+                            <option value="Grupo">Grupo</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="botoes-modal">
-                <button type="submit">Salvar</button>
-                <button class="botao-voltar"
-                onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.id}'">
-                Voltar</button>
-            </div>
-        </form>
+                <div class="botoes-modal">
+                    <button type="submit" class="botao-salvar">Salvar</button>
+                    <button type="button" class="botao-voltar"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.id}'">
+                        Voltar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+        </div>
     </div>
 </body>
 </html>

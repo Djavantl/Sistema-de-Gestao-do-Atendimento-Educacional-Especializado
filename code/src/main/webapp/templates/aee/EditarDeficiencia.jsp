@@ -8,230 +8,468 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Deficiência</title>
     <style>
-        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+        /* ======================== RESET E BASE ======================== */
+                * {
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+                body {
+                    background-color: #E6E6FA;
+                    color: #333;
+                    min-height: 100vh;
+                    position: relative;
+                    overflow-x: hidden;
+                }
 
-        body {
-            background-color: #f9f9ff;
+                /* ======================== SIDEBAR ======================== */
+                .sidebar {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 250px;
+                    height: 100%;
+                    background: #4D44B5;
+                    color: white;
+                    padding: 20px;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    z-index: 100;
+                    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+                }
 
-        }
+                .logo {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 30px;
+                }
 
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            height: 100%;
-            background-color: #4D44B5;
-            color: white;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            z-index: 1000;
-        }
+                .logo img {
+                    width: 80px;
+                    height: 80px;
+                    object-fit: contain;
+                }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 30px;
-        }
+                .logo h2 {
+                    color: #ffffff;
+                    font-size: 24px;
+                    font-weight: 700;
+                }
 
-        .logo img {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
+                .menu {
+                    width: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 30px;
+                    margin-top: 40px;
+                }
 
-        .menu {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            margin-top: 40px;
-        }
+                .menu-btn {
+                    background-color: transparent;
+                    color: #ffffff;
+                    border: none;
+                    padding: 14px 20px;
+                    text-align: left;
+                    font-size: 16px;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
 
-        .menu-btn {
-            background-color: transparent;
-            color: #ffffff;
-            border: none;
-            padding: 14px 20px;
-            text-align: left;
-            font-size: 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+                .menu-btn:hover {
+                    background-color: rgba(255, 255, 255, 0.15);
+                }
 
-        .menu-btn.ativo {
-            background-color: #f9f9ff;
-            color: #4D44B5;
-        }
+                .menu-btn.ativo {
+                    background-color: #f9f9ff;
+                    color: #4D44B5;
+                }
 
-        .menu-btn:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
+                .menu-btn img {
+                    width: 24px;
+                    height: 24px;
+                    filter: brightness(0) invert(1);
+                }
 
-        .container {
-            margin: 80px 0 40px 350px;
-            width: 60%;
-            padding: 40px;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+                .menu-btn.ativo img {
+                    filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
+                }
 
-        }
+                /* ======================== CONTEÚDO PRINCIPAL ======================== */
+                .conteudo-principal {
+                    margin-left: 280px;
+                    padding: 40px 60px;
+                    min-height: 100vh;
+                    display: flex;
+                    flex-direction: column;
+                }
 
-        .form-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
+                .header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 20px 0;
+                    margin-bottom: 30px;
+                }
 
-        .form-header h2 {
-            color: #4D44B5;
-        }
+                .titulo h1 {
+                    color: #4D44B5;
+                    font-size: 42px;
+                    font-weight: 800;
+                    line-height: 1.2;
+                    max-width: 600px;
+                }
 
-        .form-columns {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 500px;
-        }
+                .user-info {
+                    background: rgba(255, 255, 255, 0.9);
+                    border-radius: 20px;
+                    padding: 20px 25px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+                    min-width: 280px;
+                    text-align: center;
+                }
 
-        label {
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 14px;
-            margin-top: 8px;
-        }
+                .user-info p {
+                    color: #4D44B5;
+                    font-weight: 600;
+                    margin-bottom: 10px;
+                    font-size: 18px;
+                }
 
-        input, select {
-            width: 100%;
-            padding: 10px 12px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-top: 4px;
-            margin-bottom: 12px;
-            background-color: #fefefe;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
+                .user-info .funcao {
+                    font-size: 16px;
+                    color: #777;
+                    font-weight: 500;
+                }
 
-        input:focus, select:focus {
-            border-color: #4D44B5;
-            box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
-            outline: none;
-        }
+                /* ======================== FORMULÁRIO PADRÃO ======================== */
+                .conteudo-container {
+                    background: rgba(255, 255, 255, 0.95);
+                    border-radius: 20px;
+                    padding: 40px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                    position: relative;
+                    overflow: hidden;
+                    max-width: 700px;
+                    margin: 0 auto;
+                    width: 100%;
+                }
 
-        .botoes-modal {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-            width: 100%;
-        }
+                .form-titulo {
+                    text-align: center;
+                    margin-bottom: 30px;
+                    color: #4D44B5;
+                    font-size: 32px;
+                    font-weight: 700;
+                }
 
-        button[type="submit"] {
-            background-color: #4D44B5;
-            color: #ffffff;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+                .form-grid {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    gap: 25px;
+                }
 
+                .input-group {
+                    display: flex;
+                    flex-direction: column;
+                    margin-bottom: 18px;
+                }
 
+                .input-group label {
+                    font-weight: 600;
+                    margin-bottom: 8px;
+                    font-size: 15px;
+                    color: #555;
+                }
 
-        button[type="submit"]:hover {
-            background-color: #372e9c;
-        }
+                .input-group input,
+                .input-group select,
+                .input-group textarea {
+                    padding: 12px 16px;
+                    font-size: 15px;
+                    border: 1px solid #ddd;
+                    border-radius: 12px;
+                    background-color: #fafafa;
+                    transition: all 0.3s ease;
+                    width: 100%;
+                }
 
-        .botao-voltar {
-            background-color: #e0e0e0;
-            color: #333;
-            border: none;
-            padding: 10px 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+                .input-group input:focus,
+                .input-group select:focus,
+                .input-group textarea:focus {
+                    border-color: #4D44B5;
+                    box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
+                    outline: none;
+                }
 
-        .botao-voltar:hover {
-            background-color: #d0d0d0;
-        }
+                .botoes-form {
+                    display: flex;
+                    justify-content: flex-end;
+                    gap: 15px;
+                    margin-top: 30px;
+                }
 
-        .conteudo-principal {
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 40px;
-            margin: 80px auto 40px; /* Alterado para centralizar */
-            width: 40%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+                .botao-salvar {
+                    background-color: #4D44B5;
+                    color: #fff;
+                    border: none;
+                    padding: 12px 28px;
+                    border-radius: 10px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .botao-salvar:hover {
+                    background-color: #372e9c;
+                    transform: translateY(-2px);
+                    box-shadow: 0 5px 15px rgba(77, 68, 181, 0.3);
+                }
+
+                .botao-voltar {
+                    background-color: #e0e0e0;
+                    color: #333;
+                    border: none;
+                    padding: 12px 28px;
+                    border-radius: 10px;
+                    font-size: 16px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+
+                .botao-voltar:hover {
+                    background-color: #cfcfcf;
+                    transform: translateY(-2px);
+                }
+
+                /* ======================== ELEMENTOS DECORATIVOS ======================== */
+                .decorative-circle {
+                    position: absolute;
+                    border-radius: 50%;
+                    z-index: -1;
+                }
+
+                .circle-1 {
+                    width: 300px;
+                    height: 300px;
+                    background: rgba(255, 215, 0, 0.15);
+                    top: -150px;
+                    right: -150px;
+                }
+
+                .circle-2 {
+                    width: 200px;
+                    height: 200px;
+                    background: rgba(77, 68, 181, 0.15);
+                    bottom: -100px;
+                    right: 200px;
+                }
+
+                .circle-3 {
+                    width: 150px;
+                    height: 150px;
+                    background: rgba(255, 255, 255, 0.1);
+                    bottom: 100px;
+                    left: 350px;
+                }
+
+                /* ======================== RODAPÉ ======================== */
+                .footer {
+                    text-align: center;
+                    padding: 30px;
+                    color: #4D44B5;
+                    font-size: 14px;
+                    margin-top: 40px;
+                }
+
+                /* ======================== RESPONSIVIDADE ======================== */
+                @media (max-width: 1200px) {
+                    .conteudo-principal {
+                        padding: 30px;
+                    }
+                }
+
+                @media (max-width: 992px) {
+                    .sidebar {
+                        width: 220px;
+                    }
+
+                    .conteudo-principal {
+                        margin-left: 220px;
+                    }
+
+                    .header {
+                        flex-direction: column;
+                        gap: 20px;
+                        align-items: flex-start;
+                    }
+                }
+
+                @media (max-width: 768px) {
+                    .sidebar {
+                        width: 100%;
+                        height: auto;
+                        position: relative;
+                        padding: 20px;
+                    }
+
+                    .conteudo-principal {
+                        margin-left: 0;
+                        padding: 25px;
+                    }
+
+                    .menu {
+                        flex-direction: row;
+                        flex-wrap: wrap;
+                        margin-top: 20px;
+                        gap: 10px;
+                    }
+
+                    .menu-btn {
+                        padding: 12px 15px;
+                        font-size: 15px;
+                    }
+
+                    .header {
+                        flex-direction: column;
+                        align-items: stretch;
+                    }
+
+                    .user-info {
+                        min-width: auto;
+                        margin-top: 15px;
+                    }
+                }
+
+                @media (max-width: 576px) {
+                    .conteudo-principal {
+                        padding: 15px;
+                    }
+
+                    .conteudo-container {
+                        padding: 25px;
+                    }
+
+                    .botoes-form {
+                        flex-direction: column;
+                    }
+
+                    .botao-salvar, .botao-voltar {
+                        width: 100%;
+                    }
+                }
     </style>
 </head>
 <body>
+    <!-- Elementos decorativos -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
-            <h2>Inclui+</h2>
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+            <h2>AEE +</h2>
         </div>
-        <div class="menu">
-            <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/professores'">Professores</button>
-            <button class="menu-btn" onclick="window.location.href='/templates/aee/sessoes'">Sessões</button>
 
+        <div class="menu">
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                Início
+            </button>
+            <button class="menu-btn ativo"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                Estudantes
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                Sessões
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                Planos AEE
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                Relatórios
+            </button>
         </div>
     </div>
+
+    <!-- Conteúdo Principal -->
+
+
     <div class="conteudo-principal">
-        <div class="form-header">
-            <h2>Editar Condição</h2>
-        </div>
-        <form action="${pageContext.request.contextPath}/deficiencia" method="POST">
-            <input type="hidden" name="acao" value="atualizar">
-            <input type="hidden" name="id" value="${deficiencia.id}">
-            <input type="hidden" name="alunoId" value="${param.alunoId}">
-            <input type="hidden" name="matricula" value="${param.matricula}">
+                <div class="header">
+                            <div class="titulo">
+                                <h1>Editar Condição Especial</h1>
+                            </div>
+                            <div class="user-info">
+                                <p>Bem-vindo(a), Professor!</p>
+                                <div class="funcao">${nome}</div>
+                            </div>
+                        </div>
 
-            <div class="form-columns">
-                <div class="form-column">
-                    <label for="nome">Nome da Condição:</label>
-                    <input type="text" id="nome" name="nome" value="${deficiencia.nome}" required>
+        <div class="conteudo-container">
+            <form action="${pageContext.request.contextPath}/deficiencia" method="POST">
+                <input type="hidden" name="acao" value="atualizar">
+                <input type="hidden" name="id" value="${deficiencia.id}">
+                <input type="hidden" name="alunoId" value="${param.alunoId}">
+                <input type="hidden" name="matricula" value="${param.matricula}">
 
-                    <label for="descricao">Descrição:</label>
-                    <input type="text" id="descricao" name="descricao" value="${deficiencia.descricao}" required>
+                <div class="form-columns">
+                    <div class="input-group">
+                        <label for="nome">Nome da Condição:</label>
+                        <input type="text" id="nome" name="nome" value="${deficiencia.nome}" required>
+                    </div>
 
-                    <label for="grau">Grau de severidade:</label>
-                    <input type="text" id="grau" name="grau" value="${deficiencia.grauSeveridade}">
+                    <div class="input-group">
+                        <label for="descricao">Descrição:</label>
+                        <input type="text" id="descricao" name="descricao" value="${deficiencia.descricao}" required>
+                    </div>
 
-                    <label for="cid">CID:</label>
-                    <input type="text" id="cid" name="cid" value="${deficiencia.cid}" required>
+                    <div class="input-group">
+                        <label for="grau">Grau de severidade:</label>
+                        <input type="text" id="grau" name="grau" value="${deficiencia.grauSeveridade}">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="cid">CID:</label>
+                        <input type="text" id="cid" name="cid" value="${deficiencia.cid}" required>
+                    </div>
                 </div>
-            </div>
-            <div class="botoes-modal">
-                <button type="submit">Salvar Alterações</button>
-                <button type="button" class="botao-voltar"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.alunoId}'">
-                    Cancelar
-                </button>
-            </div>
-        </form>
+
+                <div class="botoes-modal">
+                <button class="botao-salvar" type="submit">Salvar Alterações</button>
+                    <button type="button" class="botao-voltar"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${param.alunoId}'">
+                        Cancelar
+                    </button>
+
+                </div>
+            </form>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+        </div>
     </div>
 </body>
 </html>

@@ -44,7 +44,7 @@ public class AvaliacaoServlet extends HttpServlet {
         }
         // repassa relatorioId para o JSP
         request.setAttribute("relatorioId", relatorioId);
-        request.getRequestDispatcher("/templates/aee/EditarAvaliacao.jsp")
+        request.getRequestDispatcher("/templates/aee/Avaliacao.jsp")
                 .forward(request, response);
     }
 
