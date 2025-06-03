@@ -158,8 +158,8 @@
             <h2>Inclui+</h2>
         </div>
         <div class="menu">
-            <button class="menu-btn ativo" onclick="window.location.href='/templates/aee/professores'">Professores</button>
-            <button class="menu-btn"onclick="window.location.href='/templates/aee/professoresAEE'">Professores AEE</button>
+            <button class="menu-btn ativo" onclick="window.location.href='/templates/admin/professores'">Professores</button>
+            <button class="menu-btn" onclick="window.location.href='/templates/admin/professoresAEE'">Professores AEE</button>
         </div>
     </div>
 
@@ -168,7 +168,7 @@
             <h2>Editar Professor</h2>
         </div>
 
-        <form action="${pageContext.request.contextPath}/templates/aee/professores" method="POST">
+        <form action="${pageContext.request.contextPath}/templates/admin/professores" method="POST">
             <input type="hidden" name="acao" value="atualizar">
             <input type="hidden" name="siape" value="${professor.siape}">
 
@@ -216,7 +216,7 @@
             <div class="button-group">
                 <button type="submit" class="btn btn-primary">Salvar Alterações</button>
                 <button type="button" class="btn btn-secondary"
-                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professores'">
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/admin/professores'">
                     Cancelar
                 </button>
             </div>
