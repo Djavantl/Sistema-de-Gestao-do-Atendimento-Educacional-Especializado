@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -9,31 +8,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Criar Plano AEE</title>
     <style>
+        /* ======================== RESET E BASE ======================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f9f9ff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #E6E6FA;
+            color: #333;
+            min-height: 100vh;
+            position: relative;
             overflow-x: hidden;
         }
 
+        /* ======================== SIDEBAR ======================== */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #4D44B5;
+            background: #4D44B5;
             color: white;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .logo {
@@ -44,13 +48,15 @@
         }
 
         .logo img {
-            width: 40px;
-            height: 40px;
+            width: 80px;
+            height: 80px;
             object-fit: contain;
         }
 
         .logo h2 {
-            color: white;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
         }
 
         .menu {
@@ -71,6 +77,9 @@
             border-radius: 12px;
             cursor: pointer;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .menu-btn:hover {
@@ -82,23 +91,71 @@
             color: #4D44B5;
         }
 
-        #titulo {
-            margin-left: 350px;
-            padding-top: 40px;
+        .menu-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
         }
 
-        #titulo h2 {
-            color: rgb(12, 12, 97);
-            font-size: 28px;
+        .menu-btn.ativo img {
+            filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
         }
 
+        /* ======================== CONTEÚDO PRINCIPAL ======================== */
         .conteudo-principal {
-            background-color: #ffffff;
+            margin-left: 280px;
+            padding: 40px 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
+            color: #4D44B5;
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.2;
+            max-width: 600px;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 20px;
-            padding: 40px;
-            margin: 30px 0 40px 350px;
-            width: 70%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 20px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .user-info p {
+            color: #4D44B5;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user-info .funcao {
+            font-size: 16px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* ======================== FORMULÁRIO ======================== */
+        .conteudo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
         }
 
         .form-plano {
@@ -115,33 +172,34 @@
         .campo {
             display: flex;
             flex-direction: column;
+            margin-bottom: 15px;
         }
 
         .campo label {
             font-weight: 600;
-            color: #2c3e50;
-            font-size: 14px;
+            color: #4D44B5;
             margin-bottom: 8px;
+            font-size: 15px;
         }
 
         .campo input,
         .campo textarea,
         .campo select {
             width: 100%;
-            padding: 12px;
+            padding: 12px 16px;
+            font-size: 15px;
             border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 14px;
-            background-color: #fefefe;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            border-radius: 10px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
         }
 
         .campo input:focus,
         .campo textarea:focus,
         .campo select:focus {
-            outline: none;
             border-color: #4D44B5;
-            box-shadow: 0 0 0 2px rgba(77, 68, 181, 0.2);
+            box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
+            outline: none;
         }
 
         .campo textarea {
@@ -149,47 +207,12 @@
             resize: vertical;
         }
 
-        .botoes-acoes {
-            margin-top: 30px;
-            display: flex;
-            gap: 15px;
-            justify-content: flex-end;
-        }
-
-        .botao-salvar {
-            background-color: #4D44B5;
-            color: white;
-            padding: 12px 25px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-
-        .botao-salvar:hover {
-            background-color: #372e9c;
-        }
-
-        .botao-cancelar {
-            background-color: #e0e0e0;
-            color: #333;
-            padding: 12px 25px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background-color 0.3s;
-        }
-
-        .botao-cancelar:hover {
-            background-color: #d0d0d0;
-        }
-
+        /* Alertas */
         .alert {
             padding: 15px;
             margin-bottom: 20px;
-            border-radius: 5px;
+            border-radius: 10px;
+            font-weight: 500;
         }
 
         .alert-sucesso {
@@ -204,103 +227,278 @@
             border: 1px solid #f5c6cb;
         }
 
+        /* Botões */
+        .botoes-acoes {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        .botao-salvar {
+            background-color: #4D44B5;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .botao-salvar:hover {
+            background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.3);
+        }
+
+        .botao-cancelar {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 12px 25px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .botao-cancelar:hover {
+            background-color: #d0d0d0;
+            transform: translateY(-2px);
+        }
+
+        /* ======================== ELEMENTOS DECORATIVOS ======================== */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 215, 0, 0.15);
+            top: -150px;
+            right: -150px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(77, 68, 181, 0.15);
+            bottom: -100px;
+            right: 200px;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            bottom: 100px;
+            left: 350px;
+        }
+
+        /* ======================== RODAPÉ ======================== */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #4D44B5;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        /* ======================== RESPONSIVIDADE ======================== */
+        @media (max-width: 1200px) {
+            .conteudo-principal {
+                padding: 30px;
+            }
+
+            .grupo-campos {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .conteudo-principal {
+                margin-left: 220px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .conteudo-principal {
+                margin-left: 0;
+                padding: 25px;
+            }
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin-top: 20px;
+                gap: 10px;
+            }
+
+            .menu-btn {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+
+            .botoes-acoes {
+                flex-wrap: wrap;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Elementos decorativos -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
+
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logo.svg" alt="Logo" />
-            <h2>Inclui+</h2>
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+            <h2>AEE +</h2>
         </div>
+
         <div class="menu">
-            <button class="menu-btn ativo" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">Estudantes</button>
-                        <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/professores'">Professores</button>
-                        <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">Planos AEE</button>
-                        <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">Sessões</button>
-                        <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/relatorios'">Relatórios</button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                Início
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                Estudantes
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                Sessões
+            </button>
+            <button class="menu-btn ativo"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                Planos AEE
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                Relatórios
+            </button>
         </div>
     </div>
 
-    <div id="titulo">
-        <h2>Criar Plano de Atendimento Educacional Especializado (Plano AEE)</h2>
-    </div>
-
+    <!-- Conteúdo Principal -->
     <div class="conteudo-principal">
-        <c:if test="${not empty success}">
-            <div class="alert alert-sucesso">${success}</div>
-        </c:if>
-        <c:if test="${not empty erro}">
-            <div class="alert alert-erro">${erro}</div>
-        </c:if>
+        <div class="header">
+            <div class="titulo">
+                <h1>Criar Plano de Atendimento Educacional Especializado</h1>
+            </div>
+        </div>
 
-        <form class="form-plano" action="${pageContext.request.contextPath}/templates/aee/planoAEE/inserir" method="post">
-            <div class="grupo-campos">
-                <div class="campo">
-                    <label for="professor_siape">Professor Responsável:</label>
-                    <select name="professor_siape" id="professor_siape">
-                      <option value="">Selecione um professor</option>
-                      <c:forEach var="professor" items="${professores}">
-                        <option value="${professor.siape}">${professor.nome}</option>
-                      </c:forEach>
-                    </select>
+        <div class="conteudo-container">
+            <c:if test="${not empty success}">
+                <div class="alert alert-sucesso">${success}</div>
+            </c:if>
+            <c:if test="${not empty erro}">
+                <div class="alert alert-erro">${erro}</div>
+            </c:if>
 
-                    <c:if test="${empty professores}">
-                        <p style="color: #dc3545; margin-top: 5px;">
-                            Nenhum professor encontrado.
-                            <a href="${pageContext.request.contextPath}/templates/aee/professores" style="color: #4D44B5;">
-                                Cadastrar novo professor
-                            </a>
-                        </p>
-                    </c:if>
+            <form class="form-plano" action="${pageContext.request.contextPath}/templates/aee/planoAEE/inserir" method="post">
+                <div class="grupo-campos">
+                    <div class="campo">
+                        <label for="professor_siape">Professor Responsável:</label>
+                        <select name="professor_siape" id="professor_siape">
+                          <option value="">Selecione um professor</option>
+                          <c:forEach var="professor" items="${professores}">
+                            <option value="${professor.siape}">${professor.nome}</option>
+                          </c:forEach>
+                        </select>
+
+                        <c:if test="${empty professores}">
+                            <p style="color: #dc3545; margin-top: 5px;">
+                                Nenhum professor encontrado.
+                                <a href="${pageContext.request.contextPath}/templates/aee/professores" style="color: #4D44B5;">
+                                    Cadastrar novo professor
+                                </a>
+                            </p>
+                        </c:if>
+                    </div>
+
+                    <div class="campo">
+                        <label for="aluno_matricula">Aluno:</label>
+                        <select name="aluno_matricula" id="aluno_matricula">
+                          <option value="">Selecione um aluno</option>
+                          <c:forEach var="aluno" items="${alunos}">
+                            <option value="${aluno.matricula}">${aluno.nome}</option>
+                          </c:forEach>
+                        </select>
+                        <c:if test="${empty alunos}">
+                            <p style="color: #dc3545; margin-top: 5px;">
+                                Nenhum aluno encontrado.
+                                <a href="${pageContext.request.contextPath}/templates/aee/alunos" style="color: #4D44B5;">
+                                    Cadastrar novo aluno
+                                </a>
+                            </p>
+                        </c:if>
+                    </div>
+
+                    <div class="campo">
+                        <label for="dataInicio">Data de Início:</label>
+                        <input type="date" id="dataInicio" name="dataInicio"
+                               value="${param.dataInicio}" required>
+                    </div>
                 </div>
 
                 <div class="campo">
-                    <label for="aluno_matricula">Aluno:</label>
-                    <select name="aluno_matricula" id="aluno_matricula">
-                      <option value="">Selecione um aluno</option>
-                      <c:forEach var="aluno" items="${alunos}">
-                        <option value="${aluno.matricula}">${aluno.nome}</option>
-                      </c:forEach>
-                    </select>
-                    <c:if test="${empty alunos}">
-                        <p style="color: #dc3545; margin-top: 5px;">
-                            Nenhum aluno encontrado.
-                            <a href="${pageContext.request.contextPath}/templates/aee/alunos" style="color: #4D44B5;">
-                                Cadastrar novo aluno
-                            </a>
-                        </p>
-                    </c:if>
+                    <label for="recomendacoes">Recomendações:</label>
+                    <textarea id="recomendacoes" name="recomendacoes" rows="4"
+                              placeholder="Recomendações pedagógicas, estratégias de ensino...">${param.recomendacoes}</textarea>
                 </div>
 
                 <div class="campo">
-                    <label for="dataInicio">Data de Início:</label>
-                    <input type="date" id="dataInicio" name="dataInicio"
-                           value="${param.dataInicio}" required>
+                    <label for="observacoes">Observações:</label>
+                    <textarea id="observacoes" name="observacoes" rows="4"
+                              placeholder="Informações relevantes sobre o aluno...">${param.observacoes}</textarea>
                 </div>
-            </div>
 
-            <div class="campo">
-                <label for="recomendacoes">Recomendações:</label>
-                <textarea id="recomendacoes" name="recomendacoes" rows="4"
-                          placeholder="Recomendações pedagógicas, estratégias de ensino...">${param.recomendacoes}</textarea>
-            </div>
+                <div class="botoes-acoes">
+                    <button type="submit" class="botao-salvar">Salvar Plano AEE</button>
+                    <button type="button" class="botao-cancelar" onclick="window.history.back()">Cancelar</button>
+                </div>
+            </form>
+        </div>
 
-            <div class="campo">
-                <label for="observacoes">Observações:</label>
-                <textarea id="observacoes" name="observacoes" rows="4"
-                          placeholder="Informações relevantes sobre o aluno...">${param.observacoes}</textarea>
-            </div>
-
-            <div class="botoes-acoes">
-                <button type="submit" class="botao-salvar">Salvar Plano AEE</button>
-                <button type="button" class="botao-cancelar" onclick="window.history.back()">Cancelar</button>
-            </div>
-        </form>
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+        </div>
     </div>
 
     <script>
-        // Script para melhorar a experiência do usuário
         document.addEventListener('DOMContentLoaded', function() {
             // Focar no primeiro campo ao carregar a página
             document.getElementById('professor_siape').focus();
