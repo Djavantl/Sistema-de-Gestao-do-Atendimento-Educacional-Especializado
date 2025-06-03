@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@WebServlet(name = "CriarProfessorAEEServlet", urlPatterns = {"/templates/aee/professoresAEE", "/templates/aee/professoresAEE/*"})
+@WebServlet(name = "CriarProfessorAEEServlet", urlPatterns = {"/templates/admin/professoresAEE", "/templates/admin/professoresAEE/*"})
 public class CriarProfessorAEEServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(CriarProfessorAEEServlet.class.getName());
     private ProfessorAEEDAO professorAEEDAO;
@@ -47,7 +47,7 @@ public class CriarProfessorAEEServlet extends HttpServlet {
 
                 if (professorAEE != null) {
                     request.setAttribute("professorAEE", professorAEE);
-                    request.getRequestDispatcher("/templates/aee/EditarProfessorAEE.jsp").forward(request, response);
+                    request.getRequestDispatcher("/templates/admin/EditarProfessorAEE.jsp").forward(request, response);
                 } else {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND, "Professor AEE não encontrado");
                 }
@@ -95,7 +95,7 @@ public class CriarProfessorAEEServlet extends HttpServlet {
         );
 
         request.setAttribute("professoresAEELista", professores);
-        request.getRequestDispatcher("/templates/aee/CriarProfessorAEE.jsp").forward(request, response);
+        request.getRequestDispatcher("/templates/admin/CriarProfessorAEE.jsp").forward(request, response);
     }
 
     private void exibirFormularioEdicao(HttpServletRequest request, HttpServletResponse response)
@@ -106,7 +106,7 @@ public class CriarProfessorAEEServlet extends HttpServlet {
 
         if (professorAEE != null) {
             request.setAttribute("professorAEE", professorAEE);
-            request.getRequestDispatcher("/templates/aee/EditarProfessorAEE.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/admin/EditarProfessorAEE.jsp").forward(request, response);
         } else {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Professor AEE não encontrado");
         }
@@ -120,7 +120,7 @@ public class CriarProfessorAEEServlet extends HttpServlet {
         if (!erros.isEmpty()) {
             request.setAttribute("erros", erros);
             request.setAttribute("professorAEE", extrairDadosFormulario(request));
-            request.getRequestDispatcher("/templates/aee/CriarProfessorAEE.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/admin/CriarProfessorAEE.jsp").forward(request, response);
             return;
         }
 
@@ -138,7 +138,7 @@ public class CriarProfessorAEEServlet extends HttpServlet {
         ProfessorAEE professor = construirProfessorAEE(request);
         professor.setSiape(request.getParameter("siape"));
         professorAEEDAO.update(professor);
-        response.sendRedirect(request.getContextPath() + "/templates/aee/professoresAEE?sucesso=Professor+AEE+atualizado");
+        response.sendRedirect(request.getContextPath() + "/templates/admin/professoresAEE?sucesso=Professor+AEE+atualizado");
     }
 
     private void processarExclusao(HttpServletRequest request, HttpServletResponse response)
@@ -147,7 +147,7 @@ public class CriarProfessorAEEServlet extends HttpServlet {
         if (siape != null && !siape.isEmpty()) {
             professorAEEDAO.delete(siape);
             response.sendRedirect(request.getContextPath() +
-                    "/templates/aee/professoresAEE?sucesso=Professor+AEE+excluído+com+sucesso");
+                    "/templates/admin/professoresAEE?sucesso=Professor+AEE+excluído+com+sucesso");
         }
     }
 
@@ -219,6 +219,6 @@ public class CriarProfessorAEEServlet extends HttpServlet {
     private void encaminharErro(HttpServletRequest request, HttpServletResponse response, String mensagem)
             throws ServletException, IOException {
         request.setAttribute("erro", mensagem);
-        request.getRequestDispatcher("/templates/aee/CriarProfessorAEE.jsp").forward(request, response);
+        request.getRequestDispatcher("/templates/admin/CriarProfessorAEE.jsp").forward(request, response);
     }
 }
