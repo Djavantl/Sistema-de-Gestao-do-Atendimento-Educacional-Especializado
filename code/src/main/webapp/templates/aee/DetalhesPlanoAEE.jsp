@@ -659,17 +659,16 @@
 
                 <c:choose>
                     <c:when test="${empty plano.proposta}">
-                        <a href="${pageContext.request.contextPath}/propostas?planoAEEId=${plano.id}"
-                           class="btn-adicionar">
+                        <button class="btn-adicionar"
+                                onclick="window.location.href='${pageContext.request.contextPath}/propostas?planoAEEId=${plano.id}'">
                             + Adicionar Proposta
-                        </a>
+                        </button>
                     </c:when>
                     <c:otherwise>
                         <div style="display: flex; gap: 15px;">
-                            <a href="${pageContext.request.contextPath}/editarProposta?id=${plano.proposta.id}"
-                               class="btn-editar">
+                            <button class="btn-editar" onclick="window.location.href='${pageContext.request.contextPath}/editarProposta?id=${plano.proposta.id}'">
                                 Editar
-                            </a>
+                            </button>
                             <form action="${pageContext.request.contextPath}/excluirProposta" method="post"
                                   onsubmit="return confirm('Tem certeza que deseja excluir esta proposta pedagógica?');">
                                 <input type="hidden" name="propostaId" value="${plano.proposta.id}">
