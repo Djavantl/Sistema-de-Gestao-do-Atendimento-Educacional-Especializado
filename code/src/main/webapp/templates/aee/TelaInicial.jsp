@@ -475,6 +475,13 @@
                     Gerenciar <i>→</i>
                 </button>
             </div>
+            <div class="card">
+                <div class="card-icon">
+                    <img src="${pageContext.request.contextPath}/static/images/professor.svg" alt="Professor">
+                </div>
+                <h3>Vínculo de Professores</h3>
+                <p>Vincule os professores com seus estudantes atendidos no programa AEE.</p>
+            </div>
 
             <!-- Segunda fileira com 2 cards centralizados -->
             <div class="second-row">
