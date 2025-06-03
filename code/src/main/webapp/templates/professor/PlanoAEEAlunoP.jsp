@@ -559,7 +559,9 @@
 
         <div class="detalhes-header">
             <div></div>
-            <button class="botao-voltar" onclick="window.location.href='/templates/aee/planosAEE'">Voltar</button>
+            <button class="botao-voltar" onclick="window.history.back()">
+                Voltar
+            </button>
         </div>
 
         <!-- Informações do Plano -->
@@ -604,12 +606,7 @@
 
         <!-- Metas do Plano -->
         <div class="info-section">
-            <div class="detalhes-header">
-                <h3>Metas do Plano</h3>
-                <button class="btn-adicionar">
-                    + Adicionar Meta
-                </button>
-            </div>
+            <h3>Metas do Plano</h3>
 
             <c:choose>
                 <c:when test="${not empty plano.metas && !plano.metas.isEmpty()}">
@@ -618,7 +615,6 @@
                             <tr>
                                 <th>Descrição</th>
                                 <th>Status</th>
-                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -630,14 +626,6 @@
                                           meta.status == 'Em Andamento' ? 'status-andamento' : 'status-concluido'}">
                                             ${meta.status}
                                         </span>
-                                    </td>
-                                    <td>
-                                        <button class="btn-editar" style="padding: 8px 16px; margin-right: 8px;">
-                                            Editar
-                                        </button>
-                                        <button class="btn-excluir" style="padding: 8px 16px;">
-                                            Excluir
-                                        </button>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -654,34 +642,7 @@
 
         <!-- Proposta Pedagógica -->
         <div class="info-section">
-            <div class="detalhes-header">
-                <h3>Proposta Pedagógica</h3>
-
-                <c:choose>
-                    <c:when test="${empty plano.proposta}">
-                        <a href="${pageContext.request.contextPath}/propostas?planoAEEId=${plano.id}"
-                           class="btn-adicionar">
-                            + Adicionar Proposta
-                        </a>
-                    </c:when>
-                    <c:otherwise>
-                        <div style="display: flex; gap: 15px;">
-                            <a href="${pageContext.request.contextPath}/editarProposta?id=${plano.proposta.id}"
-                               class="btn-editar">
-                                Editar
-                            </a>
-                            <form action="${pageContext.request.contextPath}/excluirProposta" method="post"
-                                  onsubmit="return confirm('Tem certeza que deseja excluir esta proposta pedagógica?');">
-                                <input type="hidden" name="propostaId" value="${plano.proposta.id}">
-                                <input type="hidden" name="planoId" value="${plano.id}">
-                                <button type="submit" class="btn-excluir">
-                                    Excluir
-                                </button>
-                            </form>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-            </div>
+            <h3>Proposta Pedagógica</h3>
 
             <c:choose>
                 <c:when test="${not empty plano.proposta}">

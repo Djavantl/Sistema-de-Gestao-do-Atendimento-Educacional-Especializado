@@ -531,6 +531,23 @@
                 flex-wrap: wrap;
             }
         }
+
+        /* Estilo para os inputs de filtro */
+        .linha-filtro input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 15px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            background-color: #fafafa;
+            transition: all 0.3s ease;
+        }
+
+        .linha-filtro input:focus {
+            border-color: #4D44B5;
+            box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
+            outline: none;
+        }
     </style>
 </head>
 <body>
@@ -704,6 +721,14 @@
                         <th>Turma</th>
                         <th>Responsável</th>
                         <th>Ações</th>
+                    </tr>
+                    <tr class="linha-filtro">
+                        <th><input type="text" placeholder="Matricula" oninput="filtrarColuna(this, 0)"></th>
+                        <th><input type="text" placeholder="Nome" oninput="filtrarColuna(this, 1)"></th>
+                        <th><input type="text" placeholder="Curso" oninput="filtrarColuna(this, 2)"></th>
+                        <th><input type="text" placeholder="Turma" oninput="filtrarColuna(this, 3)"></th>
+                        <th><input type="text" placeholder="Responsável" oninput="filtrarColuna(this, 4)"></th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -915,6 +940,24 @@
                 }
             });
         }
+
+        function filtrarColuna(input, coluna) {
+            const tabela = document.querySelector('.tabela-alunos tbody');
+            const linhas = tabela.querySelectorAll('tr');
+            const filtro = input.value.toLowerCase();
+
+            linhas.forEach(linha => {
+                const celula = linha.querySelectorAll('td')[coluna];
+                const texto = celula ? celula.textContent.toLowerCase() : '';
+
+                if (texto.includes(filtro)) {
+                    linha.style.display = '';
+                } else {
+                    linha.style.display = 'none';
+                }
+            });
+        }
+
     </script>
 </body>
 </html>

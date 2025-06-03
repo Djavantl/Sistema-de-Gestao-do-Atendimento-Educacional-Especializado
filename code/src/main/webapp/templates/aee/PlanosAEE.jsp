@@ -238,6 +238,40 @@
             transform: translateY(-2px);
         }
 
+        .botao-editar {
+            background-color: #6a5fcc;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .botao-editar:hover {
+            background-color: #554bbd;
+            transform: translateY(-2px);
+        }
+
+        .botao-excluir {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .botao-excluir:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
         /* Estilo para os inputs de filtro */
         .linha-filtro input {
             width: 100%;
@@ -402,10 +436,6 @@
             <div class="titulo">
                 <h1>Planos AEE</h1>
             </div>
-            <div class="user-info">
-                <p>Bem-vindo(a), Professor!</p>
-                <div class="funcao">${nome}</div>
-            </div>
         </div>
 
         <div class="conteudo-container">
@@ -424,10 +454,10 @@
                         <th style="width: 180px">Ações</th>
                     </tr>
                     <tr class="linha-filtro">
-                        <th><input type="text" placeholder="Filtrar ID" oninput="filtrarColuna(this, 0)"></th>
-                        <th><input type="text" placeholder="Filtrar Aluno" oninput="filtrarColuna(this, 1)"></th>
-                        <th><input type="text" placeholder="Filtrar Professor" oninput="filtrarColuna(this, 2)"></th>
-                        <th><input type="text" placeholder="Filtrar Data" oninput="filtrarColuna(this, 3)"></th>
+                        <th><input type="text" placeholder="ID" oninput="filtrarColuna(this, 0)"></th>
+                        <th><input type="text" placeholder="Aluno" oninput="filtrarColuna(this, 1)"></th>
+                        <th><input type="text" placeholder="Professor" oninput="filtrarColuna(this, 2)"></th>
+                        <th><input type="text" placeholder="Data" oninput="filtrarColuna(this, 3)"></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -451,6 +481,21 @@
                                             <button class="botao-detalhes-plano"
                                                 onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-plano?id=${plano.id}'">Detalhes
                                             </button>
+                                            <!-- Botão Editar -->
+                                            <a href="${pageContext.request.contextPath}/templates/aee/editarPlanoAEE?id=${plano.id}"
+                                               class="botao-editar"
+                                               style="padding: 8px 16px; margin-right: 8px; text-decoration: none; display: inline-block; text-align: center;">
+                                                Editar
+                                            </a>
+                                            <!-- Botão Excluir -->
+                                            <form action="${pageContext.request.contextPath}/templates/aee/planosAEE"
+                                                  method="post"
+                                                  onsubmit="return confirm('Tem certeza que deseja excluir este plano? Esta ação não pode ser desfeita.');"
+                                                  style="display: inline;">
+                                                <input type="hidden" name="action" value="excluirPlano">
+                                                <input type="hidden" name="planoId" value="${plano.id}">
+                                                <button type="submit" class="botao-excluir" style="padding: 8px 16px;">Excluir</button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

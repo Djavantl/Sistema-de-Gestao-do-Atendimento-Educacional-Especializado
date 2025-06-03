@@ -482,10 +482,6 @@
             <div class="titulo">
                 <h1>Editar Proposta Pedagógica</h1>
             </div>
-            <div class="user-info">
-                <p>Bem-vindo(a), Professor!</p>
-                <div class="funcao">${nome}</div>
-            </div>
         </div>
 
         <div class="conteudo-container">
