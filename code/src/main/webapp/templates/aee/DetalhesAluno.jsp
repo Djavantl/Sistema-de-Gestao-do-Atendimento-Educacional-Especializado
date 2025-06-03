@@ -273,35 +273,16 @@
             transform: translateY(-2px);
         }
 
-        /* ======================== DEFICIÊNCIAS ======================== */
-        .deficiencias-container {
-            margin-top: 20px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .deficiencia-item {
-            padding: 20px;
-            background-color: #fff;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .deficiencia-item.separador {
-            border-bottom: 2px solid #e0e0ff;
-        }
-
+        /* ======================== AÇÕES DE DEFICIÊNCIA ======================== */
         .acoes-deficiencia {
             display: flex;
             justify-content: flex-end;
-            gap: 10px;
-            padding: 15px 0 0;
-            margin-top: 15px;
+            gap: 12px; /* Espaçamento mais fluido */
+            margin-left: 410%;
         }
 
         .acoes-deficiencia button {
-            padding: 10px 18px;
+            padding: 10px 20px;
             border-radius: 10px;
             font-size: 14px;
             font-weight: 600;
@@ -310,9 +291,17 @@
             border: none;
         }
 
+        /* Botão Editar */
         .acoes-deficiencia .botao-editar {
             background-color: #6a5fcc;
             color: #fff;
+            padding: 8px 16px; /* Reduzido para deixar mais proporcional */
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
         }
 
         .acoes-deficiencia .botao-editar:hover {
@@ -320,6 +309,8 @@
             transform: translateY(-2px);
         }
 
+
+        /* Botão Excluir */
         .acoes-deficiencia .botao-excluir {
             background-color: #dc3545;
             color: #fff;
@@ -590,22 +581,25 @@
                                         <label>CID</label>
                                         <p>${deficiencia.cid}</p>
                                     </div>
-                                    <div class="acoes-deficiencia">
+                                    <div class="acoes-deficiencia" style="display: flex; gap: 10px;">
                                         <button class="botao-editar"
                                             onclick="window.location.href='${pageContext.request.contextPath}/deficiencia?acao=editar&id=${deficiencia.id}&alunoId=${aluno.id}'">
                                             Editar
                                         </button>
-                                        <form action="${pageContext.request.contextPath}/deficiencia" method="POST" style="display:inline;">
+
+                                        <form action="${pageContext.request.contextPath}/deficiencia" method="POST" style="display: inline;">
                                             <input type="hidden" name="acao" value="excluir">
                                             <input type="hidden" name="id" value="${deficiencia.id}">
                                             <input type="hidden" name="alunoId" value="${aluno.id}">
                                             <input type="hidden" name="matricula" value="${param.matricula}">
+
                                             <button type="submit" class="botao-excluir"
                                                 onclick="return confirm('Tem certeza que deseja excluir esta deficiência?')">
                                                 Excluir
                                             </button>
                                         </form>
                                     </div>
+
                                 </div>
                             </div>
                         </c:forEach>
