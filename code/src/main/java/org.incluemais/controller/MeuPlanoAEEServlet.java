@@ -47,8 +47,12 @@ public class MeuPlanoAEEServlet extends HttpServlet {
             return;
         }
 
-        // Recupera a matrícula do aluno da sessão
+
         String matricula = request.getParameter("matricula");
+        if (matricula == null || matricula.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Matrícula não fornecida");
+            return;
+        }
         try {
             // Busca o plano do aluno por matrícula
             PlanoAEE plano = planoAEEDAO.buscarPorMatriculaAluno(matricula);
@@ -56,8 +60,11 @@ public class MeuPlanoAEEServlet extends HttpServlet {
             if (plano == null) {
                 // Caso não exista plano para o aluno
                 request.setAttribute("semPlano", true);
+                request.setAttribute("matricula", matricula);
                 request.getRequestDispatcher("/templates/aluno/MeuPlanoAEE.jsp").forward(request, response);
+
                 return;
+
             }
 
             // Busca informações complementares
@@ -78,7 +85,6 @@ public class MeuPlanoAEEServlet extends HttpServlet {
             request.setAttribute("aluno", aluno);
             request.setAttribute("professor", professor);
             request.setAttribute("matricula", matricula);
-
             request.getRequestDispatcher("/templates/aluno/MeuPlanoAEE.jsp").forward(request, response);
 
         } catch (SQLException e) {
