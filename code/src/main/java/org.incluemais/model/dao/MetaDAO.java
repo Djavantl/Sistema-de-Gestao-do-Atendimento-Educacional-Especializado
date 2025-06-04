@@ -48,27 +48,18 @@ public class MetaDAO {
 
     public List<Meta> buscarMetasPorPlanoId(int planoId) throws SQLException {
         List<Meta> metas = new ArrayList<>();
-        String sql = """
-            SELECT m.id, m.descricao, m.status
-            FROM Meta m
-            JOIN PlanoAEE_Meta pm ON m.id = pm.meta_id
-            WHERE pm.plano_id = ?
-            """;
+        String sql = "SELECT id, descricao, status FROM Meta WHERE plano_id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, planoId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    Meta meta = new Meta();
-                    meta.setId(rs.getInt("id"));
-                    meta.setDescricao(rs.getString("descricao"));
-                    meta.setStatus(rs.getString("status"));
-                    metas.add(meta);
-                }
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Meta meta = new Meta();
+                meta.setId(rs.getInt("id"));
+                meta.setDescricao(rs.getString("descricao"));
+                meta.setStatus(rs.getString("status"));
+                metas.add(meta);
             }
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Erro ao buscar metas por plano", e);
-            throw e;
         }
         return metas;
     }

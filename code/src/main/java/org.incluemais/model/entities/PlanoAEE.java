@@ -11,7 +11,7 @@ public class PlanoAEE {
     private LocalDate dataInicio;
     private String recomendacoes;
     private String observacoes;
-    private List<Meta> metas = new ArrayList<>();
+    private List<Meta> metas;
     private PropostaPedagogica proposta;
 
     public PlanoAEE() {
