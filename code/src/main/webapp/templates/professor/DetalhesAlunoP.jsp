@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -8,31 +10,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalhes do Aluno</title>
     <style>
+        /* ======================== RESET E BASE ======================== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #f9f9ff;
+            background-color: #E6E6FA;
+            color: #333;
+            min-height: 100vh;
+            position: relative;
             overflow-x: hidden;
         }
 
+        /* ======================== SIDEBAR ======================== */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #4D44B5;
+            background: #4D44B5;
             color: white;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            z-index: 1000;
+            z-index: 100;
         }
 
         .logo {
@@ -46,6 +53,12 @@
             width: 80px;
             height: 80px;
             object-fit: contain;
+        }
+
+        .logo h2 {
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 700;
         }
 
         .menu {
@@ -63,14 +76,17 @@
             padding: 14px 20px;
             text-align: left;
             font-size: 16px;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: background-color 0.3s;
-            width: 100%;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .menu-btn:hover {
             background-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
         }
 
         .menu-btn.ativo {
@@ -78,281 +94,451 @@
             color: #4D44B5;
         }
 
-        #titulo h2 {
-            color: rgb(12, 12, 97);
-            font-size: 28px;
-            margin-left: 350px;
-            margin-top: 40px;
+        .menu-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
         }
 
+        .menu-btn.ativo img {
+            filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
+        }
+
+        /* ======================== CONTEÚDO PRINCIPAL ======================== */
         .conteudo-principal {
-            background-color: #ffffff;
-            border-radius: 20px;
-            padding: 40px;
-            margin: 80px 0 40px 350px;
-            width: 70%;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            margin-left: 280px;
+            padding: 40px 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        .detalhes-header {
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
+            color: #4D44B5;
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.2;
+            max-width: 600px;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .user-info p {
+            color: #4D44B5;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user-info .funcao {
+            font-size: 16px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* ======================== CONTAINER DE DETALHES ======================== */
+        .conteudo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-section h3 {
+            color: #4D44B5;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4D44B5;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            align-items: start;
+        }
+
+        .info-item {
+            background-color: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-item label {
+            display: block;
+            color: #6c757d;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .info-item p {
+            margin: 0;
+            font-size: 18px;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .text-content {
+            background-color: #f8f9ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            font-size: 18px;
+            color: #2c3e50;
+            line-height: 1.6;
+            min-height: 150px;
+        }
+
+        .deficiencias-container {
+            margin-top: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .deficiencia-item {
+            padding: 20px;
+            background-color: #fff;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .deficiencia-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* ======================== BOTÕES ======================== */
+        .botoes-acoes {
             display: flex;
             justify-content: flex-end;
-            margin-bottom: 30px;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .botao {
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .botao:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
         }
 
         .botao-voltar {
             background-color: #4D44B5;
-            color: #ffffff;
-            border: none;
-            padding: 10px 22px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 15px;
-            transition: background-color 0.3s;
+            color: white;
         }
 
         .botao-voltar:hover {
             background-color: #372e9c;
         }
 
-        .info-section {
-            margin-bottom: 40px;
+        /* ======================== ELEMENTOS DECORATIVOS ======================== */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
         }
 
-        .info-section h3 {
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 215, 0, 0.15);
+            top: -150px;
+            right: -150px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(77, 68, 181, 0.15);
+            bottom: -100px;
+            right: 200px;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            bottom: 100px;
+            left: 350px;
+        }
+
+        /* ======================== RODAPÉ ======================== */
+        .footer {
+            text-align: center;
+            padding: 30px;
             color: #4D44B5;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #4D44B5;
+            font-size: 14px;
+            margin-top: auto;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .info-item {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-        }
-
-        .info-item label {
-            display: block;
-            color: #6c757d;
-            font-size: 0.9em;
-            margin-bottom: 5px;
-        }
-
-        .info-item p {
-            margin: 0;
-            font-size: 1em;
-            color: #2c3e50;
-            word-break: break-word;
-        }
-
-        .deficiencias-container {
-            margin-top: 20px;
-        }
-
-        .deficiencia-item {
-            padding: 15px;
-            background-color: #fff;
-            border-bottom: 1px solid #dee2e6;
-        }
-
+        /* ======================== RESPONSIVIDADE ======================== */
         @media (max-width: 1200px) {
             .conteudo-principal {
-                width: 85%;
-                margin-left: 300px;
+                padding: 30px;
             }
         }
 
         @media (max-width: 992px) {
             .sidebar {
-                width: 200px;
+                width: 220px;
             }
+
             .conteudo-principal {
-                margin-left: 250px;
-                padding: 25px;
+                margin-left: 220px;
             }
-            #titulo h2 {
-                margin-left: 250px;
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
             }
         }
 
         @media (max-width: 768px) {
             .sidebar {
-                width: 60px;
-                padding: 10px;
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
             }
-            .logo h2,
-            .menu-btn span {
-                display: none;
-            }
+
             .conteudo-principal {
-                margin-left: 80px;
-                width: calc(100% - 100px);
+                margin-left: 0;
+                padding: 25px;
             }
-            #titulo h2 {
-                margin-left: 100px;
-                font-size: 24px;
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin-top: 20px;
+                gap: 10px;
+            }
+
+            .menu-btn {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+
+            .botoes-acoes {
+                flex-wrap: wrap;
+                justify-content: center;
             }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo" />
-            <h2>Inclui+</h2>
-        </div>
-        <div class="menu">
-            <button class="menu-btn " onclick="window.location.href='/templates/aee/alunos'">Estudantes</button>
-            <button class="menu-btn ativo">Meus Alunos</button>
+    <!-- Elementos decorativos -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
 
-        </div>
-    </div>
+    <!-- Sidebar -->
+            <div class="sidebar">
+                <div class="logo">
+                    <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+                    <h2>AEE +</h2>
+                </div>
 
-    <div id="titulo">
-        <h2>Detalhes do Aluno</h2>
-    </div>
+                <div class="menu">
+                    <button class="menu-btn"
+                            onclick="window.location.href='${pageContext.request.contextPath}/telaInicialProfessor'">
+                        <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                        Início
+                    </button>
+                    <button class="menu-btn ativo"
+                            onclick="window.location.reload();" >
+                        <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                        Meus Alunos
+                    </button>
+                </div>
+            </div>
 
+    <!-- Conteúdo Principal -->
     <div class="conteudo-principal">
-        <div class="detalhes-header">
-            <button class="botao-voltar" onclick="window.history.back()">Voltar</button>
-        </div>
-
-        <!-- Informações Pessoais -->
-        <div class="info-section">
-            <h3>Informações Pessoais</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <label>Nome Completo</label>
-                    <p>${aluno.nome}</p>
-                </div>
-                <div class="info-item">
-                    <label>Data de Nascimento</label>
-                    <p>${aluno.dataNascimento}</p>
-                </div>
-                <div class="info-item">
-                    <label>Sexo</label>
-                    <p>${aluno.sexo}</p>
-                </div>
-                <div class="info-item">
-                    <label>Naturalidade</label>
-                    <p>${aluno.naturalidade}</p>
-                </div>
-                <div class="info-item">
-                    <label>Email</label>
-                    <p>${aluno.email}</p>
-                </div>
-                <div class="info-item">
-                    <label>Telefone</label>
-                    <p>${aluno.telefone}</p>
-                </div>
+        <div class="header">
+            <div class="titulo">
+                <h1>Detalhes do Aluno</h1>
             </div>
         </div>
 
-        <!-- Informações Acadêmicas -->
-        <div class="info-section">
-            <h3>Informações Acadêmicas</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <label>Matrícula</label>
-                    <p>${aluno.matricula}</p>
-                </div>
-                <div class="info-item">
-                    <label>Curso</label>
-                    <p>${aluno.curso}</p>
-                </div>
-                <div class="info-item">
-                    <label>Turma</label>
-                    <p>${aluno.turma}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contatos -->
-        <div class="info-section">
-            <h3>Contatos</h3>
-            <div class="info-grid">
-                <div class="info-item">
-                    <label>Responsável</label>
-                    <p>${aluno.responsavel}</p>
-                </div>
-                <div class="info-item">
-                    <label>Tel. Responsável</label>
-                    <p>${aluno.telResponsavel}</p>
-                </div>
-                <div class="info-item">
-                    <label>Tel. Trabalho</label>
-                    <p>${aluno.telTrabalho}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Condições do Aluno -->
-        <c:if test="${not empty deficiencias}">
+        <div class="conteudo-container">
+            <!-- Informações Pessoais -->
             <div class="info-section">
-                <h3>Condições Especiais</h3>
-                <div class="deficiencias-container">
-                    <c:forEach items="${deficiencias}" var="deficiencia">
-                        <div class="deficiencia-item">
-                            <div class="info-grid">
-                                <div class="info-item">
-                                    <label>Nome</label>
-                                    <p>${deficiencia.nome}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>Descrição</label>
-                                    <p>${deficiencia.descricao}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>Grau</label>
-                                    <p>${deficiencia.grauSeveridade}</p>
-                                </div>
-                                <div class="info-item">
-                                    <label>CID</label>
-                                    <p>${deficiencia.cid}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-                </div>
-            </div>
-        </c:if>
-
-        <!-- Organização de Atendimento -->
-        <c:if test="${not empty organizacao}">
-            <div class="info-section">
-                <h3>Organização de Atendimento</h3>
+                <h3>Informações Pessoais</h3>
                 <div class="info-grid">
                     <div class="info-item">
-                        <label>Período</label>
-                        <p>${organizacao.periodo}</p>
+                        <label>Nome Completo</label>
+                        <p>${aluno.nome}</p>
                     </div>
                     <div class="info-item">
-                        <label>Duração</label>
-                        <p>${organizacao.duracao}</p>
+                        <label>Data de Nascimento</label>
+                        <p>${aluno.dataNascimento}</p>
                     </div>
                     <div class="info-item">
-                        <label>Frequência</label>
-                        <p>${organizacao.frequencia}</p>
+                        <label>Sexo</label>
+                        <p>${aluno.sexo}</p>
                     </div>
                     <div class="info-item">
-                        <label>Composição</label>
-                        <p>${organizacao.composicao}</p>
+                        <label>Naturalidade</label>
+                        <p>${aluno.naturalidade}</p>
                     </div>
                     <div class="info-item">
-                        <label>Tipo</label>
-                        <p>${organizacao.tipo}</p>
+                        <label>Email</label>
+                        <p>${aluno.email}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Telefone</label>
+                        <p>${aluno.telefone}</p>
                     </div>
                 </div>
             </div>
-        </c:if>
+
+            <!-- Informações Acadêmicas -->
+            <div class="info-section">
+                <h3>Informações Acadêmicas</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Matrícula</label>
+                        <p>${aluno.matricula}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Curso</label>
+                        <p>${aluno.curso}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Turma</label>
+                        <p>${aluno.turma}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contatos -->
+            <div class="info-section">
+                <h3>Contatos</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>Responsável</label>
+                        <p>${aluno.responsavel}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Tel. Responsável</label>
+                        <p>${aluno.telResponsavel}</p>
+                    </div>
+                    <div class="info-item">
+                        <label>Tel. Trabalho</label>
+                        <p>${aluno.telTrabalho}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Condições do Aluno -->
+            <c:if test="${not empty deficiencias}">
+                <div class="info-section">
+                    <h3>Condições Especiais</h3>
+                    <div class="deficiencias-container">
+                        <c:forEach items="${deficiencias}" var="deficiencia">
+                            <div class="deficiencia-item">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <label>Nome</label>
+                                        <p>${deficiencia.nome}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Descrição</label>
+                                        <p>${deficiencia.descricao}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>Grau</label>
+                                        <p>${deficiencia.grauSeveridade}</p>
+                                    </div>
+                                    <div class="info-item">
+                                        <label>CID</label>
+                                        <p>${deficiencia.cid}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </div>
+            </c:if>
+
+            <!-- Organização de Atendimento -->
+            <c:if test="${not empty organizacao}">
+                <div class="info-section">
+                    <h3>Organização de Atendimento</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Período</label>
+                            <p>${organizacao.periodo}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Duração</label>
+                            <p>${organizacao.duracao}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Frequência</label>
+                            <p>${organizacao.frequencia}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Composição</label>
+                            <p>${organizacao.composicao}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Tipo</label>
+                            <p>${organizacao.tipo}</p>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
+        </div>
+
+        <!-- Botão Voltar -->
+        <div class="botoes-acoes">
+            <button class="botao botao-voltar" onclick="window.history.back()">Voltar</button>
+        </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+        </div>
     </div>
 </body>
 </html>
