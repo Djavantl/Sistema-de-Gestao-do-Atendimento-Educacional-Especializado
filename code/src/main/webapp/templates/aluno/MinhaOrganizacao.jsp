@@ -362,10 +362,10 @@
             </button>
 
             <button class="menu-btn"
-                                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-sessoes?matricula=${matricula}'">
-                                            <img src="${pageContext.request.contextPath}/static/images/atendimento.svg" alt="Sessões" />
-                                        Sessões
-                             </button>
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-sessoes?matricula=${matricula}'">
+                    <img src="${pageContext.request.contextPath}/static/images/atendimento.svg" alt="Sessões" />
+                Sessões
+            </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/meus-relatorios?matricula=${matricula}'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />

@@ -68,9 +68,9 @@ public class ProfessorAlunoDAO {
         List<Aluno> alunos = new ArrayList<>();
         String sql = "SELECT " +
                 "a.matricula, a.curso, a.turma, a.responsavel, " +
-                "a.telResponsavel, a.telTrabalho, " +
+                "a.telResponsavel, a.telTrabalho, " +  // Campos do Aluno
                 "p.nome, p.dataNascimento, p.email, p.sexo, " +
-                "p.naturalidade, p.telefone " +
+                "p.naturalidade, p.telefone " +        // Telefone PESSOAL por último
                 "FROM Professor_Aluno pa " +
                 "JOIN Aluno a ON pa.aluno_matricula = a.matricula " +
                 "JOIN Pessoa p ON a.pessoa_id = p.id " +

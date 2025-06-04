@@ -85,6 +85,13 @@
             gap: 10px;
         }
 
+        .menu-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+
         .menu-btn:hover {
             background-color: rgba(255, 255, 255, 0.15);
         }
@@ -274,6 +281,11 @@
                 padding: 12px 15px;
                 font-size: 15px;
             }
+
+        }
+
+        .menu-btn.ativo img {
+            filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
         }
 
         /* Status de presença */
@@ -308,29 +320,34 @@
 
         <div class="menu">
             <button class="menu-btn"
-                onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
-                 Início
+                    onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                Início
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-informacoes?matricula=${matricula}'">
-                Minhas Informações
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                Informações
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/MinhaOrganizacao?matricula=${matricula}'">
-                Minha Organização
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                Organização
             </button>
-
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/meu-plano?matricula=${matricula}'">
-                 Meu Plano AEE
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                Plano AEE
             </button>
             <button class="menu-btn ativo"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-sessoes?matricula=${matricula}'">
-                Minhas Sessões
+                    <img src="${pageContext.request.contextPath}/static/images/atendimento.svg" alt="Sessões" />
+                Sessões
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/meus-relatorios?matricula=${matricula}'">
-                Meus Relatórios
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                Relatórios
             </button>
         </div>
     </div>

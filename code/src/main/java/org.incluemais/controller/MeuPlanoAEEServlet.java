@@ -55,6 +55,7 @@ public class MeuPlanoAEEServlet extends HttpServlet {
 
             if (plano == null) {
                 request.setAttribute("semPlano", true);
+                request.setAttribute("matricula", matricula);
                 request.getRequestDispatcher("/templates/aluno/MeuPlanoAEE.jsp").forward(request, response);
                 return;
             }

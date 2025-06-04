@@ -30,12 +30,12 @@
                     top: 0;
                     left: 0;
                     padding: 20px 40px;
-                    background-color: rgba(255, 255, 255, 0.1);
-                    backdrop-filter: blur(10px);
+                    background: transparent;           /* retira o fundo */
+                    backdrop-filter: none;             /* desliga o blur */
                     display: flex;
                     align-items: center;
-                    justify-content: space-between;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                    justify-content: space-between;        /* empurra o logo para a direita */
+                    box-shadow: none;                  /* remove sombra */
                     z-index: 100;
                 }
 

@@ -331,8 +331,6 @@
                         <th>Matrícula</th>
                         <th>Nome</th>
                         <th>Curso</th>
-                        <th>Turma</th>
-                        <th>Responsável</th>
                         <th>Telefone</th>
                         <th>Ações</th>
                     </tr>
@@ -342,9 +340,9 @@
                         <tr>
                             <td>${aluno.matricula}</td>
                             <td>${aluno.nome}</td>
-                            <td>${aluno.curso}</td>
-                            <td>${aluno.turma}</td>
                             <td>${aluno.responsavel}</td>
+
+
                             <td>${aluno.telefone}</td>
                             <td>
                                 <div class="botoes-acoes">
