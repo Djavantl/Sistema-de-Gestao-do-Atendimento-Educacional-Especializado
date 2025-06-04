@@ -70,7 +70,7 @@ public class LoginServlet extends HttpServlet {
                 autenticado = usuarioProfessorDAO.verificarCredenciais(identificacao, senha);
                 tipoUsuario = "professor";
                 System.out.println(identificacao);
-                redirectPage = "/templates/professor/professor-alunos?siape=" + identificacao;
+                redirectPage = request.getContextPath() + "/telaInicialProfessor";
             }
             else if ("professorAEE".equals(tipo)) {
                 usuarioProfessorAEEDAO = new UsuarioProfessorAEEDAO(conn);

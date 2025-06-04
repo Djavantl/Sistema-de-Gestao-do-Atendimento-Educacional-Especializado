@@ -402,12 +402,12 @@
 
         <div class="menu">
             <button class="menu-btn ativo"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicialProfessor.jsp'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/telaInicialProfessor'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
                 Início
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/professor/professor-alunos?siape=${siape}'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
                 Meus Alunos
             </button>
@@ -443,7 +443,7 @@
                 <h3>Visualize as informações dos seus alunos</h3>
                 <p>Acesse dados completos sobre o perfil, necessidades e histórico escolar dos estudantes.</p>
                 <button class="card-btn"
-                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/professor/professor-alunos?siape=${siape}'">
                     Acessar <i>→</i>
                 </button>
             </div>

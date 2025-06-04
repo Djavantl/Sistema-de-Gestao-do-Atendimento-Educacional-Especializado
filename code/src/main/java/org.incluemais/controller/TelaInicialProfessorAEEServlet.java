@@ -44,9 +44,8 @@ public class TelaInicialProfessorAEEServlet extends HttpServlet {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            request.setAttribute("nome", "Professor");
-        }
 
+        }
         request.getRequestDispatcher("/templates/aee/TelaInicial.jsp").forward(request, response);
     }
 }
