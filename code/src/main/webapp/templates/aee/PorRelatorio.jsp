@@ -457,6 +457,35 @@
                 flex-wrap: wrap;
             }
         }
+
+        .botao-voltar {
+                    background-color: #e0e0e0;
+                    color: #black;
+                    border: none;
+                    padding: 12px 22px;
+                    border-radius: 12px;
+                    cursor: pointer;
+                    font-size: 16px;
+                    font-weight: 600;
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    margin-right: 15px;
+                }
+
+                .botao-voltar:hover {
+                    background-color: #e0e0e0;
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+                }
+
+                .container-botoes {
+                            display: flex;
+                            justify-content: flex-end;
+                            margin-bottom: 20px;
+                        }
     </style>
 </head>
 <body>
@@ -514,12 +543,17 @@
         </div>
 
         <div class="conteudo-container">
-            <div class="linha-superior">
-                <button class="botao-novo-relatorio"
-                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/novo<c:if test="${not empty param.alunoMatricula}">?alunoMatricula=${param.alunoMatricula}</c:if>'">
-                    + Novo Relatório
-                </button>
-            </div>
+                    <!-- Botões superiores (Voltar e Novo Relatório) -->
+                    <div class="container-botoes">
+                        <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-aluno?id=${id}'">
+
+                            Voltar
+                        </button>
+                        <button class="botao-novo-relatorio"
+                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios/novo<c:if test="${not empty param.alunoMatricula}">?alunoMatricula=${param.alunoMatricula}</c:if>'">
+                            + Novo Relatório
+                        </button>
+                    </div>
 
             <!-- Tabela de Relatórios -->
             <table class="tabela-relatorios">
@@ -628,6 +662,8 @@
                 modalExcluir.style.display = 'none';
             }
         }
+
+
     </script>
 </body>
 </html>

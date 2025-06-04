@@ -767,8 +767,8 @@
             <!-- Nova Seção: Sessões por Aluno -->
             <div class="secao-tabela">
                 <div class="cabecalho-secao cabecalho-sessao-aluno">
-                            <h3><i class="fas fa-user-graduate"></i> Sessões por Aluno</h3>
-                        </div>
+                    <h3><i class="fas fa-user-graduate"></i> Sessões por Aluno</h3>
+                </div>
 
                 <form action="${pageContext.request.contextPath}/templates/aee/sessoes" method="GET">
                     <div class="selecionar-aluno-container">
@@ -822,19 +822,24 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
+                                    <!-- Coluna de Observações modificada -->
                                     <td>
-                                        <c:choose>
-                                            <c:when test="${not empty sessao.observacoes}">
-                                                ${fn:substring(sessao.observacoes, 0, 30)}${fn:length(sessao.observacoes) > 30 ? '...' : ''}
-                                            </c:when>
-                                            <c:otherwise>
-                                                -
-                                            </c:otherwise>
-                                        </c:choose>
+                                        <div class="sessao-status">
+                                            <c:choose>
+                                                <c:when test="${not empty sessao.observacoes}">
+                                                    <span>${fn:substring(sessao.observacoes, 0, 30)}${fn:length(sessao.observacoes) > 30 ? '...' : ''}</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span>-</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <button class="botao-dropdown" onclick="toggleDetalhes(this)">
+                                                <i class="fas fa-chevron-down"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="botoes-acoes">
-                                            <!-- Botões sem ícones -->
                                             <button class="botao-editar"
                                                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes?action=editar&id=${sessao.id}'">
                                                 Editar
@@ -842,6 +847,14 @@
                                             <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">
                                                 Excluir
                                             </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <!-- Nova linha de detalhes -->
+                                <tr class="linha-detalhes" style="display: none;">
+                                    <td colspan="6">
+                                        <div class="conteudo-detalhes">
+                                            <p><strong>Observações:</strong> ${sessao.observacoes}</p>
                                         </div>
                                     </td>
                                 </tr>
@@ -857,11 +870,11 @@
                 </c:if>
             </div>
 
-            <!-- Seção de Sessões Futuras -->
+            <!-- Seção de Sessões Futuras (Próximas Sessões) -->
             <div class="secao-tabela sessoes-futuras">
                 <div class="cabecalho-secao cabecalho-sessao-futuras">
-                            <h3><i class="fas fa-calendar-check"></i> Próximas Sessões</h3>
-                        </div>
+                    <h3><i class="fas fa-calendar-check"></i> Próximas Sessões</h3>
+                </div>
 
                 <table class="tabela-sessoes">
                     <thead>
@@ -871,6 +884,7 @@
                             <th>Horário</th>
                             <th>Local</th>
                             <th>Presença</th>
+                            <th>Ações</th> <!-- Coluna Ações adicionada -->
                         </tr>
                     </thead>
 
@@ -904,17 +918,18 @@
                                             <button class="botao-dropdown" onclick="toggleDetalhes(this)">
                                                 <i class="fas fa-chevron-down"></i>
                                             </button>
-
-                                            <div class="botoes-acoes">
-                                                <!-- Botões sem ícones -->
-                                                <button class="botao-editar"
-                                                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes?action=editar&id=${sessao.id}'">
-                                                    Editar
-                                                </button>
-                                                <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">
-                                                    Excluir
-                                                </button>
-                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- Nova célula para os botões de ação -->
+                                    <td>
+                                        <div class="botoes-acoes">
+                                            <button class="botao-editar"
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes?action=editar&id=${sessao.id}'">
+                                                Editar
+                                            </button>
+                                            <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">
+                                                Excluir
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -930,7 +945,7 @@
 
                         <c:if test="${not existemFuturas}">
                             <tr>
-                                <td colspan="5" style="text-align: center; padding: 40px; font-size: 16px; color: #666;">
+                                <td colspan="6" style="text-align: center; padding: 40px; font-size: 16px; color: #666;">
                                     <p>Sem sessões marcadas no momento</p>
                                 </td>
                             </tr>
@@ -939,11 +954,11 @@
                 </table>
             </div>
 
-            <!-- Seção de Sessões Passadas -->
+            <!-- Seção de Sessões Passadas (Desatualizadas) -->
             <div class="secao-tabela sessoes-passadas">
                 <div class="cabecalho-secao cabecalho-sessao-passadas">
-                            <h3><i class="fas fa-history"></i> Sessões Desatualizadas</h3>
-                        </div>
+                    <h3><i class="fas fa-history"></i> Sessões Desatualizadas</h3>
+                </div>
 
                 <table class="tabela-sessoes">
                     <thead>
@@ -953,6 +968,7 @@
                             <th>Horário</th>
                             <th>Local</th>
                             <th>Presença</th>
+                            <th>Ações</th> <!-- Coluna Ações adicionada -->
                         </tr>
                     </thead>
 
@@ -986,17 +1002,18 @@
                                             <button class="botao-dropdown" onclick="toggleDetalhes(this)">
                                                 <i class="fas fa-chevron-down"></i>
                                             </button>
-
-                                            <div class="botoes-acoes">
-                                                <!-- Botões sem ícones -->
-                                                <button class="botao-editar"
-                                                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes?action=editar&id=${sessao.id}'">
-                                                    Editar
-                                                </button>
-                                                <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">
-                                                    Excluir
-                                                </button>
-                                            </div>
+                                        </div>
+                                    </td>
+                                    <!-- Nova célula para os botões de ação -->
+                                    <td>
+                                        <div class="botoes-acoes">
+                                            <button class="botao-editar"
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes?action=editar&id=${sessao.id}'">
+                                                Editar
+                                            </button>
+                                            <button class="botao-excluir" onclick="confirmarExclusao(${sessao.id})">
+                                                Excluir
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -1012,7 +1029,7 @@
 
                         <c:if test="${not existemPassadas}">
                             <tr>
-                                <td colspan="5" style="text-align: center; padding: 40px; font-size: 16px; color: #666;">
+                                <td colspan="6" style="text-align: center; padding: 40px; font-size: 16px; color: #666;">
                                     <p>Sem sessões desatualizadas</p>
                                 </td>
                             </tr>

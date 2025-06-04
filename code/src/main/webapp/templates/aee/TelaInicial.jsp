@@ -423,7 +423,7 @@
                 Planos AEE
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/todos'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
                 Relatórios
             </button>
@@ -504,7 +504,7 @@
                     <h3>Relatórios</h3>
                     <p>Visualize e acompanhe relatórios detalhados sobre o progresso dos estudantes.</p>
                     <button class="card-btn"
-                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios/todos'">
                         Relatorios <i>→</i>
                     </button>
                 </div>

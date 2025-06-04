@@ -35,7 +35,8 @@ import java.util.logging.Logger;
         "/relatorios/atualizar",
         "/relatorios/excluir",
         "/meus-relatorios",
-        "/relatorios/meus-detalhes"
+        "/relatorios/meus-detalhes",
+        "/relatorios/todos"
 })
 public class RelatorioServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RelatorioServlet.class.getName());
@@ -77,6 +78,8 @@ public class RelatorioServlet extends HttpServlet {
             } else if (path.equals("/relatorios/meus-detalhes")) {
                 int id = Integer.parseInt(request.getParameter("id"));
                 exibirDetalhesMeuRelatorio(id, request, response);
+            } else if (path.equals("/relatorios/todos")) {
+                listarTodosRelatorios(request, response);
             }
 
         } catch (SQLException e) {
@@ -109,6 +112,14 @@ public class RelatorioServlet extends HttpServlet {
         }
     }
 
+    private void listarTodosRelatorios(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        List<Relatorio> relatorios = relatorioDAO.buscarTodos();
+        request.setAttribute("relatoriosLista", relatorios);
+        request.getRequestDispatcher("/templates/aee/ListarTodosRelatorios.jsp").forward(request, response);
+    }
+
     private void listarMeusRelatorios(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
@@ -125,6 +136,7 @@ public class RelatorioServlet extends HttpServlet {
         List<Relatorio> relatorios = relatorioDAO.buscarPorAlunoMatricula(matriculaSessao);
 
         request.setAttribute("relatoriosLista", relatorios);
+        request.setAttribute("matricula", matriculaSessao);
         request.getRequestDispatcher("/templates/aluno/MeusRelatorios.jsp").forward(request, response);
         logger.info("Matrícula da sessão: " + matriculaSessao);
         logger.info("Número de relatórios encontrados: " + relatorios.size());
@@ -134,8 +146,11 @@ public class RelatorioServlet extends HttpServlet {
             throws ServletException, IOException, SQLException {
 
         Relatorio relatorio = relatorioDAO.buscarPorId(id);
+        HttpSession session = request.getSession();
+        String matriculaSessao = (String) session.getAttribute("identificacao");
 
         if (relatorio != null) {
+            request.setAttribute("matricula", matriculaSessao);
             request.setAttribute("relatorio", relatorio);
             request.getRequestDispatcher("/templates/aluno/DetalhesMeusRelatorios.jsp").forward(request, response);
         } else {
@@ -312,9 +327,13 @@ public class RelatorioServlet extends HttpServlet {
             throws SQLException, ServletException, IOException {
 
         String alunoMatricula = request.getParameter("alunoMatricula");
+
         List<Relatorio> relatorios;
 
         if (alunoMatricula != null && !alunoMatricula.isEmpty()) {
+            Aluno alunoID = alunoDAO.buscarPorMatricula(alunoMatricula);
+            int Id = alunoID.getId();
+            request.setAttribute("id", Id);
             relatorios = relatorioDAO.buscarPorAlunoMatricula(alunoMatricula);
             // opcional: passar de volta para o JSP o próprio alunoMatricula, se quiser exibir
             request.setAttribute("alunoMatricula", alunoMatricula);

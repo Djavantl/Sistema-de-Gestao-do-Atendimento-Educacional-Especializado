@@ -1,16 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meus Relatórios</title>
+    <title>Todos os Relatórios</title>
     <style>
-        /* ======================== RESET E BASE ======================== */
+        /* Estilos idênticos à página original, mas sem .linha-superior e .botao-novo-relatorio */
         * {
             margin: 0;
             padding: 0;
@@ -26,7 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* ======================== SIDEBAR ======================== */
         .sidebar {
             position: fixed;
             top: 0;
@@ -103,7 +100,6 @@
             filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
         }
 
-        /* ======================== CONTEÚDO PRINCIPAL ======================== */
         .conteudo-principal {
             margin-left: 280px;
             padding: 40px 60px;
@@ -128,37 +124,28 @@
             max-width: 600px;
         }
 
-        /* ======================== BOTÃO VOLTAR ======================== */
-        .botao-voltar {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #4D44B5;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
+        .user-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .user-info p {
+            color: #4D44B5;
             font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user-info .funcao {
             font-size: 16px;
-            transition: all 0.2s ease;
-            margin-left: auto; /* Alinha à direita */
-            margin-bottom: 15px; /* Espaço abaixo do botão */
+            color: #777;
+            font-weight: 500;
         }
 
-        .botao-voltar:hover {
-            background: #3a3285;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
-        .botao-voltar img {
-            width: 20px;
-            height: 20px;
-            filter: brightness(0) invert(1);
-        }
-
-        /* ======================== TABELA ======================== */
         .conteudo-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -206,8 +193,8 @@
         }
 
         .botao-detalhes {
-            background-color: #17a2b8;
-            color: white;
+            background-color: #e0e0e0;
+            color: #333;
             border: none;
             padding: 8px 16px;
             border-radius: 10px;
@@ -218,12 +205,135 @@
         }
 
         .botao-detalhes:hover {
-            background-color: #138496;
+            background-color: #d0d0d0;
             transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
-        /* ======================== ELEMENTOS DECORATIVOS ======================== */
+        .botao-editar {
+            background-color: #6a5fcc;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .botao-editar:hover {
+            background-color: #554bbd;
+            transform: translateY(-2px);
+        }
+
+        .botao-excluir {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .botao-excluir:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.3);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-conteudo {
+            background-color: #fff;
+            border-radius: 20px;
+            width: 650px;
+            max-width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-conteudo h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #4D44B5;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        #modalExcluir .modal-conteudo {
+            text-align: center;
+            padding: 40px;
+        }
+
+        #modalExcluir p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        #modalExcluir .botoes-modal {
+            justify-content: center;
+        }
+
+        .botoes-modal {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .botoes-modal button[type="submit"] {
+            background-color: #4D44B5;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .botoes-modal button[type="submit"]:hover {
+            background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.3);
+        }
+
+        .botoes-modal button[type="button"] {
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .botoes-modal button[type="button"]:hover {
+            background-color: #cfcfcf;
+            transform: translateY(-2px);
+        }
+
         .decorative-circle {
             position: absolute;
             border-radius: 50%;
@@ -254,7 +364,6 @@
             left: 350px;
         }
 
-        /* ======================== RODAPÉ ======================== */
         .footer {
             text-align: center;
             padding: 30px;
@@ -263,7 +372,6 @@
             margin-top: 40px;
         }
 
-        /* ======================== RESPONSIVIDADE ======================== */
         @media (max-width: 1200px) {
             .conteudo-principal {
                 padding: 30px;
@@ -314,11 +422,6 @@
             .botoes-acoes {
                 flex-wrap: wrap;
             }
-
-            .botao-voltar {
-                padding: 8px 15px;
-                font-size: 14px;
-            }
         }
     </style>
 </head>
@@ -337,33 +440,27 @@
 
         <div class="menu">
             <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
                 Início
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-informacoes?matricula=${matricula}'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
-                Informações
+                Estudantes
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/MinhaOrganizacao?matricula=${matricula}'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
-                Organização
+                Sessões
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/meu-plano?matricula=${matricula}'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
                 <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
-                Plano AEE
+                Planos AEE
             </button>
-
-            <button class="menu-btn"
-                                            onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-sessoes?matricula=${matricula}'">
-                                            <img src="${pageContext.request.contextPath}/static/images/atendimento.svg" alt="Sessões" />
-                                        Sessões
-                             </button>
             <button class="menu-btn ativo"
-                    onclick="window.location.href='${pageContext.request.contextPath}/meus-relatorios?matricula=${matricula}'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/todos'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
                 Relatórios
             </button>
@@ -374,17 +471,16 @@
     <div class="conteudo-principal">
         <div class="header">
             <div class="titulo">
-                <h1>Relatórios</h1>
+                <h1>Todos os Relatórios</h1>
+            </div>
+            <div class="user-info">
+                <p>Bem-vindo(a), Professor!</p>
+                <div class="funcao">${nome}</div>
             </div>
         </div>
 
         <div class="conteudo-container">
-            <!-- Botão Voltar dentro do quadrado branco, alinhado à direita -->
-            <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
-                Voltar
-            </button>
-
-            <!-- Tabela de Relatórios -->
+            <!-- Tabela de Relatórios (sem botão de adicionar) -->
             <table class="tabela-relatorios">
                 <thead>
                     <tr>
@@ -402,9 +498,7 @@
                                 <tr data-id="${relatorio.id}">
                                     <td>${relatorio.titulo}</td>
                                     <td>${relatorio.aluno.nome}</td>
-                                    <td>
-                                        ${relatorio.dataGeracao.dayOfMonth}/${relatorio.dataGeracao.monthValue}/${relatorio.dataGeracao.year}
-                                    </td>
+                                    <td>${relatorio.dataGeracao}</td>
                                     <td>
                                         <c:choose>
                                             <c:when test="${not empty relatorio.professorAEE}">
@@ -417,10 +511,17 @@
                                     </td>
                                     <td>
                                         <div class="botoes-acoes">
-                                            <!-- Botão Detalhes -->
+                                            <button class="botao-editar"
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/editar?id=${relatorio.id}'">
+                                                Editar
+                                            </button>
                                             <button class="botao-detalhes"
-                                                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/meus-detalhes?id=${relatorio.id}'">
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes?id=${relatorio.id}'">
                                                 Detalhes
+                                            </button>
+                                            <button class="botao-excluir"
+                                                    onclick="confirmarExclusao(${relatorio.id})">
+                                                Excluir
                                             </button>
                                         </div>
                                     </td>
@@ -437,6 +538,21 @@
                     </c:choose>
                 </tbody>
             </table>
+
+            <!-- Modal de Confirmação de Exclusão -->
+            <div class="modal-overlay" id="modalExcluir">
+                <div class="modal-conteudo">
+                    <h3>Confirmar Exclusão</h3>
+                    <p>Tem certeza que deseja excluir este relatório? Esta ação não pode ser desfeita.</p>
+                    <form id="formExcluirRelatorio" action="${pageContext.request.contextPath}/relatorios/excluir" method="POST">
+                        <input type="hidden" name="id" id="idExcluir">
+                        <div class="botoes-modal">
+                            <button type="submit">Confirmar Exclusão</button>
+                            <button type="button" onclick="fecharModal(modalExcluir)">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- Rodapé -->
@@ -445,5 +561,24 @@
             <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
         </div>
     </div>
+
+    <script>
+        const modalExcluir = document.getElementById('modalExcluir');
+
+        function confirmarExclusao(id) {
+            document.getElementById('idExcluir').value = id;
+            modalExcluir.style.display = 'flex';
+        }
+
+        function fecharModal(modal) {
+            modal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target === modalExcluir) {
+                modalExcluir.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
