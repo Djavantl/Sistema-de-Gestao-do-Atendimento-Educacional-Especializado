@@ -497,6 +497,86 @@
                 justify-content: center;
             }
         }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-conteudo {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            text-align: center;
+        }
+
+        .modal-conteudo h3 {
+            font-size: 24px;
+            color: #4D44B5;
+            margin-bottom: 20px;
+        }
+
+        .modal-conteudo p {
+            margin-bottom: 30px;
+            font-size: 18px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .botoes-modal {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .botoes-modal button[type="submit"] {
+            background-color: #4D44B5;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .botoes-modal button[type="submit"]:hover {
+            background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.3);
+        }
+
+        .botoes-modal button[type="button"] {
+            background-color: #e0e0e0;
+            color: #333;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .botoes-modal button[type="button"]:hover {
+            background-color: #cfcfcf;
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -669,14 +749,9 @@
                             <button class="btn-editar" onclick="window.location.href='${pageContext.request.contextPath}/editarProposta?id=${plano.proposta.id}'">
                                 Editar
                             </button>
-                            <form action="${pageContext.request.contextPath}/excluirProposta" method="post"
-                                  onsubmit="return confirm('Tem certeza que deseja excluir esta proposta pedagógica?');">
-                                <input type="hidden" name="propostaId" value="${plano.proposta.id}">
-                                <input type="hidden" name="planoId" value="${plano.id}">
-                                <button type="submit" class="btn-excluir">
-                                    Excluir
-                                </button>
-                            </form>
+                            <button class="btn-excluir" onclick="abrirModalExcluirProposta(${plano.proposta.id}, ${plano.id})">
+                                Excluir
+                            </button>
                         </div>
                     </c:otherwise>
                 </c:choose>
@@ -809,6 +884,20 @@
                 </c:otherwise>
             </c:choose>
         </div>
+        <div class="modal-overlay" id="modalExcluirProposta">
+            <div class="modal-conteudo">
+                <h3>Confirmar Exclusão</h3>
+                <p>Tem certeza que deseja excluir esta proposta pedagógica? Esta ação não pode ser desfeita.</p>
+                <form id="formExcluirProposta" action="${pageContext.request.contextPath}/excluirProposta" method="POST">
+                    <input type="hidden" name="propostaId" id="propostaIdExcluir">
+                    <input type="hidden" name="planoId" id="planoIdExcluir">
+                    <div class="botoes-modal">
+                        <button type="submit">Confirmar Exclusão</button>
+                        <button type="button" onclick="fecharModal('modalExcluirProposta')">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
 
         <!-- Rodapé -->
         <div class="footer">
@@ -816,5 +905,25 @@
             <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
         </div>
     </div>
+    <script>
+        // Funções para o modal de exclusão da proposta
+        function abrirModalExcluirProposta(propostaId, planoId) {
+            document.getElementById('propostaIdExcluir').value = propostaId;
+            document.getElementById('planoIdExcluir').value = planoId;
+            document.getElementById('modalExcluirProposta').style.display = 'flex';
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora do conteúdo
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('modalExcluirProposta');
+            if (event.target === modal) {
+                fecharModal('modalExcluirProposta');
+            }
+        });
+    </script>
 </body>
 </html>

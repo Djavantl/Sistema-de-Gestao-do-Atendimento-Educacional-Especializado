@@ -276,7 +276,7 @@
                  Meu Plano AEE
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='#'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/meus-relatorios?matricula=${matricula}'">
                 Meus Relatórios
             </button>
         </div>

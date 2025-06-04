@@ -457,12 +457,6 @@
                 <p>Consulte os planos de atendimento educacional individualizados de cada estudante.</p>
 
             </div>
-
-        <!-- Rodapé -->
-        <div class="footer">
-            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
-            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
         </div>
-    </div>
 </body>
 </html>

@@ -46,6 +46,15 @@ public class MinhaOrganizacaoServlet extends HttpServlet {
 
             OrganizacaoAtendimento organizacao = orgDAO.buscarPorAlunoMatricula(matricula);
 
+            if (organizacao == null) {
+                // Caso não exista organização para o aluno
+                request.setAttribute("semPlano", true);
+                request.setAttribute("aluno", aluno);
+                request.setAttribute("matricula", matricula);
+                request.getRequestDispatcher("/templates/aluno/MinhaOrganizacao.jsp").forward(request, response);
+                return;
+
+            }
             request.setAttribute("aluno", aluno);
             request.setAttribute("organizacao", organizacao);
             request.setAttribute("matricula", matricula);

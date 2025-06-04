@@ -367,11 +367,12 @@
                  Meu Plano AEE
             </button>
             <button class="menu-btn"
-                    onclick="window.location.href='#'">
+                     onclick="window.location.href='${pageContext.request.contextPath}/meus-relatorios?matricula=${matricula}'">
                 Meus Relatórios
             </button>
         </div>
     </div>
+    <input type="hidden" id="matriculaHidden" value="${matricula}"/>
 
     <c:if test="${semPlano}">
         <div class="conteudo-principal">

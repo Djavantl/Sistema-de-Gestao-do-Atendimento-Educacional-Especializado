@@ -227,7 +227,8 @@
 
         /* ======================== BOTÕES ======================== */
         .botoes-acoes {
-            margin-top: 20px;
+            height: 30%;
+            margin-top: 100px;
             display: flex;
             gap: 15px;
             justify-content: flex-end;
