@@ -506,40 +506,25 @@
     <div class="decorative-circle circle-3"></div>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
-            <h2>AEE +</h2>
-        </div>
+        <div class="sidebar">
+            <div class="logo">
+                <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+                <h2>AEE +</h2>
+            </div>
 
-        <div class="menu">
-            <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
-                Início
-            </button>
-            <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
-                Estudantes
-            </button>
-            <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
-                Sessões
-            </button>
-            <button class="menu-btn ativo"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
-                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
-                Planos AEE
-            </button>
-            <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
-                Relatórios
-            </button>
+            <div class="menu">
+                <button class="menu-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/telaInicialProfessor'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                    Início
+                </button>
+                <button class="menu-btn ativo"
+                        onclick="window.location.reload();" >
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                    Meus Alunos
+                </button>
+            </div>
         </div>
-    </div>
 
     <!-- Conteúdo Principal -->
     <div class="conteudo-principal">
