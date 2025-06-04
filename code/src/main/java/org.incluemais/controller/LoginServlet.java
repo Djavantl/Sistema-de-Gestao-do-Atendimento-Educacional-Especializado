@@ -85,7 +85,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("identificacao", identificacao);
                 response.sendRedirect(redirectPage);
             } else {
-                request.setAttribute("mensagemErro", "Matrícula/SIAPE ou senha incorretos");
+                request.setAttribute("mensagemErro", "");
                 request.getRequestDispatcher("/templates/usuarios/login.jsp").forward(request, response);
             }
         } catch (SQLException e) {
