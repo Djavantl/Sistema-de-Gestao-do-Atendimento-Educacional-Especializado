@@ -270,6 +270,7 @@
             font-weight: 600;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(77, 68, 181, 0.3);
+            margin-
         }
 
         .botao-voltar:hover {

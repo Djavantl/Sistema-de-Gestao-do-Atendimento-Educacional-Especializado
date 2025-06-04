@@ -540,7 +540,7 @@
                                     <td>${relatorio.titulo}</td>
                                     <td>${relatorio.aluno.nome}</td>
                                     <td>
-                                        ${relatorio.dataGeracao.dayOfMonth}/${relatorio.dataGeracao.monthValue}/${relatorio.dataGeracao.year}
+                                        ${relatorio.dataGeracao}
                                     </td>
                                     <td>
                                         <c:choose>
