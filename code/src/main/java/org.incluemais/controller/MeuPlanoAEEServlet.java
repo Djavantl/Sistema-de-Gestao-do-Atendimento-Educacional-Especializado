@@ -43,14 +43,14 @@ public class MeuPlanoAEEServlet extends HttpServlet {
             return;
         }
 
-        String matricula = request.getParameter("matricula");
+        // Obter matrícula da sessão ao invés de parâmetro
+        String matricula = (String) session.getAttribute("identificacao");
         if (matricula == null || matricula.isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Matrícula não fornecida");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Matrícula não encontrada na sessão");
             return;
         }
 
         try {
-            // Busca o plano do aluno por matrícula
             PlanoAEE plano = planoAEEDAO.buscarPorMatriculaAluno(matricula);
 
             if (plano == null) {
@@ -59,21 +59,21 @@ public class MeuPlanoAEEServlet extends HttpServlet {
                 return;
             }
 
-            // Buscar proposta e metas associadas ao plano
             PropostaPedagogica proposta = propostaDAO.buscarPorPlanoId(plano.getId());
             List<Meta> metas = metaDAO.buscarMetasPorPlanoId(plano.getId());
 
-            // Atribui as relações ao plano
             plano.setProposta(proposta);
             plano.setMetas(metas);
 
-            // Adiciona atributos para a JSP
+            // Adicionar matrícula como atributo para a JSP
+            request.setAttribute("matricula", matricula);
             request.setAttribute("plano", plano);
             request.getRequestDispatcher("/templates/aluno/MeuPlanoAEE.jsp").forward(request, response);
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro ao carregar plano do aluno", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro interno do servidor");
+            request.setAttribute("erro", "Erro ao carregar plano: " + e.getMessage());
+            request.getRequestDispatcher("/templates/aluno/MeuPlanoAEE.jsp").forward(request, response);
         }
     }
 }

@@ -295,16 +295,25 @@
 </head>
 <body>
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo" />
-            <h2>Inclui+</h2>
+        <div class="sidebar">
+            <div class="logo">
+                <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+                <h2>AEE +</h2>
+            </div>
+
+            <div class="menu">
+                <button class="menu-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/telaInicialProfessor'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                    Início
+                </button>
+                <button class="menu-btn ativo"
+                        onclick="window.location.reload();" >
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                    Meus Alunos
+                </button>
+            </div>
         </div>
-        <div class="menu">
-            <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/telaInicialProfessor'">Inicio</button>
-            <button class="menu-btn ativo">Meus Alunos</button>
-        </div>
-    </div>
 
 
     <!-- Conteúdo Principal -->
