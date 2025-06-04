@@ -6,8 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metas</title>
+    <title>${meta != null ? 'Editar Meta' : 'Adicionar Nova Meta'}</title>
     <style>
+        /* RESET E BASE */
         * {
             margin: 0;
             padding: 0;
@@ -23,7 +24,7 @@
             overflow-x: hidden;
         }
 
-        /* ======================== SIDEBAR ======================== */
+        /* SIDEBAR */
         .sidebar {
             position: fixed;
             top: 0;
@@ -100,7 +101,7 @@
             filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
         }
 
-        /* ======================== CONTEÚDO PRINCIPAL ======================== */
+        /* CONTEÚDO PRINCIPAL */
         .conteudo-principal {
             margin-left: 280px;
             padding: 40px 60px;
@@ -147,14 +148,7 @@
             font-weight: 500;
         }
 
-        /* ======================== CONTEÚDO DETALHES ======================== */
-        .detalhes-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
+        /* FORMULÁRIO */
         .info-section {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -163,247 +157,268 @@
             margin-bottom: 30px;
         }
 
-        .info-section h3 {
+        .info-section h2 {
             color: #4D44B5;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
             border-bottom: 2px solid #f0f0f0;
         }
 
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+        .form-group {
+            margin-bottom: 25px;
         }
 
-        .info-item {
-            background-color: #f9f9ff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .info-item label {
+        .form-group label {
             display: block;
-            color: #6c757d;
-            font-size: 14px;
-            margin-bottom: 5px;
+            color: #4D44B5;
             font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
         }
 
-        .info-item p {
-            color: #333;
-            font-size: 16px;
-            margin: 0;
-        }
-
-        /* ======================== BOTÕES ======================== */
-        .botao-voltar {
-            background-color: #4D44B5;
-            color: #fff;
-            border: none;
-            padding: 12px 22px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(77, 68, 181, 0.3);
-        }
-
-        .botao-voltar:hover {
-            background-color: #372e9c;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(77, 68, 181, 0.4);
-        }
-
-        .btn-adicionar {
-            background-color: #4D44B5;
-            color: #fff;
-            border: none;
-            padding: 12px 22px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(77, 68, 181, 0.3);
-        }
-
-        .btn-adicionar:hover {
-            background-color: #372e9c;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(77, 68, 181, 0.4);
-        }
-
-        .btn-editar {
-            background-color: #6a5fcc;
-            color: #fff;
-            border: none;
-            padding: 12px 22px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(77, 68, 181, 0.3);
-        }
-
-        .btn-editar:hover {
-            background-color: #554bbd;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(77, 68, 181, 0.4);
-        }
-
-        .btn-excluir {
-            background-color: #dc3545;
-            color: #fff;
-            border: none;
-            padding: 12px 22px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
-        }
-
-        .btn-excluir:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
-        }
-
-        .botoes-acoes {
-            display: flex;
-            justify-content: flex-end;
-            gap: 15px;
-            margin-top: 30px;
-        }
-
-        /* ======================== TABELAS ======================== */
-        .metas-table {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            font-size: 16px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
             border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-size: 16px;
+            background-color: #f9f9ff;
+            transition: all 0.3s ease;
+            outline: none;
         }
 
-        .metas-table th, .metas-table td {
-            padding: 14px 20px;
-            text-align: left;
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
         }
 
-        .metas-table thead {
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #4D44B5;
+            box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
+        }
+
+        .botoes-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            justify-content: flex-end;
+        }
+
+        .btn-submit,
+        .btn-cancelar {
+            padding: 10px 20px;
+            font-size: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-submit {
             background-color: #4D44B5;
             color: white;
-            font-weight: 700;
+            border: none;
+            cursor: pointer;
         }
 
-        .metas-table tbody tr {
-            border-bottom: 1px solid #e0e0e0;
-            background-color: #fff;
-            transition: background-color 0.3s ease;
+        .btn-submit:hover {
+            background-color: #372e9c;
         }
 
-        .metas-table tbody tr:hover {
-            background-color: #f9f9ff;
+        .btn-cancelar {
+            background-color: #6c757d;
+            color: white;
+            text-decoration: none;
         }
 
-        .metas-table tbody tr:last-child {
-            border-bottom: none;
+        .btn-cancelar:hover {
+            background-color: #5a6268;
+        }
+
+        /* ELEMENTOS DECORATIVOS */
+        .decorative-circle {
+            position: absolute;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 215, 0, 0.15);
+            top: -150px;
+            right: -150px;
+        }
+
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: rgba(77, 68, 181, 0.15);
+            bottom: -100px;
+            right: 200px;
+        }
+
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.1);
+            bottom: 100px;
+            left: 350px;
+        }
+
+        /* RODAPÉ */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #4D44B5;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+
+            .conteudo-principal {
+                margin-left: 220px;
+                padding: 30px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding: 20px;
+            }
+
+            .conteudo-principal {
+                margin-left: 0;
+                padding: 25px;
+            }
+
+            .menu {
+                flex-direction: row;
+                flex-wrap: wrap;
+                margin-top: 20px;
+                gap: 10px;
+            }
+
+            .menu-btn {
+                padding: 12px 15px;
+                font-size: 15px;
+            }
+
+            .botoes-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
         }
     </style>
 </head>
-    <body>
-        <!-- Elementos decorativos -->
-        <div class="decorative-circle circle-1"></div>
-        <div class="decorative-circle circle-2"></div>
-        <div class="decorative-circle circle-3"></div>
+<body>
+    <!-- Elementos decorativos -->
+    <div class="decorative-circle circle-1"></div>
+    <div class="decorative-circle circle-2"></div>
+    <div class="decorative-circle circle-3"></div>
 
-        <!-- Sidebar atualizado conforme página de Planos AEE -->
-        <div class="sidebar">
-            <div class="logo">
-                <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
-                <h2>AEE +</h2>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+            <h2>AEE +</h2>
+        </div>
+
+        <div class="menu">
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                Início
+            </button>
+            <button class="menu-btn ativo"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                Estudantes
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                Sessões
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                Planos AEE
+            </button>
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                Relatórios
+            </button>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="conteudo-principal">
+        <div class="header">
+            <div class="titulo">
+                <h1>${meta != null ? 'Editar Meta' : 'Adicionar Nova Meta'}</h1>
             </div>
-
-            <div class="menu">
-                <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
-                    <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
-                    Início
-                </button>
-                <button class="menu-btn ativo" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
-                    <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
-                    Estudantes
-                </button>
-                <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
-                    <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
-                    Sessões
-                </button>
-                <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
-                    <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
-                    Planos AEE
-                </button>
-                <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
-                    <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
-                    Relatórios
-                </button>
+            <div class="user-info">
+                <p>Bem-vindo(a), Professor!</p>
+                <div class="funcao">${nome}</div>
             </div>
         </div>
 
-        <!-- Conteúdo Principal -->
-        <div class="conteudo-principal">
-            <div class="header">
-                <div class="titulo">
-                    <h1>Criando Meta</h1>
+        <!-- Formulário de Meta -->
+        <div class="info-section">
+            <h2>${meta != null ? 'Editar Meta' : 'Adicionar Nova Meta'}</h2>
+
+            <form action="${pageContext.request.contextPath}/templates/aee/metas/salvar" method="post">
+                <input type="hidden" name="planoId" value="${planoId}">
+                <c:if test="${meta != null}">
+                    <input type="hidden" name="metaId" value="${meta.id}">
+                </c:if>
+
+                <div class="form-group">
+                    <label for="descricao">Descrição:</label>
+                    <textarea id="descricao" name="descricao" required>${meta != null ? meta.descricao : ''}</textarea>
                 </div>
-                <div class="user-info">
-                    <p>Bem-vindo(a), Professor!</p>
-                    <div class="funcao">${nome}</div>
+
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <select id="status" name="status">
+                        <option value="Pendente" ${meta != null && meta.status == 'Pendente' ? 'selected' : ''}>Pendente</option>
+                        <option value="Em Andamento" ${meta != null && meta.status == 'Em Andamento' ? 'selected' : ''}>Em Andamento</option>
+                        <option value="Concluído" ${meta != null && meta.status == 'Concluído' ? 'selected' : ''}>Concluído</option>
+                    </select>
                 </div>
-            </div>
 
-            </head>
-            <body>
-                <div class="form-container">
-                    <h2>${meta != null ? 'Editar Meta' : 'Adicionar Nova Meta'}</h2>
-
-                    <form action="${pageContext.request.contextPath}/templates/aee/metas/salvar" method="post">
-                        <input type="hidden" name="planoId" value="${planoId}">
-                        <c:if test="${meta != null}">
-                            <input type="hidden" name="metaId" value="${meta.id}">
-                        </c:if>
-
-                        <div class="form-group">
-                            <label for="descricao">Descrição:</label>
-                            <textarea id="descricao" name="descricao" rows="4" required>${meta != null ? meta.descricao : ''}</textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="status">Status:</label>
-                            <select id="status" name="status">
-                                <option value="Pendente" ${meta != null && meta.status == 'Pendente' ? 'selected' : ''}>Pendente</option>
-                                <option value="Em Andamento" ${meta != null && meta.status == 'Em Andamento' ? 'selected' : ''}>Em Andamento</option>
-                                <option value="Concluído" ${meta != null && meta.status == 'Concluído' ? 'selected' : ''}>Concluído</option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="btn-submit">Salvar</button>
-                    </form>
+                <div class="botoes-form">
+                    <button type="submit" class="btn-submit">Salvar</button>
+                    <a href="${pageContext.request.contextPath}/templates/aee/detalhes-plano?id=${planoId}" class="btn-cancelar">Cancelar</a>
                 </div>
-            </body>
-
-            <!-- Rodapé -->
-            <div class="footer">
-                <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
-                <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
-            </div>
+            </form>
         </div>
-    </body>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+        </div>
+    </div>
+</body>
 </html>
