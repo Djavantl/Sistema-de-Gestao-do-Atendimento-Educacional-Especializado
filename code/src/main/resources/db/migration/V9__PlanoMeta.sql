@@ -1,0 +1,6 @@
+ALTER TABLE Meta
+ADD COLUMN plano_id INT,
+ADD CONSTRAINT fk_meta_plano
+    FOREIGN KEY (plano_id)
+    REFERENCES PlanoAEE(id)
+    ON DELETE CASCADE;

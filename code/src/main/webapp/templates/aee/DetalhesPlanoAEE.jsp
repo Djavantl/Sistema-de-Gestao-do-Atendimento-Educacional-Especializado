@@ -686,9 +686,12 @@
         <div class="info-section">
             <div class="detalhes-header">
                 <h3>Metas do Plano</h3>
-                <button class="btn-adicionar">
-                    + Adicionar Meta
-                </button>
+                <form action = "${pageContext.request.contextPath}/metas/form" method = "GET">
+                    <input name = "planoId" value = "${plano.id}" type = "hidden">
+                    <button class="btn-adicionar" type = "submit">
+                        + Adicionar Meta
+                    </button>
+                </form>
             </div>
 
             <c:choose>
@@ -906,7 +909,47 @@
             <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
         </div>
     </div>
+
+    //Modal Exclusão de Meta -->
+    <!-- Modal Exclusão de Meta -->
+    <div class="modal-overlay" id="modalExcluirMeta">
+        <div class="modal-conteudo">
+            <h3>Confirmar Exclusão</h3>
+            <p>Tem certeza que deseja excluir esta meta? Esta ação não pode ser desfeita.</p>
+            <form action="${pageContext.request.contextPath}/excluirMeta" method="POST">
+                <input type="hidden" name="metaId" id="metaIdExcluir">
+                <input type="hidden" name="planoId" id="planoIdExcluirMeta">
+                <div class="botoes-modal">
+                    <button type="submit">Confirmar Exclusão</button>
+                    <button type="button" onclick="fecharModal('modalExcluirMeta')">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // Funções para modais
+        function abrirModalExcluirMeta(metaId, planoId) {
+            document.getElementById('metaIdExcluir').value = metaId;
+            document.getElementById('planoIdExcluirMeta').value = planoId;
+            document.getElementById('modalExcluirMeta').style.display = 'flex';
+        }
+
+        function fecharModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', function(event) {
+            const modals = ['modalExcluirProposta', 'modalExcluirMeta'];
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if (event.target === modal) {
+                    fecharModal(modalId);
+                }
+            });
+        });
+
         // Funções para o modal de exclusão da proposta
         function abrirModalExcluirProposta(propostaId, planoId) {
             document.getElementById('propostaIdExcluir').value = propostaId;

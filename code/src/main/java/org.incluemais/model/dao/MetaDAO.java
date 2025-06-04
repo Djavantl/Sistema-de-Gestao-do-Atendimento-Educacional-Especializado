@@ -17,6 +17,22 @@ public class MetaDAO {
         this.conn = conn;
     }
 
+    public void insert(Meta meta) throws SQLException {
+        String sql = "INSERT INTO Meta (descricao, status) VALUES (?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stmt.setString(1, meta.getDescricao());
+            stmt.setString(2, meta.getStatus());
+            stmt.executeUpdate();
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    meta.setId(generatedKeys.getInt(1));
+                }
+            }
+        }
+    }
+
     public void update(Meta meta) throws SQLException {
         String sql = "UPDATE Meta SET descricao = ?, status = ? WHERE id = ?";
 
@@ -67,4 +83,5 @@ public class MetaDAO {
             stmt.executeUpdate();
         }
     }
+
 }
