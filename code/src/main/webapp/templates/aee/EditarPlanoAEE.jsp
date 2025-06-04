@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -426,7 +427,7 @@
     <div class="conteudo-principal">
         <div class="header">
             <div class="titulo">
-                <h1>Editar Plano AEE</h1>
+                <h1>Editar Plano de Atendimento Educacional Especializado</h1>
             </div>
         </div>
 
@@ -439,63 +440,77 @@
             </c:if>
 
             <form class="form-plano" action="${pageContext.request.contextPath}/templates/aee/planoAEE/atualizar" method="post">
-                <input type="hidden" name="id" value="${plano.id}">
+                <!-- Campo oculto para o ID do Plano -->
+                <input type="hidden" name="id" value="${plano.id}" />
 
                 <div class="grupo-campos">
                     <div class="campo">
                         <label for="professor_siape">Professor Responsável:</label>
-                        <select id="professor_siape" name="professor_siape" required>
-                            <c:forEach items="${professores}" var="prof">
-                                <option value="${prof.siape}"
-                                    ${prof.siape == plano.professorSiape ? 'selected' : ''}>
-                                    ${prof.nome} (${prof.siape})
+                        <select name="professor_siape" id="professor_siape">
+                            <option value="">Selecione um professor</option>
+                            <c:forEach var="professor" items="${professores}">
+                                <option value="${professor.siape}"
+                                    ${plano.professorAEE.siape == professor.siape ? 'selected' : ''}>
+                                    ${professor.nome}
                                 </option>
                             </c:forEach>
                         </select>
+
+                        <c:if test="${empty professores}">
+                            <p style="color: #dc3545; margin-top: 5px;">
+                                Nenhum professor encontrado.
+                                <a href="${pageContext.request.contextPath}/templates/aee/professores" style="color: #4D44B5;">
+                                    Cadastrar novo professor
+                                </a>
+                            </p>
+                        </c:if>
                     </div>
 
                     <div class="campo">
-                        <label for="aluno_info">Aluno:</label>
-                        <input type="text" id="aluno_info"
-                               value="${aluno.nome} (${aluno.matricula})"
-                               readonly>
+                        <label for="aluno_matricula">Aluno:</label>
+                        <select name="aluno_matricula" id="aluno_matricula">
+                            <option value="${aluno.matricula}" readonly>${aluno.nome}</option>
+                         
+                        </select>
+
                     </div>
 
                     <div class="campo">
                         <label for="dataInicio">Data de Início:</label>
-                        <input type="date" id="dataInicio" name="dataInicio" value="${plano.dataInicio}" required>
+                        <input type="date" id="dataInicio" name="dataInicio"
+                               value="${plano.dataInicio}" required>
                     </div>
                 </div>
 
                 <div class="campo">
                     <label for="recomendacoes">Recomendações:</label>
-                    <textarea id="recomendacoes" name="recomendacoes" rows="4">${plano.recomendacoes}</textarea>
+                    <textarea id="recomendacoes" name="recomendacoes" rows="4"
+                              placeholder="Recomendações pedagógicas, estratégias de ensino...">${plano.recomendacoes}</textarea>
                 </div>
 
                 <div class="campo">
                     <label for="observacoes">Observações:</label>
-                    <textarea id="observacoes" name="observacoes" rows="4">${plano.observacoes}</textarea>
+                    <textarea id="observacoes" name="observacoes" rows="4"
+                              placeholder="Informações relevantes sobre o aluno...">${plano.observacoes}</textarea>
                 </div>
 
                 <div class="botoes-acoes">
-                    <button type="submit" class="botao-salvar">Atualizar Plano</button>
+                    <button type="submit" class="botao-salvar">Atualizar Plano AEE</button>
                     <button type="button" class="botao-cancelar" onclick="window.history.back()">Cancelar</button>
-                    <button type="button" class="botao-excluir" onclick="confirmarExclusao()">Excluir Plano</button>
                 </div>
             </form>
         </div>
-
-        <!-- Rodapé -->
-        <div class="footer">
-            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
-            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
-        </div>
+    </div>
+    <!-- Rodapé -->
+    <div class="footer">
+        <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+        <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
     </div>
 
     <script>
         function confirmarExclusao() {
             if(confirm('Tem certeza que deseja excluir este plano? Esta ação não pode ser desfeita.')) {
-                window.location.href = '/planoAEE/excluir?id=${plano.id}';
+                window.location.href = '/plano/excluir?id=${plano.id}';
             }
         }
     </script>

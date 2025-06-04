@@ -526,63 +526,59 @@
             </div>
 
             <!-- Tabela de Planos AEE -->
-            <table class="tabela-planos">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Aluno</th>
-                        <th>Professor</th>
-                        <th>Data Início</th>
-                        <th style="width: 180px">Ações</th>
-                    </tr>
-                    <tr class="linha-filtro">
-                        <th><input type="text" placeholder="ID" oninput="filtrarColuna(this, 0)"></th>
-                        <th><input type="text" placeholder="Aluno" oninput="filtrarColuna(this, 1)"></th>
-                        <th><input type="text" placeholder="Professor" oninput="filtrarColuna(this, 2)"></th>
-                        <th><input type="text" placeholder="Data" oninput="filtrarColuna(this, 3)"></th>
-                        <th></th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    <c:choose>
-                        <c:when test="${empty planosLista}">
-                            <tr>
-                                <td colspan="5" style="text-align: center; padding: 20px;">Nenhum plano encontrado.</td>
-                            </tr>
-                        </c:when>
-                        <c:otherwise>
-                            <c:forEach items="${planosLista}" var="plano">
+                <table class="tabela-planos">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Aluno</th>
+                            <th>Professor</th>
+                            <th>Data Início</th>
+                            <th style="width: 180px">Ações</th>
+                        </tr>
+                        <tr class="linha-filtro">
+                            <th><input type="text" placeholder="ID" oninput="filtrarColuna(this, 0)"></th>
+                            <th><input type="text" placeholder="Aluno" oninput="filtrarColuna(this, 1)"></th>
+                            <th><input type="text" placeholder="Professor" oninput="filtrarColuna(this, 2)"></th>
+                            <th><input type="text" placeholder="Data" oninput="filtrarColuna(this, 3)"></th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <c:choose>
+                            <c:when test="${empty planosLista}">
                                 <tr>
-                                    <td>${plano.id}</td>
-                                    <td>${plano.nomeAluno}</td>
-                                    <td>${plano.nomeProfessor}</td>
-                                    <td><fmt:formatDate value="${plano.dataInicio}" pattern="dd/MM/yyyy" /></td>
-                                    <td>
-                                        <div class="botoes-acoes">
-                                            <button class="botao-detalhes-plano"
-                                                onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-plano?id=${plano.id}'">Detalhes
-                                            </button>
-                                            <!-- Botão Editar -->
-                                            <a href="${pageContext.request.contextPath}/templates/aee/editarPlanoAEE?id=${plano.id}"
-                                               class="botao-editar"
-                                               style="padding: 8px 16px; margin-right: 8px; text-decoration: none; display: inline-block; text-align: center;">
-                                                Editar
-                                            </a>
-                                            <!-- Botão Excluir -->
-                                            <button class="botao-excluir"
-                                                    onclick="abrirModalExcluir(${plano.id})">
-                                                Excluir
-                                            </button>
-                                        </div>
-                                    </td>
+                                    <td colspan="5" style="text-align: center; padding: 20px;">Nenhum plano encontrado.</td>
                                 </tr>
-                            </c:forEach>
-                        </c:otherwise>
-                    </c:choose>
-                </tbody>
-            </table>
-        </div>
+                            </c:when>
+                            <c:otherwise>
+                                <c:forEach items="${planosLista}" var="plano">
+                                    <tr>
+                                        <td>${plano.id}</td>
+                                        <td>${plano.nomeAluno}</td>
+                                        <td>${plano.nomeProfessor}</td>
+                                        <td><fmt:formatDate value="${plano.dataInicio}" pattern="dd/MM/yyyy" /></td>
+                                        <td>
+                                            <div class="botoes-acoes">
+                                                <button class="botao-detalhes-plano"
+                                                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-plano?id=${plano.id}'">
+                                                    Detalhes
+                                                </button>
+                                                <a href="${pageContext.request.contextPath}/templates/aee/editarPlanoAEE?id=${plano.id}"
+                                                   class="botao-editar">
+                                                    Editar
+                                                </a>
+                                                <button class="botao-excluir"
+                                                        onclick="abrirModalExcluir(${plano.id})">
+                                                    Excluir
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </c:forEach>
+                            </c:otherwise>
+                        </c:choose>
+                    </tbody>
+                </table>
         <div class="modal-overlay" id="modalExcluir">
             <div class="modal-conteudo">
                 <h3>Confirmar Exclusão</h3>
@@ -597,14 +593,12 @@
                 </form>
             </div>
         </div>
-
-        <!-- Rodapé -->
-        <div class="footer">
-            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
-            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
-        </div>
     </div>
-
+     <!-- Rodapé -->
+    <div class="footer">
+        <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+        <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+    </div>
     <script>
         // Função para filtrar por coluna
         function filtrarColuna(input, colIndex) {

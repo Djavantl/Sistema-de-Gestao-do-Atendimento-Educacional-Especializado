@@ -21,8 +21,6 @@ public class MeuPlanoAEEServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(MeuPlanoAEEServlet.class.getName());
 
     private PlanoAEEDAO planoAEEDAO;
-    private AlunoDAO alunoDAO;
-    private ProfessorAEEDAO professorAEEDAO;
     private PropostaPedagogicaDAO propostaDAO;
     private MetaDAO metaDAO;
 
@@ -30,8 +28,6 @@ public class MeuPlanoAEEServlet extends HttpServlet {
     public void init() throws ServletException {
         Connection conn = (Connection) getServletContext().getAttribute("conexao");
         this.planoAEEDAO = new PlanoAEEDAO(conn);
-        this.alunoDAO = new AlunoDAO(conn);
-        this.professorAEEDAO = new ProfessorAEEDAO(conn);
         this.propostaDAO = new PropostaPedagogicaDAO(conn);
         this.metaDAO = new MetaDAO(conn);
     }
@@ -47,32 +43,23 @@ public class MeuPlanoAEEServlet extends HttpServlet {
             return;
         }
 
-
         String matricula = request.getParameter("matricula");
         if (matricula == null || matricula.isEmpty()) {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Matrícula não fornecida");
             return;
         }
+
         try {
             // Busca o plano do aluno por matrícula
             PlanoAEE plano = planoAEEDAO.buscarPorMatriculaAluno(matricula);
 
             if (plano == null) {
-                // Caso não exista plano para o aluno
                 request.setAttribute("semPlano", true);
-                request.setAttribute("matricula", matricula);
                 request.getRequestDispatcher("/templates/aluno/MeuPlanoAEE.jsp").forward(request, response);
-
                 return;
-
             }
 
-            // Busca informações complementares
-            Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
-            ProfessorAEE professor = null;
-            if (plano.getProfessorSiape() != null) {
-                professor = professorAEEDAO.getBySiape(plano.getProfessorSiape());
-            }
+            // Buscar proposta e metas associadas ao plano
             PropostaPedagogica proposta = propostaDAO.buscarPorPlanoId(plano.getId());
             List<Meta> metas = metaDAO.buscarMetasPorPlanoId(plano.getId());
 
@@ -82,9 +69,6 @@ public class MeuPlanoAEEServlet extends HttpServlet {
 
             // Adiciona atributos para a JSP
             request.setAttribute("plano", plano);
-            request.setAttribute("aluno", aluno);
-            request.setAttribute("professor", professor);
-            request.setAttribute("matricula", matricula);
             request.getRequestDispatcher("/templates/aluno/MeuPlanoAEE.jsp").forward(request, response);
 
         } catch (SQLException e) {

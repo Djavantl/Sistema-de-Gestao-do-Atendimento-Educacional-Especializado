@@ -426,16 +426,19 @@
                 <div class="alert alert-erro">${erro}</div>
             </c:if>
 
-            <form class="form-plano" action="${pageContext.request.contextPath}/templates/aee/planoAEE/inserir" method="post">
-                <div class="grupo-campos">
-                    <div class="campo">
-                        <label for="professor_siape">Professor Responsável:</label>
-                        <select name="professor_siape" id="professor_siape">
-                          <option value="">Selecione um professor</option>
-                          <c:forEach var="professor" items="${professores}">
-                            <option value="${professor.siape}">${professor.nome}</option>
-                          </c:forEach>
-                        </select>
+           <form class="form-plano" action="${pageContext.request.contextPath}/templates/aee/planoAEE/inserir" method="post">
+               <div class="grupo-campos">
+                   <div class="campo">
+                       <label for="professor_siape">Professor Responsável:</label>
+                       <select name="professor_siape" id="professor_siape">
+                           <option value="">Selecione um professor</option>
+                           <c:forEach var="professor" items="${professores}">
+                               <option value="${professor.siape}"
+                                   ${param.professor_siape == professor.siape ? 'selected' : ''}>
+                                   ${professor.nome}
+                               </option>
+                           </c:forEach>
+                       </select>
 
                         <c:if test="${empty professores}">
                             <p style="color: #dc3545; margin-top: 5px;">
@@ -450,10 +453,13 @@
                     <div class="campo">
                         <label for="aluno_matricula">Aluno:</label>
                         <select name="aluno_matricula" id="aluno_matricula">
-                          <option value="">Selecione um aluno</option>
-                          <c:forEach var="aluno" items="${alunos}">
-                            <option value="${aluno.matricula}">${aluno.nome}</option>
-                          </c:forEach>
+                            <option value="">Selecione um aluno</option>
+                            <c:forEach var="aluno" items="${alunos}">
+                                <option value="${aluno.matricula}"
+                                    ${param.aluno_matricula == aluno.matricula ? 'selected' : ''}>
+                                    ${aluno.nome}
+                                </option>
+                            </c:forEach>
                         </select>
                         <c:if test="${empty alunos}">
                             <p style="color: #dc3545; margin-top: 5px;">

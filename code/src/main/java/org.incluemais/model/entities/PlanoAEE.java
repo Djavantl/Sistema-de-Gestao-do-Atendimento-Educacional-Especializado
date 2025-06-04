@@ -6,8 +6,8 @@ import java.util.List;
 
 public class PlanoAEE {
     private int id;
-    private String professorSiape; // pode ser null
-    private String alunoMatricula;
+    private ProfessorAEE professorAEE; // Objeto completo
+    private Aluno aluno; // Objeto completo
     private LocalDate dataInicio;
     private String recomendacoes;
     private String observacoes;
@@ -17,16 +17,17 @@ public class PlanoAEE {
     public PlanoAEE() {
     }
 
-    public PlanoAEE(String professorSiape, String alunoMatricula, LocalDate dataInicio,
+    // Construtor atualizado
+    public PlanoAEE(ProfessorAEE professorAEE, Aluno aluno, LocalDate dataInicio,
                     String recomendacoes, String observacoes) {
-        this.professorSiape = professorSiape;
-        this.alunoMatricula = alunoMatricula;
+        this.professorAEE = professorAEE;
+        this.aluno = aluno;
         this.dataInicio = dataInicio;
         this.recomendacoes = recomendacoes;
         this.observacoes = observacoes;
     }
 
-    // Getters e Setters
+    // Getters e Setters atualizados
     public int getId() {
         return id;
     }
@@ -35,20 +36,20 @@ public class PlanoAEE {
         this.id = id;
     }
 
-    public String getProfessorSiape() {
-        return professorSiape;
+    public ProfessorAEE getProfessorAEE() {
+        return professorAEE;
     }
 
-    public void setProfessorSiape(String professorSiape) {
-        this.professorSiape = professorSiape;
+    public void setProfessorAEE(ProfessorAEE professorAEE) {
+        this.professorAEE = professorAEE;
     }
 
-    public String getAlunoMatricula() {
-        return alunoMatricula;
+    public Aluno getAluno() {
+        return aluno;
     }
 
-    public void setAlunoMatricula(String alunoMatricula) {
-        this.alunoMatricula = alunoMatricula;
+    public void setAluno(Aluno aluno) {
+        this.aluno = aluno;
     }
 
     public LocalDate getDataInicio() {

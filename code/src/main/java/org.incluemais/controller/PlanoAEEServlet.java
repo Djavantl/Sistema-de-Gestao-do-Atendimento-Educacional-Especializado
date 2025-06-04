@@ -17,7 +17,6 @@ import static org.incluemais.model.connection.DBConnection.getConnection;
 
 @WebServlet(name = "PlanoAEEServlet",
         urlPatterns = {"/templates/aee/criarPlanoAEE", "/templates/aee/planoAEE/inserir", "/templates/aee/planoAEE/atualizar"})
-
 public class PlanoAEEServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(PlanoAEEServlet.class.getName());
 
@@ -60,6 +59,8 @@ public class PlanoAEEServlet extends HttpServlet {
             try {
                 conn = getConnection();
                 PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
+                AlunoDAO alunoDAO = new AlunoDAO(conn);
+                ProfessorAEEDAO professorDAO = new ProfessorAEEDAO(conn);
 
                 // Coletar parâmetros do formulário
                 String siapeProfessor = request.getParameter("professor_siape");
@@ -68,10 +69,18 @@ public class PlanoAEEServlet extends HttpServlet {
                 String recomendacoes = request.getParameter("recomendacoes");
                 String observacoes = request.getParameter("observacoes");
 
-                // Criar novo plano
+                // Buscar objetos completos de Aluno e Professor
+                Aluno aluno = alunoDAO.buscarPorMatricula(matriculaAluno);
+                ProfessorAEE professor = null;
+
+                if (siapeProfessor != null && !siapeProfessor.isEmpty()) {
+                    professor = professorDAO.buscarPorSiape(siapeProfessor);
+                }
+
+                // Criar novo plano com composição
                 PlanoAEE novoPlano = new PlanoAEE(
-                        siapeProfessor,
-                        matriculaAluno,
+                        professor,
+                        aluno,
                         dataInicio,
                         recomendacoes,
                         observacoes
@@ -80,7 +89,7 @@ public class PlanoAEEServlet extends HttpServlet {
                 // Inserir no banco de dados
                 int planoId = planoDAO.inserir(novoPlano);
 
-                // Redirecionar para edição com mensagem de sucesso
+                // Redirecionar para detalhes do plano
                 response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId);
 
             } catch (SQLException | IllegalArgumentException e) {
@@ -120,7 +129,6 @@ public class PlanoAEEServlet extends HttpServlet {
         }
     }
 
-    // Adicione este método ao PlanoAEEServlet
     private void atualizarPlano(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -128,7 +136,7 @@ public class PlanoAEEServlet extends HttpServlet {
         try {
             conn = getConnection();
             PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
-
+            ProfessorAEEDAO professorDAO = new ProfessorAEEDAO(conn);
 
             // Obter parâmetros
             int id = Integer.parseInt(request.getParameter("id"));
@@ -136,11 +144,7 @@ public class PlanoAEEServlet extends HttpServlet {
             LocalDate dataInicio = LocalDate.parse(request.getParameter("dataInicio"));
             String recomendacoes = request.getParameter("recomendacoes");
             String observacoes = request.getParameter("observacoes");
-            logger.info("Atualizando plano ID: " + id);
-            logger.info("Professor Siape: " + siapeProfessor);
-            logger.info("Data Início: " + dataInicio);
-            logger.info("Recomendações: " + recomendacoes);
-            logger.info("Observações: " + observacoes);
+
             // Buscar plano existente
             PlanoAEE plano = planoDAO.buscarPorId(id);
             if (plano == null) {
@@ -148,8 +152,15 @@ public class PlanoAEEServlet extends HttpServlet {
                 return;
             }
 
-            // Atualizar dados
-            plano.setProfessorSiape(siapeProfessor);
+            // Atualizar professor (se fornecido)
+            if (siapeProfessor != null && !siapeProfessor.isEmpty()) {
+                ProfessorAEE professor = professorDAO.buscarPorSiape(siapeProfessor);
+                plano.setProfessorAEE(professor);
+            } else {
+                plano.setProfessorAEE(null);
+            }
+
+            // Atualizar outros campos
             plano.setDataInicio(dataInicio);
             plano.setRecomendacoes(recomendacoes);
             plano.setObservacoes(observacoes);

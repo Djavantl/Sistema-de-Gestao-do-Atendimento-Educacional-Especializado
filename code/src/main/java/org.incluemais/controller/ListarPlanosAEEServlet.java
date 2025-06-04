@@ -40,14 +40,10 @@ public class ListarPlanosAEEServlet extends HttpServlet {
         String path = request.getServletPath();
 
         if ("/templates/aee/planosAEE".equals(path)) {
-            // Código de listagem
-            try (Connection conn = getConnection()) {
-                PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
-                List<Map<String, Object>> planos = planoDAO.listarTodosComNomes();
-
+            try {
+                List<Map<String, Object>> planos = planoAEEDAO.listarTodosComNomes();
                 request.setAttribute("planosLista", planos);
                 request.getRequestDispatcher("/templates/aee/PlanosAEE.jsp").forward(request, response);
-
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Erro ao listar planos", e);
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro interno do servidor");
@@ -60,22 +56,15 @@ public class ListarPlanosAEEServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-
         if ("excluirPlano".equals(action)) {
-            Connection conn = null;
+            String idParam = request.getParameter("planoId");
+            if (idParam == null || idParam.isEmpty()) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do plano não fornecido");
+                return;
+            }
             try {
-                conn = getConnection();
-                PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
-
-                String idParam = request.getParameter("planoId");
-                if (idParam == null || idParam.isEmpty()) {
-                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do plano não fornecido");
-                    return;
-                }
-
                 int planoId = Integer.parseInt(idParam);
-                boolean excluido = planoDAO.excluir(planoId);
-
+                boolean excluido = planoAEEDAO.excluir(planoId);
                 if (excluido) {
                     response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE");
                 } else {
@@ -84,69 +73,40 @@ public class ListarPlanosAEEServlet extends HttpServlet {
             } catch (SQLException | NumberFormatException e) {
                 logger.log(Level.SEVERE, "Erro ao excluir plano", e);
                 response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE?erro=Erro+ao+excluir+plano");
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                        logger.warning("Erro ao fechar conexão");
-                    }
-                }
             }
         } else {
             doGet(request, response);
         }
     }
 
-    protected void carregarPaginaEdicao(HttpServletRequest request, HttpServletResponse response)
+    private void carregarPaginaEdicao(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        Connection conn = null;
+        System.out.println("AAAAAAAAAAA");
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.isEmpty()) {
+            System.out.println("Parametro nao fornecido");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do plano não fornecido");
+            return;
+        }
         try {
-            conn = getConnection();
-            String idParam = request.getParameter("id");
-
-            if (idParam == null || idParam.isEmpty()) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID do plano não fornecido");
-                return;
-            }
-
             int planoId = Integer.parseInt(idParam);
-
-            // Buscar o plano
-            PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
-            PlanoAEE plano = planoDAO.buscarPorId(planoId);
-
+            PlanoAEE plano = planoAEEDAO.buscarPorId(planoId);
             if (plano == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Plano não encontrado");
                 return;
             }
 
-            // Buscar aluno associado
-            Aluno aluno = alunoDAO.buscarPorMatricula(plano.getAlunoMatricula());
-
-            // Buscar todos os professores para o dropdown
+            System.out.println("pano id" + planoId);
+            System.out.println("plano professor aee" + plano.getProfessorAEE().getNome());
             List<ProfessorAEE> professores = professorAEEDAO.getAll();
-
-            // Adicionar atributos à requisição
             request.setAttribute("plano", plano);
-            request.setAttribute("aluno", aluno);
+            request.setAttribute("aluno", plano.getAluno());
             request.setAttribute("professores", professores);
-
-            // Encaminhar para a página de edição
+            System.out.println();
             request.getRequestDispatcher("/templates/aee/EditarPlanoAEE.jsp").forward(request, response);
-
         } catch (SQLException | NumberFormatException e) {
             logger.log(Level.SEVERE, "Erro ao carregar página de edição", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Erro interno do servidor");
-        } finally {
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    logger.warning("Erro ao fechar conexão");
-                }
-            }
         }
     }
 }
