@@ -8,7 +8,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Metas</title>
     <style>
-        /* ======================== RESET E BASE ======================== */
         * {
             margin: 0;
             padding: 0;
@@ -123,6 +122,7 @@
             font-size: 42px;
             font-weight: 800;
             line-height: 1.2;
+            max-width: 600px;
         }
 
         .user-info {
@@ -147,80 +147,135 @@
             font-weight: 500;
         }
 
-        .conteudo-container {
+        /* ======================== CONTEÚDO DETALHES ======================== */
+        .detalhes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .info-section {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
             padding: 30px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            position: relative;
+            margin-bottom: 30px;
         }
 
-        /* ======================== FORMULÁRIO ======================== */
-        .form-proposta {
+        .info-section h3 {
+            color: #4D44B5;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .info-grid {
             display: grid;
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 18px;
+        .info-item {
+            background-color: #f9f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .input-group label {
+        .info-item label {
+            display: block;
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 5px;
             font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 15px;
-            color: #555;
         }
 
-        .input-group input,
-        .input-group select,
-        .input-group textarea {
-            padding: 12px 16px;
-            font-size: 15px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            background-color: #fafafa;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .input-group textarea {
-            height: 120px;
-            resize: vertical;
-        }
-
-        .input-group input:focus,
-        .input-group select:focus,
-        .input-group textarea:focus {
-            border-color: #4D44B5;
-            box-shadow: 0 0 0 3px rgba(77, 68, 181, 0.15);
-            outline: none;
-        }
-
-        /* ======================== MENSAGENS ======================== */
-        .alert-sucesso {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-            font-size: 15px;
-        }
-
-        .alert-erro {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
-            font-size: 15px;
+        .info-item p {
+            color: #333;
+            font-size: 16px;
+            margin: 0;
         }
 
         /* ======================== BOTÕES ======================== */
+        .botao-voltar {
+            background-color: #4D44B5;
+            color: #fff;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(77, 68, 181, 0.3);
+        }
+
+        .botao-voltar:hover {
+            background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(77, 68, 181, 0.4);
+        }
+
+        .btn-adicionar {
+            background-color: #4D44B5;
+            color: #fff;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(77, 68, 181, 0.3);
+        }
+
+        .btn-adicionar:hover {
+            background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(77, 68, 181, 0.4);
+        }
+
+        .btn-editar {
+            background-color: #6a5fcc;
+            color: #fff;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(77, 68, 181, 0.3);
+        }
+
+        .btn-editar:hover {
+            background-color: #554bbd;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(77, 68, 181, 0.4);
+        }
+
+        .btn-excluir {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+        }
+
+        .btn-excluir:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+        }
+
         .botoes-acoes {
             display: flex;
             justify-content: flex-end;
@@ -228,212 +283,127 @@
             margin-top: 30px;
         }
 
-        .botao-salvar {
+        /* ======================== TABELAS ======================== */
+        .metas-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 16px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .metas-table th, .metas-table td {
+            padding: 14px 20px;
+            text-align: left;
+        }
+
+        .metas-table thead {
             background-color: #4D44B5;
-            color: #fff;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            color: white;
+            font-weight: 700;
         }
 
-        .botao-salvar:hover {
-            background-color: #372e9c;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(77, 68, 181, 0.3);
+        .metas-table tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
         }
 
-        .botao-cancelar {
-            background-color: #e0e0e0;
-            color: #333;
-            border: none;
-            padding: 12px 28px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .metas-table tbody tr:hover {
+            background-color: #f9f9ff;
         }
 
-        .botao-cancelar:hover {
-            background-color: #cfcfcf;
-            transform: translateY(-2px);
-        }
-
-        /* ======================== ELEMENTOS DECORATIVOS ======================== */
-        .decorative-circle {
-            position: absolute;
-            border-radius: 50%;
-            z-index: -1;
-        }
-
-        .circle-1 {
-            width: 300px;
-            height: 300px;
-            background: rgba(255, 215, 0, 0.15);
-            top: -150px;
-            right: -150px;
-        }
-
-        .circle-2 {
-            width: 200px;
-            height: 200px;
-            background: rgba(77, 68, 181, 0.15);
-            bottom: -100px;
-            right: 200px;
-        }
-
-        .circle-3 {
-            width: 150px;
-            height: 150px;
-            background: rgba(255, 255, 255, 0.1);
-            bottom: 100px;
-            left: 350px;
-        }
-
-        /* ======================== RODAPÉ ======================== */
-        .footer {
-            text-align: center;
-            padding: 30px;
-            color: #4D44B5;
-            font-size: 14px;
-            margin-top: 40px;
-        }
-
-        /* ======================== RESPONSIVIDADE ======================== */
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 220px;
-            }
-
-            .conteudo-principal {
-                margin-left: 220px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding: 20px;
-            }
-
-            .conteudo-principal {
-                margin-left: 0;
-                padding: 25px;
-            }
-
-            .menu {
-                flex-direction: row;
-                flex-wrap: wrap;
-                margin-top: 20px;
-                gap: 10px;
-            }
-
-            .menu-btn {
-                padding: 12px 15px;
-                font-size: 15px;
-            }
+        .metas-table tbody tr:last-child {
+            border-bottom: none;
         }
     </style>
 </head>
-<body>
-    <!-- Elementos decorativos -->
-    <div class="decorative-circle circle-1"></div>
-    <div class="decorative-circle circle-2"></div>
-    <div class="decorative-circle circle-3"></div>
+    <body>
+        <!-- Elementos decorativos -->
+        <div class="decorative-circle circle-1"></div>
+        <div class="decorative-circle circle-2"></div>
+        <div class="decorative-circle circle-3"></div>
 
-    <!-- Sidebar atualizado conforme página de Planos AEE -->
-    <div class="sidebar">
-        <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
-            <h2>AEE +</h2>
-        </div>
-
-        <div class="menu">
-            <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
-                Início
-            </button>
-            <button class="menu-btn ativo" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
-                Estudantes
-            </button>
-            <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
-                Sessões
-            </button>
-            <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
-                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
-                Planos AEE
-            </button>
-            <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
-                Relatórios
-            </button>
-        </div>
-    </div>
-
-    <!-- Conteúdo Principal -->
-    <div class="conteudo-principal">
-        <div class="header">
-            <div class="titulo">
-                <h1>Criando Meta</h1>
+        <!-- Sidebar atualizado conforme página de Planos AEE -->
+        <div class="sidebar">
+            <div class="logo">
+                <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+                <h2>AEE +</h2>
             </div>
-            <div class="user-info">
-                <p>Bem-vindo(a), Professor!</p>
-                <div class="funcao">${nome}</div>
+
+            <div class="menu">
+                <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                    Início
+                </button>
+                <button class="menu-btn ativo" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                    Estudantes
+                </button>
+                <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                    Sessões
+                </button>
+                <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                    <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                    Planos AEE
+                </button>
+                <button class="menu-btn" onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                    Relatórios
+                </button>
             </div>
         </div>
 
-        <div class="conteudo-container">
-            <!-- Mensagens de Sucesso/Erro -->
-            <c:if test="${not empty metaId}">
-                <div class="alert-sucesso">
-                    ✅ Proposta criada com ID: <strong>${metaId}</strong>
+        <!-- Conteúdo Principal -->
+        <div class="conteudo-principal">
+            <div class="header">
+                <div class="titulo">
+                    <h1>Criando Meta</h1>
                 </div>
-            </c:if>
+                <div class="user-info">
+                    <p>Bem-vindo(a), Professor!</p>
+                    <div class="funcao">${nome}</div>
+                </div>
+            </div>
 
-            <c:if test="${not empty erro}">
-                <div class="alert-erro">
-                    ❌ Erro: ${erro}
-                </div>
-            </c:if>
+            </head>
+            <body>
+                <div class="form-container">
+                    <h2>${meta != null ? 'Editar Meta' : 'Adicionar Nova Meta'}</h2>
 
-            <form action="${pageContext.request.contextPath}/metas/criar" method="POST">
-                <!-- Campo oculto para o ID da meta, usado na edição -->
-                <c:if test="${not empty meta.id}">
-                </c:if>
-                    <input type="hidden" name="planoId" value="${planoId}">
-                <!-- Campo STATUS -->
-                <div class="input-group">
-                    <label for="status">Status:</label>
-                    <textarea id="status" name="status">${meta.status}</textarea>
-                </div>
+                    <form action="${pageContext.request.contextPath}/templates/aee/metas/salvar" method="post">
+                        <input type="hidden" name="planoId" value="${planoId}">
+                        <c:if test="${meta != null}">
+                            <input type="hidden" name="metaId" value="${meta.id}">
+                        </c:if>
 
-                <!-- Campo DESCRIÇÃO -->
-                <div class="input-group">
-                    <label for="descricao">Descrição:</label>
-                    <textarea id="descricao" name="descricao">${meta.descricao}</textarea>
-                </div>
+                        <div class="form-group">
+                            <label for="descricao">Descrição:</label>
+                            <textarea id="descricao" name="descricao" rows="4" required>${meta != null ? meta.descricao : ''}</textarea>
+                        </div>
 
-                <!-- Botões -->
-                <div class="botoes-acoes">
-                    <button type="submit" class="botao-salvar">Salvar Meta</button>
-                    <button type="button" class="botao-cancelar" onclick="window.history.back()">Cancelar</button>
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <select id="status" name="status">
+                                <option value="Pendente" ${meta != null && meta.status == 'Pendente' ? 'selected' : ''}>Pendente</option>
+                                <option value="Em Andamento" ${meta != null && meta.status == 'Em Andamento' ? 'selected' : ''}>Em Andamento</option>
+                                <option value="Concluído" ${meta != null && meta.status == 'Concluído' ? 'selected' : ''}>Concluído</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn-submit">Salvar</button>
+                    </form>
                 </div>
-            </form>
+            </body>
+
+            <!-- Rodapé -->
+            <div class="footer">
+                <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+                <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+            </div>
         </div>
-
-        <!-- Rodapé -->
-        <div class="footer">
-            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
-            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
-        </div>
-    </div>
-</body>
+    </body>
 </html>

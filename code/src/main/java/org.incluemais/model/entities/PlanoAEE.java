@@ -6,8 +6,8 @@ import java.util.List;
 
 public class PlanoAEE {
     private int id;
-    private ProfessorAEE professorAEE; // Objeto completo
-    private Aluno aluno; // Objeto completo
+    private ProfessorAEE professorAEE;
+    private Aluno aluno;
     private LocalDate dataInicio;
     private String recomendacoes;
     private String observacoes;

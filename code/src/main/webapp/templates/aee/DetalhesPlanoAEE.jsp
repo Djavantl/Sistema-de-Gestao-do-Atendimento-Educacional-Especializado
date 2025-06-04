@@ -682,13 +682,12 @@
             </div>
         </div>
 
-        <!-- Metas do Plano -->
         <div class="info-section">
             <div class="detalhes-header">
                 <h3>Metas do Plano</h3>
-                <form action = "${pageContext.request.contextPath}/metas/form" method = "GET">
-                    <input name = "planoId" value = "${plano.id}" type = "hidden">
-                    <button class="btn-adicionar" type = "submit">
+                <form action="${pageContext.request.contextPath}/templates/aee/metas/form" method="GET">
+                    <input name="planoId" value="${plano.id}" type="hidden">
+                    <button class="btn-adicionar" type="submit">
                         + Adicionar Meta
                     </button>
                 </form>
@@ -715,12 +714,20 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <button class="btn-editar" style="padding: 8px 16px; margin-right: 8px;">
-                                            Editar
-                                        </button>
-                                        <button class="btn-excluir" style="padding: 8px 16px;">
-                                            Excluir
-                                        </button>
+                                        <form action="${pageContext.request.contextPath}/templates/aee/metas/form" method="GET" style="display: inline;">
+                                            <input type="hidden" name="planoId" value="${plano.id}">
+                                            <input type="hidden" name="metaId" value="${meta.id}">
+                                            <button class="btn-editar" type="submit">
+                                                Editar
+                                            </button>
+                                        </form>
+                                        <form action="${pageContext.request.contextPath}/templates/aee/metas/excluir" method="POST" style="display: inline;">
+                                            <input type="hidden" name="planoId" value="${plano.id}">
+                                            <input type="hidden" name="metaId" value="${meta.id}">
+                                            <button class="btn-excluir" type="submit" onclick="return confirm('Tem certeza que deseja excluir esta meta?')">
+                                                Excluir
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             </c:forEach>

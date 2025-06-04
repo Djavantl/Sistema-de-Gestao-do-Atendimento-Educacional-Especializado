@@ -1,6 +1,7 @@
 package org.incluemais.model.dao;
 
 import org.incluemais.model.entities.Aluno;
+import org.incluemais.model.entities.Meta;
 import org.incluemais.model.entities.PlanoAEE;
 import org.incluemais.model.entities.ProfessorAEE;
 
@@ -206,4 +207,67 @@ public class PlanoAEEDAO {
         return null;
     }
 
+
+    // Método para adicionar uma nova meta ao plano
+    public void adicionarMetaAoPlano(int planoId, Meta meta) throws SQLException {
+        String sqlMeta = "INSERT INTO Meta (descricao, status, plano_id) VALUES (?, ?, ?)";
+
+        try (PreparedStatement stmtMeta = conn.prepareStatement(sqlMeta, Statement.RETURN_GENERATED_KEYS)) {
+            stmtMeta.setString(1, meta.getDescricao());
+            stmtMeta.setString(2, meta.getStatus());
+            stmtMeta.setInt(3, planoId);
+            stmtMeta.executeUpdate();
+
+            // Obter o ID gerado
+            try (ResultSet generatedKeys = stmtMeta.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    meta.setId(generatedKeys.getInt(1));
+                }
+            }
+        }
+    }
+
+    // Método para atualizar uma meta existente
+    public boolean atualizarMeta(Meta meta) throws SQLException {
+        String sql = "UPDATE Meta SET descricao = ?, status = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, meta.getDescricao());
+            stmt.setString(2, meta.getStatus());
+            stmt.setInt(3, meta.getId());
+
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    // Método para excluir uma meta
+    public boolean excluirMeta(int metaId) throws SQLException {
+        String sql = "DELETE FROM Meta WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, metaId);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    // Método para buscar uma meta por ID
+    public Meta buscarMetaPorId(int metaId) throws SQLException {
+        String sql = "SELECT * FROM Meta WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, metaId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Meta meta = new Meta();
+                    meta.setId(rs.getInt("id"));
+                    meta.setDescricao(rs.getString("descricao"));
+                    meta.setStatus(rs.getString("status"));
+                    return meta;
+                }
+            }
+        }
+        return null;
+    }
 }
+
