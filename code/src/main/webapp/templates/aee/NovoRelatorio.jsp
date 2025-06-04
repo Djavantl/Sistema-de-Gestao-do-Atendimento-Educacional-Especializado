@@ -463,8 +463,10 @@
 
                     <!-- Data -->
                     <div class="campo">
-                        <label for="dataGeracao">Data do Relatório:</label>
-                        <input type="date" id="dataGeracao" name="dataGeracao" required>
+                        <label for="dataGeracao">Data:</label>
+                        <input type="date" id="dataGeracao" name="dataGeracao"
+                               value="${not empty relatorio ? relatorio.dataGeracao : ''}"
+                               required class="campo-data">
                     </div>
                 </div>
 

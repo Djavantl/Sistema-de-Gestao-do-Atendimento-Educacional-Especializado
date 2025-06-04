@@ -218,7 +218,11 @@ public class RelatorioServlet extends HttpServlet {
 
             // 1) Define o título e data:
             relatorio.setTitulo(request.getParameter("titulo"));
-            relatorio.setDataGeracao(LocalDate.parse(request.getParameter("dataGeracao")));
+
+            String dataStr = request.getParameter("dataGeracao");
+            if (dataStr != null && !dataStr.isEmpty()) {
+                relatorio.setDataGeracao(LocalDate.parse(dataStr));
+            }
 
             // 2) Lê o alunoMatricula do <select> e busca o objeto Aluno no banco:
             String alunoMatricula = request.getParameter("alunoMatricula");
@@ -285,7 +289,12 @@ public class RelatorioServlet extends HttpServlet {
     private Relatorio construirRelatorio(HttpServletRequest request) throws SQLException {
         Relatorio relatorio = new Relatorio();
         relatorio.setTitulo(request.getParameter("titulo"));
-        relatorio.setDataGeracao(LocalDate.parse(request.getParameter("dataGeracao")));
+
+
+        String dataStr = request.getParameter("dataGeracao");
+        if (dataStr != null && !dataStr.isEmpty()) {
+            relatorio.setDataGeracao(LocalDate.parse(dataStr));
+        }
 
         // Obter SIAPE digitado manualmente
         String siape = request.getParameter("professorSiape");

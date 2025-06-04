@@ -6,9 +6,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Organização de Atendimento</title>
+    <title>Minha Organização</title>
     <style>
-        /* Reset e estilos globais */
+        /* ======================== RESET E BASE ======================== */
         * {
             margin: 0;
             padding: 0;
@@ -16,23 +16,22 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Body com gradiente roxo (igual à primeira página) */
         body {
-            background: #E6E6FA;
+            background-color: #E6E6FA;
             color: #333;
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Sidebar (estilo da primeira página) */
+        /* ======================== SIDEBAR ======================== */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             width: 250px;
             height: 100%;
-            background-color: #4D44B5;
+            background: #4D44B5;
             color: white;
             padding: 20px;
             display: flex;
@@ -49,10 +48,10 @@
         }
 
         .logo img {
-             width: 80px;
-             height: 80px;
-             object-fit: contain;
-         }
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
 
         .logo h2 {
             color: #ffffff;
@@ -92,22 +91,72 @@
             color: #4D44B5;
         }
 
-        /* Conteúdo Principal */
-        .conteudo-principal {
-            margin: 80px 0 40px 350px;
-            width: 70%;
-            padding: 40px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            position: relative;
-            z-index: 10;
+        .menu-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
         }
 
-        #titulo h2 {
+        .menu-btn.ativo img {
+            filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
+        }
+
+        /* ======================== CONTEÚDO PRINCIPAL ======================== */
+        .conteudo-principal {
+            margin-left: 280px;
+            padding: 40px 60px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .titulo h1 {
             color: #4D44B5;
-            font-size: 28px;
-            margin-bottom: 20px;
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.2;
+            max-width: 600px;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 20px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .user-info p {
+            color: #4D44B5;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .user-info .funcao {
+            font-size: 16px;
+            color: #777;
+            font-weight: 500;
+        }
+
+        /* ======================== CONTEÚDO ======================== */
+        .conteudo-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 30px;
         }
 
         .detalhes-header {
@@ -121,15 +170,18 @@
             background-color: #4D44B5;
             color: #ffffff;
             border: none;
-            padding: 10px 22px;
+            padding: 12px 24px;
             border-radius: 10px;
             cursor: pointer;
-            font-size: 15px;
-            transition: background-color 0.3s;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.2s ease;
         }
 
         .botao-voltar:hover {
             background-color: #372e9c;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .info-section {
@@ -138,46 +190,49 @@
 
         .info-section h3 {
             color: #4D44B5;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             border-bottom: 2px solid #4D44B5;
-            padding-bottom: 5px;
+            padding-bottom: 10px;
+            font-size: 24px;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(200px, 1fr));
-            gap: 15px;
-            align-items: start;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .info-item {
+            background-color: #f8f9ff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
         }
 
         .info-item.span-2 {
             grid-column: span 2;
         }
 
-        .info-item {
-            background-color: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-        }
-
         .info-item label {
             display: block;
             color: #6c757d;
-            font-size: 0.9em;
-            margin-bottom: 5px;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
 
         .info-item p {
             margin: 0;
-            font-size: 1em;
+            font-size: 18px;
             color: #2c3e50;
+            font-weight: 600;
         }
 
-        /* Elementos Decorativos */
+        /* ======================== ELEMENTOS DECORATIVOS ======================== */
         .decorative-circle {
             position: absolute;
             border-radius: 50%;
-            z-index: 0;
+            z-index: -1;
         }
 
         .circle-1 {
@@ -204,16 +259,35 @@
             left: 350px;
         }
 
-        /* Responsividade */
+        /* ======================== RODAPÉ ======================== */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #4D44B5;
+            font-size: 14px;
+            margin-top: auto;
+        }
+
+        /* ======================== RESPONSIVIDADE ======================== */
+        @media (max-width: 1200px) {
+            .conteudo-principal {
+                padding: 30px;
+            }
+        }
+
         @media (max-width: 992px) {
             .sidebar {
                 width: 220px;
             }
 
             .conteudo-principal {
-                margin-left: 240px;
-                width: calc(100% - 260px);
-                padding: 30px;
+                margin-left: 220px;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
             }
         }
 
@@ -226,8 +300,7 @@
             }
 
             .conteudo-principal {
-                margin: 30px auto;
-                width: 90%;
+                margin-left: 0;
                 padding: 25px;
             }
 
@@ -242,6 +315,14 @@
                 padding: 12px 15px;
                 font-size: 15px;
             }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-item.span-2 {
+                grid-column: span 1;
+            }
         }
     </style>
 </head>
@@ -251,7 +332,7 @@
     <div class="decorative-circle circle-2"></div>
     <div class="decorative-circle circle-3"></div>
 
-    <!-- Sidebar (igual à primeira página) -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
             <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
@@ -260,94 +341,105 @@
 
         <div class="menu">
             <button class="menu-btn"
-                onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
-                 Início
+                    onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                Início
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-informacoes?matricula=${matricula}'">
-                Minhas Informações
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                Informações
             </button>
             <button class="menu-btn ativo"
                     onclick="window.location.href='${pageContext.request.contextPath}/MinhaOrganizacao?matricula=${matricula}'">
-                Minha Organização
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                Organização
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/meu-plano?matricula=${matricula}'">
-                 Meu Plano AEE
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                Plano AEE
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/meus-relatorios?matricula=${matricula}'">
-                Meus Relatórios
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                Relatórios
             </button>
         </div>
     </div>
 
-    <!-- Conteúdo Principal (estrutura mantida intacta) -->
+    <!-- Conteúdo Principal -->
     <div class="conteudo-principal">
-        <div id="titulo">
-            <h2>Organização de Atendimento</h2>
+        <div class="header">
+            <div class="titulo">
+                <h1>Minha Organização</h1>
+            </div>
         </div>
 
-        <div class="detalhes-header">
-            <div></div>
-            <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">Voltar</button>
-        </div>
-        <input type="hidden" id="matriculaHidden" value="${matricula}" />
+        <div class="conteudo-container">
+            <div class="detalhes-header">
+                <div></div>
+                <button class="botao-voltar" onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">Voltar</button>
+            </div>
+            <input type="hidden" id="matriculaHidden" value="${matricula}" />
 
-        <div class="detalhes-content">
-            <div class="info-section">
-                <h3>Dados do Aluno</h3>
-                <div class="info-grid">
-                    <div class="info-item span-2">
-                        <label>Nome</label>
-                        <p>${aluno.nome}</p>
-                    </div>
-                    <div class="info-item">
-                        <label>Turma</label>
-                        <p>${aluno.turma}</p>
+            <div class="detalhes-content">
+                <div class="info-section">
+                    <h3>Dados do Aluno</h3>
+                    <div class="info-grid">
+                        <div class="info-item span-2">
+                            <label>Nome</label>
+                            <p>${aluno.nome}</p>
+                        </div>
+                        <div class="info-item">
+                            <label>Turma</label>
+                            <p>${aluno.turma}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="info-section">
-                <h3>Organização de Atendimento</h3>
-                <c:choose>
-                    <c:when test="${not empty organizacao}">
-                        <div class="info-grid">
+                <div class="info-section">
+                    <h3>Organização de Atendimento</h3>
+                    <c:choose>
+                        <c:when test="${not empty organizacao}">
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <label>Período</label>
+                                    <p>${organizacao.periodo}</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Duração</label>
+                                    <p>${organizacao.duracao}</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Frequência</label>
+                                    <p>${organizacao.frequencia}</p>
+                                </div>
+                                <div class="info-item span-2">
+                                    <label>Composição</label>
+                                    <p>${organizacao.composicao}</p>
+                                </div>
+                                <div class="info-item">
+                                    <label>Tipo</label>
+                                    <p>${organizacao.tipo}</p>
+                                </div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
                             <div class="info-item">
-                                <label>Período</label>
-                                <p>${organizacao.periodo}</p>
+                                <p>Nenhuma organização de atendimento cadastrada.</p>
                             </div>
-                            <div class="info-item">
-                                <label>Duração</label>
-                                <p>${organizacao.duracao}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Frequência</label>
-                                <p>${organizacao.frequencia}</p>
-                            </div>
-                            <div class="info-item span-2">
-                                <label>Composição</label>
-                                <p>${organizacao.composicao}</p>
-                            </div>
-                            <div class="info-item">
-                                <label>Tipo</label>
-                                <p>${organizacao.tipo}</p>
-                            </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <p>Nenhuma organização de atendimento cadastrada.</p>
-                    </c:otherwise>
-                </c:choose>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
             </div>
         </div>
+
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+        </div>
     </div>
-    <script>
-        // Botão Voltar corrigido
-        document.querySelector('.botao-voltar').onclick = function() {
-            window.location.href = '${pageContext.request.contextPath}/telaInicialAluno';
-        };
-    </script>
 </body>
 </html>

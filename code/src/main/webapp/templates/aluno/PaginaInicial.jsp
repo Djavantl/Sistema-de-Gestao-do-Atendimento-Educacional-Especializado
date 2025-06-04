@@ -14,9 +14,8 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        /* Body Background (mantido do primeiro layout) */
+        /* Body Background */
         body {
-
             background-color: #E6E6FA;
             color: #333;
             min-height: 100vh;
@@ -25,7 +24,7 @@
         }
 
         /* ---------------------------------------------
-           Sidebar (estilos reaproveitados da segunda página)
+           Sidebar (estilos atualizados)
            --------------------------------------------- */
         .sidebar {
             position: fixed;
@@ -92,8 +91,18 @@
             color: #4D44B5;
         }
 
+        .menu-btn img {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+
+        .menu-btn.ativo img {
+            filter: invert(26%) sepia(33%) saturate(3500%) hue-rotate(261deg) brightness(86%) contrast(85%);
+        }
+
         /* ---------------------------------------------
-           Conteúdo Principal (mantido do primeiro layout)
+           Conteúdo Principal
            --------------------------------------------- */
         .conteudo-principal {
             margin-left: 280px; /* deixa espaço para sidebar */
@@ -295,8 +304,6 @@
             margin-top: auto;
         }
 
-
-
         /* Responsividade */
         @media (max-width: 992px) {
             .sidebar {
@@ -348,7 +355,7 @@
     <div class="decorative-circle circle-2"></div>
     <div class="decorative-circle circle-3"></div>
 
-    <!-- Sidebar (modelo da segunda página, com ícones do primeiro) -->
+    <!-- Sidebar atualizado -->
     <div class="sidebar">
         <div class="logo">
             <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
@@ -359,30 +366,46 @@
         <input type="hidden" id="matriculaHidden" value="${matricula}" />
 
         <div class="menu">
+            <!-- Botão Início com classe ativo -->
             <button class="menu-btn ativo"
-                onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
-                 Início
+                    onclick="window.location.href='${pageContext.request.contextPath}/telaInicialAluno'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                Início
             </button>
+
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-informacoes?matricula=${matricula}'">
-                Minhas Informações
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Informações" />
+                Informações
             </button>
+
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/MinhaOrganizacao?matricula=${matricula}'">
-                Minha Organização
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Organização" />
+                Organização
             </button>
+
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/meu-plano?matricula=${matricula}'">
-                 Meu Plano AEE
+                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Plano AEE" />
+                Plano AEE
             </button>
+
+            <button class="menu-btn"
+                                onclick="window.location.href='${pageContext.request.contextPath}/templates/aluno/minhas-sessoes?matricula=${matricula}'">
+                                <img src="${pageContext.request.contextPath}/static/images/atendimento.svg" alt="Sessões" />
+                            Sessões
+                 </button>
+
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/meus-relatorios?matricula=${matricula}'">
-                Meus Relatórios
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
+                Relatórios
             </button>
         </div>
     </div>
 
-    <!-- Conteúdo Principal (mantido do primeiro layout) -->
+    <!-- Conteúdo Principal -->
     <div class="conteudo-principal">
         <div class="header">
             <div class="titulo">
@@ -443,29 +466,9 @@
 
         <!-- Rodapé -->
         <div class="footer">
-            <p id= "fo">© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
-            <p id= "fo1">Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
+            <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
+            <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
         </div>
     </div>
-
-    <!-- Script para efeito de digitação no título -->
-    <script>
-        const titulo = document.querySelector('.titulo h1 span');
-        const textoOriginal = titulo.textContent;
-        titulo.textContent = '';
-
-        let i = 0;
-        const velocidadeDigitacao = 100;
-
-        function digitar() {
-            if (i < textoOriginal.length) {
-                titulo.textContent += textoOriginal.charAt(i);
-                i++;
-                setTimeout(digitar, velocidadeDigitacao);
-            }
-        }
-
-        setTimeout(digitar, 800);
-    </script>
 </body>
 </html>
