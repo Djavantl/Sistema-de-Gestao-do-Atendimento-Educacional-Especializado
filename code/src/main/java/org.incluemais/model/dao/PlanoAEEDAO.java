@@ -176,4 +176,34 @@ public class PlanoAEEDAO {
         return null;
     }
 
+    public PlanoAEE buscarPorAluno(String matriculaAluno) throws SQLException {
+        String sql = "SELECT * FROM PlanoAEE WHERE aluno_matricula = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, matriculaAluno);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                PlanoAEE plano = new PlanoAEE();
+                plano.setId(rs.getInt("id"));
+                plano.setDataInicio(rs.getDate("dataInicio").toLocalDate());
+                plano.setRecomendacoes(rs.getString("recomendacoes"));
+                plano.setObservacoes(rs.getString("observacoes"));
+
+                // Aluno básico
+                Aluno aluno = new Aluno();
+                aluno.setMatricula(rs.getString("aluno_matricula"));
+                plano.setAluno(aluno);
+
+                // Professor básico (se existir)
+                if (rs.getString("professor_siape") != null) {
+                    ProfessorAEE professor = new ProfessorAEE();
+                    professor.setSiape(rs.getString("professor_siape"));
+                    plano.setProfessorAEE(professor);
+                }
+
+                return plano;
+            }
+        }
+        return null;
+    }
+
 }

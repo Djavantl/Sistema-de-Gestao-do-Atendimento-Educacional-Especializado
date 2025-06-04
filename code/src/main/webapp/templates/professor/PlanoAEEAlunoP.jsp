@@ -570,14 +570,14 @@
             <div class="info-grid">
                 <div class="info-item">
                     <label>Aluno</label>
-                    <p>${aluno.nome} (${plano.alunoMatricula})</p>
+                    <p>${plano.aluno.nome} (${plano.aluno.matricula})</p>
                 </div>
                 <div class="info-item">
                     <label>Professor Responsável</label>
                     <p>
                         <c:choose>
-                            <c:when test="${not empty professor}">
-                                ${professor.nome} (${plano.professorSiape})
+                            <c:when test="${not empty plano.professorAEE}">
+                                ${plano.professorAEE.nome} (${plano.professorAEE.siape})
                             </c:when>
                             <c:otherwise>
                                 Não atribuído
@@ -591,7 +591,7 @@
                 </div>
                 <div class="info-item">
                     <label>Curso/Turma</label>
-                    <p>${aluno.curso} - ${aluno.turma}</p>
+                    <p>${plano.aluno.curso} - ${plano.aluno.turma}</p>
                 </div>
                 <div class="info-item">
                     <label>Recomendações</label>
