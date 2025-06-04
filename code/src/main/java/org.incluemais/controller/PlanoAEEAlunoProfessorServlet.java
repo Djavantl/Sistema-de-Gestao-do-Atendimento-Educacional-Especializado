@@ -6,14 +6,17 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.incluemais.model.dao.AlunoDAO;
+import org.incluemais.model.dao.MetaDAO;
 import org.incluemais.model.dao.PlanoAEEDAO;
 import org.incluemais.model.dao.ProfessorAEEDAO;
 import org.incluemais.model.entities.Aluno;
+import org.incluemais.model.entities.Meta;
 import org.incluemais.model.entities.PlanoAEE;
 import org.incluemais.model.entities.ProfessorAEE;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import org.incluemais.model.connection.DBConnection;
 
 @WebServlet("/templates/professor/visualizar-plano")
@@ -32,6 +35,7 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
             PlanoAEEDAO planoAeeDAO = new PlanoAEEDAO(conn);
             AlunoDAO alunoDAO = new AlunoDAO(conn);
             ProfessorAEEDAO professorDAO = new ProfessorAEEDAO(conn);
+            MetaDAO metaDAO = new MetaDAO(conn); // Novo DAO para metas
 
             // Buscar aluno pela matrícula
             Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
@@ -50,6 +54,10 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
                 return;
             }
 
+            // Carregar metas associadas ao plano
+            List<Meta> metas = metaDAO.buscarMetasPorPlanoId(plano.getId());
+            plano.setMetas(metas); // Adiciona metas ao objeto plano
+
             // Completar dados do professor se existir
             if (plano.getProfessorAEE() != null && plano.getProfessorAEE().getSiape() != null) {
                 ProfessorAEE professor = professorDAO.buscarPorSiape(
@@ -62,6 +70,7 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
             plano.setAluno(aluno);
 
             request.setAttribute("plano", plano);
+            request.setAttribute("metas", metas); // Passa metas explicitamente
             request.getRequestDispatcher("/templates/professor/PlanoAEEAlunoP.jsp").forward(request, response);
 
         } catch (SQLException e) {
@@ -70,6 +79,4 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }
-
-
 }
