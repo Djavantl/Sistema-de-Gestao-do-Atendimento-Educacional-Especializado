@@ -27,7 +27,7 @@ public class TelaInicialProfessorServlet extends HttpServlet {
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        System.out.println("aa");
+
         // Verificar se o usuário está autenticado como professor
         if (session == null || !"professor".equals(session.getAttribute("tipoUsuario"))) {
             System.out.println("Deu ruim");
@@ -37,7 +37,7 @@ public class TelaInicialProfessorServlet extends HttpServlet {
 
 
         String siape = (String) session.getAttribute("identificacao");
-        System.out.println(siape);
+
 
         Professor professor = professorDAO.getBySiape(siape);
         if (professor != null) {
@@ -46,6 +46,7 @@ public class TelaInicialProfessorServlet extends HttpServlet {
             // Caso não encontre, define um nome padrão
             request.setAttribute("nome", "Professor");
         }
+
         request.setAttribute("siape", siape);
         request.getRequestDispatcher("/templates/professor/TelaInicialProfessor.jsp").forward(request, response);
     }
