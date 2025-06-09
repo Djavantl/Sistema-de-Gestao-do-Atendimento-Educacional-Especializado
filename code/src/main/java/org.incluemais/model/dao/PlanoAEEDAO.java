@@ -1,9 +1,6 @@
 package org.incluemais.model.dao;
 
-import org.incluemais.model.entities.Aluno;
-import org.incluemais.model.entities.Meta;
-import org.incluemais.model.entities.PlanoAEE;
-import org.incluemais.model.entities.ProfessorAEE;
+import org.incluemais.model.entities.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -177,15 +174,16 @@ public class PlanoAEEDAO {
         return null;
     }
 
-    public PlanoAEE buscarPorAluno(String matriculaAluno) throws SQLException {
+    public PlanoAEE buscarPorAluno(String matricula) throws SQLException {
         String sql = "SELECT * FROM PlanoAEE WHERE aluno_matricula = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, matriculaAluno);
+            stmt.setString(1, matricula);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 PlanoAEE plano = new PlanoAEE();
                 plano.setId(rs.getInt("id"));
                 plano.setDataInicio(rs.getDate("dataInicio").toLocalDate());
+                // ADICIONE ESTES CAMPOS FALTANTES:
                 plano.setRecomendacoes(rs.getString("recomendacoes"));
                 plano.setObservacoes(rs.getString("observacoes"));
 
@@ -200,7 +198,6 @@ public class PlanoAEEDAO {
                     professor.setSiape(rs.getString("professor_siape"));
                     plano.setProfessorAEE(professor);
                 }
-
                 return plano;
             }
         }

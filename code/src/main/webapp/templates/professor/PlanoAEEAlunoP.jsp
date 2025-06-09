@@ -625,137 +625,141 @@
             </c:choose>
         </div>
 
-        <!-- Proposta Pedagógica -->
-        <div class="info-section">
-            <h3>Proposta Pedagógica</h3>
+       <!-- Proposta Pedagógica -->
+       <div class="info-section">
+           <div class="detalhes-header">
+               <h3>Proposta Pedagógica</h3>
+           </div>
 
-            <c:choose>
-                <c:when test="${not empty plano.proposta}">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label>Objetivos</label>
-                            <p>${plano.proposta.objetivos}</p>
-                        </div>
-                        <div class="info-item">
-                            <label>Metodologias</label>
-                            <p>${plano.proposta.metodologias}</p>
-                        </div>
-                    </div>
+           <c:choose>
+               <c:when test="${not empty plano.proposta}">
+                   <div class="info-grid">
+                       <div class="info-item">
+                           <label>Objetivos</label>
+                           <p>${plano.proposta.objetivos}</p>
+                       </div>
+                       <div class="info-item">
+                           <label>Metodologias</label>
+                           <p>${plano.proposta.metodologias}</p>
+                       </div>
+                   </div>
 
-                    <!-- Recursos Pedagógicos -->
-                    <c:if test="${not empty plano.proposta.recursoP}">
-                        <div class="recursos-grid">
-                            <div class="recurso-categoria">
-                                <h5>Recursos Pedagógicos</h5>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoP.adaptacaoDidaticaAulasAvaliacoes ? 'checked' : ''} disabled>
-                                    <label>Adaptação didática para aulas e avaliações</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoP.materialDidaticoAdaptado ? 'checked' : ''} disabled>
-                                    <label>Material didático adaptado</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoP.usoTecnologiaAssistiva ? 'checked' : ''} disabled>
-                                    <label>Uso de tecnologia assistiva</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoP.tempoEmpregadoAtividadesAvaliacoes ? 'checked' : ''} disabled>
-                                    <label>Tempo adicional para atividades/avaliações</label>
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
+                   <!-- Recursos Pedagógicos -->
+                   <c:if test="${not empty plano.proposta.recursoP}">
+                       <div class="recursos-grid">
+                           <div class="recurso-categoria">
+                               <h5>Recursos Pedagógicos</h5>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoP.adaptacaoDidaticaAulasAvaliacoes ? 'checked' : ''} disabled>
+                                   <label>Adaptação didática para aulas e avaliações</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoP.materialDidaticoAdaptado ? 'checked' : ''} disabled>
+                                   <label>Material didático adaptado</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoP.usoTecnologiaAssistiva ? 'checked' : ''} disabled>
+                                   <label>Uso de tecnologia assistiva</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoP.tempoEmpregadoAtividadesAvaliacoes ? 'checked' : ''} disabled>
+                                   <label>Tempo adicional para atividades/avaliações</label>
+                               </div>
+                           </div>
+                       </div>
+                   </c:if>
 
-                    <!-- Recursos Físicos/Arquitetônicos -->
-                    <c:if test="${not empty plano.proposta.recursoFA}">
-                        <div class="recursos-grid">
-                            <div class="recurso-categoria">
-                                <h5>Recursos Físicos/Arquitetônicos</h5>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoFA.usoCadeiraDeRodas ? 'checked' : ''} disabled>
-                                    <label>Uso de cadeira de rodas</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoFA.auxilioTranscricaoEscrita ? 'checked' : ''} disabled>
-                                    <label>Auxílio para transcrição escrita</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoFA.mesaAdaptadaCadeiraDeRodas ? 'checked' : ''} disabled>
-                                    <label>Mesa adaptada para cadeira de rodas</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoFA.usoDeMuleta ? 'checked' : ''} disabled>
-                                    <label>Uso de muleta</label>
-                                </div>
-                                <c:if test="${plano.proposta.recursoFA.outrosFisicoArquitetonico}">
-                                    <div class="recurso-item">
-                                        <label>Outros recursos:</label>
-                                        <p>${plano.proposta.recursoFA.outrosEspecificado}</p>
-                                    </div>
-                                </c:if>
-                            </div>
-                        </div>
-                    </c:if>
+                   <!-- Recursos Físicos/Arquitetônicos -->
+                   <c:if test="${not empty plano.proposta.recursoFA}">
+                       <div class="recursos-grid">
+                           <div class="recurso-categoria">
+                               <h5>Recursos Físicos/Arquitetônicos</h5>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoFA.usoCadeiraDeRodas ? 'checked' : ''} disabled>
+                                   <label>Uso de cadeira de rodas</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoFA.auxilioTranscricaoEscrita ? 'checked' : ''} disabled>
+                                   <label>Auxílio para transcrição escrita</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoFA.mesaAdaptadaCadeiraDeRodas ? 'checked' : ''} disabled>
+                                   <label>Mesa adaptada para cadeira de rodas</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoFA.usoDeMuleta ? 'checked' : ''} disabled>
+                                   <label>Uso de muleta</label>
+                               </div>
+                               <c:if test="${plano.proposta.recursoFA.outrosFisicoArquitetonico}">
+                                   <div class="recurso-item">
+                                       <label>Outros recursos:</label>
+                                       <p>${plano.proposta.recursoFA.outrosEspecificado}</p>
+                                   </div>
+                               </c:if>
+                           </div>
+                       </div>
+                   </c:if>
 
-                    <!-- Recursos de Comunicação -->
-                    <c:if test="${not empty plano.proposta.recursoCI}">
-                        <div class="recursos-grid">
-                            <div class="recurso-categoria">
-                                <h5>Recursos de Comunicação e Informação</h5>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.comunicacaoAlternativa ? 'checked' : ''} disabled>
-                                    <label>Comunicação alternativa</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.tradutorInterprete ? 'checked' : ''} disabled>
-                                    <label>Tradutor/intérprete</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.leitorTranscritor ? 'checked' : ''} disabled>
-                                    <label>Leitor/transcritor</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.interpreteOralizador ? 'checked' : ''} disabled>
-                                    <label>Intérprete/oralizador</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.guiaInterprete ? 'checked' : ''} disabled>
-                                    <label>Guia-intérprete</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoBraille ? 'checked' : ''} disabled>
-                                    <label>Material em Braille</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoTextoAmpliado ? 'checked' : ''} disabled>
-                                    <label>Texto ampliado</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoRelevo ? 'checked' : ''} disabled>
-                                    <label>Material em relevo</label>
-                                </div>
-                                <div class="recurso-item">
-                                    <input type="checkbox" ${plano.proposta.recursoCI.leitorDeTela ? 'checked' : ''} disabled>
-                                    <label>Leitor de tela</label>
-                                </div>
-                            </div>
-                        </div>
-                    </c:if>
-                    <c:if test="${not empty plano.proposta.observacoes}">
-                        <div class="info-item">
-                            <label>Observações Recursos</label>
-                            <p>${plano.proposta.observacoes}</p>
-                        </div>
-                    </c:if>
-                </c:when>
-                <c:otherwise>
-                    <div class="info-item">
-                        <p>Nenhuma proposta pedagógica cadastrada para este plano.</p>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-        </div>
+                   <!-- Recursos de Comunicação -->
+                   <c:if test="${not empty plano.proposta.recursoCI}">
+                       <div class="recursos-grid">
+                           <div class="recurso-categoria">
+                               <h5>Recursos de Comunicação e Informação</h5>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.comunicacaoAlternativa ? 'checked' : ''} disabled>
+                                   <label>Comunicação alternativa</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.tradutorInterprete ? 'checked' : ''} disabled>
+                                   <label>Tradutor/intérprete</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.leitorTranscritor ? 'checked' : ''} disabled>
+                                   <label>Leitor/transcritor</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.interpreteOralizador ? 'checked' : ''} disabled>
+                                   <label>Intérprete/oralizador</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.guiaInterprete ? 'checked' : ''} disabled>
+                                   <label>Guia-intérprete</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoBraille ? 'checked' : ''} disabled>
+                                   <label>Material em Braille</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoTextoAmpliado ? 'checked' : ''} disabled>
+                                   <label>Texto ampliado</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.materialDidaticoRelevo ? 'checked' : ''} disabled>
+                                   <label>Material em relevo</label>
+                               </div>
+                               <div class="recurso-item">
+                                   <input type="checkbox" ${plano.proposta.recursoCI.leitorDeTela ? 'checked' : ''} disabled>
+                                   <label>Leitor de tela</label>
+                               </div>
+                           </div>
+                       </div>
+                   </c:if>
+
+                   <!-- Observações Recursos -->
+                   <c:if test="${not empty plano.proposta.observacoes}">
+                       <div class="info-item">
+                           <label>Observações Recursos</label>
+                           <p>${plano.proposta.observacoes}</p>
+                       </div>
+                   </c:if>
+               </c:when>
+               <c:otherwise>
+                   <div class="info-item">
+                       <p>Nenhuma proposta pedagógica cadastrada para este plano.</p>
+                   </div>
+               </c:otherwise>
+           </c:choose>
+       </div>
 
         <!-- Rodapé -->
         <div class="footer">
