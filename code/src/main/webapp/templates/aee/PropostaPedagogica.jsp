@@ -457,11 +457,10 @@
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
                 Estudantes
-            </button>
-            <button class="menu-btn ativo"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/propostas'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Propostas" />
-                Propostas
+            <button class="menu-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                Sessões
             </button>
             <button class="menu-btn"
                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
