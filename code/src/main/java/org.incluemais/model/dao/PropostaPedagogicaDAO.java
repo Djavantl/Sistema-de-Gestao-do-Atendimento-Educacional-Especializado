@@ -8,7 +8,7 @@ public class PropostaPedagogicaDAO {
     private final RecursosPedagogicosDAO recursosPedagogicosDAO;
     private final RecursoFisicoArquitetonicoDAO recursoFisicoDAO;
     private final RecursosComunicacaoEInformacaoDAO recursoComunicacaoDAO;
-    private final PlanoAEEDAO planoAEEDAO; // Adicionado para manipular objetos PlanoAEE
+    private final PlanoAEEDAO planoAEEDAO;
 
     public PropostaPedagogicaDAO(Connection connection) {
         if (connection == null) {
@@ -18,8 +18,10 @@ public class PropostaPedagogicaDAO {
         this.recursosPedagogicosDAO = new RecursosPedagogicosDAO(connection);
         this.recursoFisicoDAO = new RecursoFisicoArquitetonicoDAO(connection);
         this.recursoComunicacaoDAO = new RecursosComunicacaoEInformacaoDAO(connection);
-        this.planoAEEDAO = new PlanoAEEDAO(connection); // Inicializado
+        this.planoAEEDAO = new PlanoAEEDAO(connection);
     }
+
+    // --------------------- CRIAÇÃO ---------------------
 
     public void inserir(PropostaPedagogica proposta) throws SQLException {
         persistirRecursosAssociados(proposta);
@@ -51,6 +53,76 @@ public class PropostaPedagogicaDAO {
             }
         }
     }
+
+    private void persistirRecursosAssociados(PropostaPedagogica proposta) throws SQLException {
+        if (proposta.getRecursoP() != null && proposta.getRecursoP().getId() == 0) {
+            recursosPedagogicosDAO.inserir(proposta.getRecursoP());
+        }
+        if (proposta.getRecursoFA() != null && proposta.getRecursoFA().getId() == 0) {
+            recursoFisicoDAO.inserir(proposta.getRecursoFA());
+        }
+        if (proposta.getRecursoCI() != null && proposta.getRecursoCI().getId() == 0) {
+            recursoComunicacaoDAO.inserir(proposta.getRecursoCI());
+        }
+    }
+
+    private void setResourceId(PreparedStatement stmt, int parameterIndex, Object recurso) throws SQLException {
+        if (recurso != null) {
+            int id = -1;
+
+            if (recurso instanceof RecursosPedagogicos) {
+                id = ((RecursosPedagogicos) recurso).getId();
+            } else if (recurso instanceof RecursoFisicoArquitetonico) {
+                id = ((RecursoFisicoArquitetonico) recurso).getId();
+            } else if (recurso instanceof RecursosComunicacaoEInformacao) {
+                id = ((RecursosComunicacaoEInformacao) recurso).getId();
+            }
+
+            if (id > 0) {
+                stmt.setInt(parameterIndex, id);
+            } else {
+                stmt.setNull(parameterIndex, Types.INTEGER);
+            }
+        } else {
+            stmt.setNull(parameterIndex, Types.INTEGER);
+        }
+    }
+
+    // --------------------- ATUALIZAÇÃO ---------------------
+
+    public void atualizar(PropostaPedagogica proposta) throws SQLException {
+        atualizarRecursos(proposta);
+
+        String sql = "UPDATE PropostaPedagogica SET objetivos = ?, metodologias = ?, observacoes = ?, " +
+                "recursoP_id = ?, recursoFA_id = ?, recursoCI_id = ? " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, proposta.getObjetivos());
+            stmt.setString(2, proposta.getMetodologias());
+            stmt.setString(3, proposta.getObservacoes());
+            setResourceId(stmt, 4, proposta.getRecursoP());
+            setResourceId(stmt, 5, proposta.getRecursoFA());
+            setResourceId(stmt, 6, proposta.getRecursoCI());
+            stmt.setInt(7, proposta.getId());
+
+            stmt.executeUpdate();
+        }
+    }
+
+    private void atualizarRecursos(PropostaPedagogica proposta) throws SQLException {
+        if (proposta.getRecursoP() != null) {
+            recursosPedagogicosDAO.atualizar(proposta.getRecursoP());
+        }
+        if (proposta.getRecursoFA() != null) {
+            recursoFisicoDAO.atualizar(proposta.getRecursoFA());
+        }
+        if (proposta.getRecursoCI() != null) {
+            recursoComunicacaoDAO.atualizar(proposta.getRecursoCI());
+        }
+    }
+
+    // --------------------- LEITURA ---------------------
 
     public PropostaPedagogica buscarPorPlanoId(int planoId) throws SQLException {
         String sql = "SELECT * FROM PropostaPedagogica WHERE planoAEE_id = ?";
@@ -92,100 +164,6 @@ public class PropostaPedagogicaDAO {
         return proposta;
     }
 
-    public void atualizar(PropostaPedagogica proposta) throws SQLException {
-        atualizarRecursos(proposta);
-
-        String sql = "UPDATE PropostaPedagogica SET objetivos = ?, metodologias = ?, observacoes = ?, " +
-                "recursoP_id = ?, recursoFA_id = ?, recursoCI_id = ? " +
-                "WHERE id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, proposta.getObjetivos());
-            stmt.setString(2, proposta.getMetodologias());
-            stmt.setString(3, proposta.getObservacoes());
-            setResourceId(stmt, 4, proposta.getRecursoP());
-            setResourceId(stmt, 5, proposta.getRecursoFA());
-            setResourceId(stmt, 6, proposta.getRecursoCI());
-            stmt.setInt(7, proposta.getId());
-
-            stmt.executeUpdate();
-        }
-    }
-
-    private void atualizarRecursos(PropostaPedagogica proposta) throws SQLException {
-        // Atualizar recursos pedagógicos
-        if (proposta.getRecursoP() != null) {
-            recursosPedagogicosDAO.atualizar(proposta.getRecursoP());
-        }
-
-        // Atualizar recursos físicos/arquitetônicos
-        if (proposta.getRecursoFA() != null) {
-            recursoFisicoDAO.atualizar(proposta.getRecursoFA());
-        }
-
-        // Atualizar recursos de comunicação
-        if (proposta.getRecursoCI() != null) {
-            recursoComunicacaoDAO.atualizar(proposta.getRecursoCI());
-        }
-    }
-
-    private void persistirRecursosAssociados(PropostaPedagogica proposta) throws SQLException {
-        if (proposta.getRecursoP() != null && proposta.getRecursoP().getId() == 0) {
-            recursosPedagogicosDAO.inserir(proposta.getRecursoP());
-        }
-        if (proposta.getRecursoFA() != null && proposta.getRecursoFA().getId() == 0) {
-            recursoFisicoDAO.inserir(proposta.getRecursoFA());
-        }
-        if (proposta.getRecursoCI() != null && proposta.getRecursoCI().getId() == 0) {
-            recursoComunicacaoDAO.inserir(proposta.getRecursoCI());
-        }
-    }
-
-    private void setResourceId(PreparedStatement stmt, int parameterIndex, Object recurso) throws SQLException {
-        if (recurso != null) {
-            int id = -1;
-
-            if (recurso instanceof RecursosPedagogicos) {
-                id = ((RecursosPedagogicos) recurso).getId();
-            } else if (recurso instanceof RecursoFisicoArquitetonico) {
-                id = ((RecursoFisicoArquitetonico) recurso).getId();
-            } else if (recurso instanceof RecursosComunicacaoEInformacao) {
-                id = ((RecursosComunicacaoEInformacao) recurso).getId();
-            }
-
-            if (id > 0) {
-                stmt.setInt(parameterIndex, id);
-            } else {
-                stmt.setNull(parameterIndex, Types.INTEGER);
-            }
-        } else {
-            stmt.setNull(parameterIndex, Types.INTEGER);
-        }
-    }
-
-    public void excluirPropostaComRecursos(int propostaId) throws SQLException {
-        // Buscar proposta para obter IDs dos recursos
-        PropostaPedagogica proposta = buscarPorId(propostaId);
-
-        if (proposta == null) {
-            throw new SQLException("Proposta não encontrada com ID: " + propostaId);
-        }
-
-        // Excluir recursos associados
-        if (proposta.getRecursoP() != null) {
-            recursosPedagogicosDAO.excluirP(proposta.getRecursoP().getId());
-        }
-        if (proposta.getRecursoFA() != null) {
-            recursoFisicoDAO.excluirFA(proposta.getRecursoFA().getId());
-        }
-        if (proposta.getRecursoCI() != null) {
-            recursoComunicacaoDAO.excluirCI(proposta.getRecursoCI().getId());
-        }
-
-        // Excluir proposta principal
-        excluirProposta(propostaId);
-    }
-
     public PropostaPedagogica buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM PropostaPedagogica WHERE id = ?";
         PropostaPedagogica proposta = null;
@@ -200,7 +178,6 @@ public class PropostaPedagogicaDAO {
                     proposta.setMetodologias(rs.getString("metodologias"));
                     proposta.setObservacoes(rs.getString("observacoes"));
 
-                    // Carrega o objeto PlanoAEE completo
                     PlanoAEE plano = planoAEEDAO.buscarPorId(rs.getInt("planoAEE_id"));
                     proposta.setPlanoAEE(plano);
 
@@ -221,6 +198,28 @@ public class PropostaPedagogicaDAO {
             }
         }
         return proposta;
+    }
+
+    // --------------------- EXCLUSÃO ---------------------
+
+    public void excluirPropostaComRecursos(int propostaId) throws SQLException {
+        PropostaPedagogica proposta = buscarPorId(propostaId);
+
+        if (proposta == null) {
+            throw new SQLException("Proposta não encontrada com ID: " + propostaId);
+        }
+
+        if (proposta.getRecursoP() != null) {
+            recursosPedagogicosDAO.excluirP(proposta.getRecursoP().getId());
+        }
+        if (proposta.getRecursoFA() != null) {
+            recursoFisicoDAO.excluirFA(proposta.getRecursoFA().getId());
+        }
+        if (proposta.getRecursoCI() != null) {
+            recursoComunicacaoDAO.excluirCI(proposta.getRecursoCI().getId());
+        }
+
+        excluirProposta(propostaId);
     }
 
     private void excluirProposta(int id) throws SQLException {

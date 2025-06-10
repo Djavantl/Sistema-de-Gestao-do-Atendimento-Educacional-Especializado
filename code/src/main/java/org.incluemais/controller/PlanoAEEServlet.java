@@ -15,29 +15,33 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.incluemais.model.connection.DBConnection.getConnection;
 
-@WebServlet(name = "PlanoAEEServlet",
-        urlPatterns = {"/templates/aee/criarPlanoAEE", "/templates/aee/planoAEE/inserir", "/templates/aee/planoAEE/atualizar"})
+/**
+ * Servlet para criação, inserção e atualização de planos AEE.
+ */
+@WebServlet(name = "PlanoAEEServlet", urlPatterns = {
+        "/templates/aee/criarPlanoAEE",
+        "/templates/aee/planoAEE/inserir",
+        "/templates/aee/planoAEE/atualizar"
+})
 public class PlanoAEEServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(PlanoAEEServlet.class.getName());
 
+    /**
+     * Exibe o formulário de criação de novo plano AEE.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String path = request.getServletPath();
         logger.info("Requisição GET recebida: " + path);
 
         if ("/templates/aee/criarPlanoAEE".equals(path)) {
             try (Connection conn = getConnection()) {
-                // Carregar dados necessários para o formulário
                 AlunoDAO alunoDAO = new AlunoDAO(conn);
                 ProfessorAEEDAO professorAEEDAO = new ProfessorAEEDAO(conn);
-
                 request.setAttribute("alunos", alunoDAO.buscarTodos());
                 request.setAttribute("professores", professorAEEDAO.getAll());
-
                 request.getRequestDispatcher("/templates/aee/CriarPlanoAEE.jsp").forward(request, response);
-
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Erro ao carregar dados para criação de plano", e);
                 request.setAttribute("erro", "Erro ao carregar dados: " + e.getMessage());
@@ -46,145 +50,120 @@ public class PlanoAEEServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Encaminha para a inserção ou atualização conforme a URL da requisição.
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String path = request.getServletPath();
 
-        if ("/templates/aee/planoAEE/atualizar".equals(path)) {
+        if ("/templates/aee/planoAEE/inserir".equals(path)) {
+            inserirPlano(request, response);
+        } else if ("/templates/aee/planoAEE/atualizar".equals(path)) {
             atualizarPlano(request, response);
-        } else if ("/templates/aee/planoAEE/inserir".equals(path)) {
-            Connection conn = null;
-            try {
-                conn = getConnection();
-                PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
-                AlunoDAO alunoDAO = new AlunoDAO(conn);
-                ProfessorAEEDAO professorDAO = new ProfessorAEEDAO(conn);
+        }
+    }
 
-                // Coletar parâmetros do formulário
-                String siapeProfessor = request.getParameter("professor_siape");
-                String matriculaAluno = request.getParameter("aluno_matricula");
-                LocalDate dataInicio = LocalDate.parse(request.getParameter("dataInicio"));
-                String recomendacoes = request.getParameter("recomendacoes");
-                String observacoes = request.getParameter("observacoes");
+    /**
+     * Processa a criação de um novo plano AEE e persiste no banco.
+     */
+    private void inserirPlano(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
+            AlunoDAO alunoDAO = new AlunoDAO(conn);
+            ProfessorAEEDAO professorDAO = new ProfessorAEEDAO(conn);
 
-                // Buscar objetos completos de Aluno e Professor
-                Aluno aluno = alunoDAO.buscarPorMatricula(matriculaAluno);
-                ProfessorAEE professor = null;
+            String siapeProfessor = request.getParameter("professor_siape");
+            String matriculaAluno = request.getParameter("aluno_matricula");
+            LocalDate dataInicio = LocalDate.parse(request.getParameter("dataInicio"));
+            String recomendacoes = request.getParameter("recomendacoes");
+            String observacoes = request.getParameter("observacoes");
 
-                if (siapeProfessor != null && !siapeProfessor.isEmpty()) {
-                    professor = professorDAO.buscarPorSiape(siapeProfessor);
-                }
+            Aluno aluno = alunoDAO.buscarPorMatricula(matriculaAluno);
+            ProfessorAEE professor = (siapeProfessor != null && !siapeProfessor.isEmpty())
+                    ? professorDAO.buscarPorSiape(siapeProfessor)
+                    : null;
 
-                // Criar novo plano com composição
-                PlanoAEE novoPlano = new PlanoAEE(
-                        professor,
-                        aluno,
-                        dataInicio,
-                        recomendacoes,
-                        observacoes
-                );
+            PlanoAEE novoPlano = new PlanoAEE(professor, aluno, dataInicio, recomendacoes, observacoes);
+            int planoId = planoDAO.inserir(novoPlano);
 
-                // Inserir no banco de dados
-                int planoId = planoDAO.inserir(novoPlano);
-
-                // Redirecionar para detalhes do plano
-                response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId);
-
-            } catch (SQLException | IllegalArgumentException e) {
-                logger.log(Level.SEVERE, "Erro ao criar plano", e);
-
-                // Manter dados no formulário em caso de erro
-                request.setAttribute("professor_siape", request.getParameter("professor_siape"));
-                request.setAttribute("aluno_matricula", request.getParameter("aluno_matricula"));
-                request.setAttribute("dataInicio", request.getParameter("dataInicio"));
-                request.setAttribute("recomendacoes", request.getParameter("recomendacoes"));
-                request.setAttribute("observacoes", request.getParameter("observacoes"));
-                request.setAttribute("erro", "Erro ao criar plano: " + e.getMessage());
-
-                try (Connection connReload = getConnection()) {
-                    // Recarregar dados para o formulário
-                    AlunoDAO alunoDAO = new AlunoDAO(connReload);
-                    ProfessorAEEDAO professorAEEDAO = new ProfessorAEEDAO(connReload);
-
-                    request.setAttribute("alunos", alunoDAO.buscarTodos());
-                    request.setAttribute("professores", professorAEEDAO.getAll());
-
-                    request.getRequestDispatcher("/templates/aee/CriarPlanoAEE.jsp").forward(request, response);
-
-                } catch (SQLException ex) {
-                    logger.log(Level.SEVERE, "Erro ao recarregar dados", ex);
-                    response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE?erro=Erro+crítico");
-                }
-            } finally {
-                if (conn != null) {
-                    try {
-                        conn.close();
-                    } catch (SQLException e) {
-                        logger.warning("Erro ao fechar conexão");
-                    }
-                }
+            response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId);
+        } catch (SQLException | IllegalArgumentException e) {
+            logger.log(Level.SEVERE, "Erro ao criar plano", e);
+            request.setAttribute("professor_siape", request.getParameter("professor_siape"));
+            request.setAttribute("aluno_matricula", request.getParameter("aluno_matricula"));
+            request.setAttribute("dataInicio", request.getParameter("dataInicio"));
+            request.setAttribute("recomendacoes", request.getParameter("recomendacoes"));
+            request.setAttribute("observacoes", request.getParameter("observacoes"));
+            request.setAttribute("erro", "Erro ao criar plano: " + e.getMessage());
+            try (Connection connReload = getConnection()) {
+                AlunoDAO alunoDAO = new AlunoDAO(connReload);
+                ProfessorAEEDAO professorAEEDAO = new ProfessorAEEDAO(connReload);
+                request.setAttribute("alunos", alunoDAO.buscarTodos());
+                request.setAttribute("professores", professorAEEDAO.getAll());
+                request.getRequestDispatcher("/templates/aee/CriarPlanoAEE.jsp").forward(request, response);
+            } catch (SQLException ex) {
+                logger.log(Level.SEVERE, "Erro ao recarregar dados", ex);
+                response.sendRedirect(request.getContextPath() + "/templates/aee/planosAEE?erro=Erro+crítico");
+            }
+        } finally {
+            if (conn != null) {
+                try { conn.close(); } catch (SQLException e) { logger.warning("Erro ao fechar conexão"); }
             }
         }
     }
 
+    /**
+     * Atualiza um plano AEE existente com novos dados e persiste no banco.
+     */
     private void atualizarPlano(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         Connection conn = null;
         try {
             conn = getConnection();
             PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
             ProfessorAEEDAO professorDAO = new ProfessorAEEDAO(conn);
 
-            // Obter parâmetros
             int id = Integer.parseInt(request.getParameter("id"));
             String siapeProfessor = request.getParameter("professor_siape");
             LocalDate dataInicio = LocalDate.parse(request.getParameter("dataInicio"));
             String recomendacoes = request.getParameter("recomendacoes");
             String observacoes = request.getParameter("observacoes");
 
-            // Buscar plano existente
             PlanoAEE plano = planoDAO.buscarPorId(id);
             if (plano == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Plano não encontrado");
                 return;
             }
 
-            // Atualizar professor (se fornecido)
             if (siapeProfessor != null && !siapeProfessor.isEmpty()) {
-                ProfessorAEE professor = professorDAO.buscarPorSiape(siapeProfessor);
-                plano.setProfessorAEE(professor);
+                ProfessorAEE prof = professorDAO.buscarPorSiape(siapeProfessor);
+                plano.setProfessorAEE(prof);
             } else {
                 plano.setProfessorAEE(null);
             }
 
-            // Atualizar outros campos
             plano.setDataInicio(dataInicio);
             plano.setRecomendacoes(recomendacoes);
             plano.setObservacoes(observacoes);
 
-            // Atualizar no banco
             boolean atualizado = planoDAO.atualizar(plano);
-
             if (atualizado) {
                 response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + id + "&success=Plano+atualizado+com+sucesso");
             } else {
                 response.sendRedirect(request.getContextPath() + "/templates/aee/editarPlanoAEE?id=" + id + "&erro=Falha+ao+atualizar+plano");
             }
-
         } catch (SQLException | IllegalArgumentException e) {
             logger.log(Level.SEVERE, "Erro ao atualizar plano", e);
             String idParam = request.getParameter("id");
             response.sendRedirect(request.getContextPath() + "/templates/aee/editarPlanoAEE?id=" + idParam + "&erro=Erro+ao+atualizar+plano");
         } finally {
             if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    logger.warning("Erro ao fechar conexão");
-                }
+                try { conn.close(); } catch (SQLException e) { logger.warning("Erro ao fechar conexão"); }
             }
         }
     }

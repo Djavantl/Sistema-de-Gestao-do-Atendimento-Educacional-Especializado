@@ -13,11 +13,13 @@ public class RecursoFisicoArquitetonicoDAO {
         this.conn = connection;
     }
 
+    // --------------------- CRIAÇÃO ---------------------
+
     public void inserir(RecursoFisicoArquitetonico recurso) throws SQLException {
-        String sql = "INSERT INTO RecursoFisicoArquitetonico ("
-                + "usoCadeiraDeRodas, auxilioTranscricaoEscrita, mesaAdaptadaCadeiraDeRodas, "
-                + "usoDeMuleta, outrosFisicoArquitetonico, outrosEspecificado) "
-                + "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO RecursoFisicoArquitetonico (" +
+                "usoCadeiraDeRodas, auxilioTranscricaoEscrita, mesaAdaptadaCadeiraDeRodas, " +
+                "usoDeMuleta, outrosFisicoArquitetonico, outrosEspecificado) " +
+                "VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -49,6 +51,8 @@ public class RecursoFisicoArquitetonicoDAO {
         }
     }
 
+    // --------------------- LEITURA ---------------------
+
     public RecursoFisicoArquitetonico buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM RecursoFisicoArquitetonico WHERE id = ?";
         RecursoFisicoArquitetonico recurso = null;
@@ -71,13 +75,7 @@ public class RecursoFisicoArquitetonicoDAO {
         return recurso;
     }
 
-    public boolean excluirFA(int id) throws SQLException {
-        String sql = "DELETE FROM RecursoFisicoArquitetonico WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-        }
-    }
+    // --------------------- ATUALIZAÇÃO ---------------------
 
     public void atualizar(RecursoFisicoArquitetonico recurso) throws SQLException {
         String sql = """
@@ -100,6 +98,16 @@ public class RecursoFisicoArquitetonicoDAO {
             stmt.setString(6, recurso.getOutrosEspecificado());
             stmt.setInt(7, recurso.getId());
             stmt.executeUpdate();
+        }
+    }
+
+    // --------------------- EXCLUSÃO ---------------------
+
+    public boolean excluirFA(int id) throws SQLException {
+        String sql = "DELETE FROM RecursoFisicoArquitetonico WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
         }
     }
 }

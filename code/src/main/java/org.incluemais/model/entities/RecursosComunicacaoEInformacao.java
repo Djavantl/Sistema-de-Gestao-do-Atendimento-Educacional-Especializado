@@ -76,10 +76,16 @@ public class RecursosComunicacaoEInformacao {
     public void setFonteTamanhoEspecifico(boolean fonteTamanhoEspecifico) { this.fonteTamanhoEspecifico = fonteTamanhoEspecifico; }
 
     public boolean temRecursos() {
-        return comunicacaoAlternativa || tradutorInterprete || leitorTranscritor
-                || interpreteOralizador || guiaInterprete || materialDidaticoBraille
-                || materialDidaticoTextoAmpliado || materialDidaticoRelevo
-                || leitorDeTela || fonteTamanhoEspecifico;
+        return comunicacaoAlternativa ||
+                tradutorInterprete ||
+                leitorTranscritor ||
+                interpreteOralizador ||
+                guiaInterprete ||
+                materialDidaticoBraille ||
+                materialDidaticoTextoAmpliado ||
+                materialDidaticoRelevo ||
+                leitorDeTela ||
+                fonteTamanhoEspecifico;
     }
 
 }

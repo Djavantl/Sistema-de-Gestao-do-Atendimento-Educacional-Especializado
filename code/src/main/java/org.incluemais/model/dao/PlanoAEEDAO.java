@@ -15,7 +15,58 @@ public class PlanoAEEDAO {
         this.conn = conn;
     }
 
-    // Método para listar todos os planos com nomes de aluno e professor
+    // --------------------- CRIAÇÃO ---------------------
+
+    public int inserir(PlanoAEE plano) throws SQLException {
+        String sql = "INSERT INTO PlanoAEE (professor_siape, aluno_matricula, dataInicio, recomendacoes, observacoes) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            if (plano.getProfessorAEE() != null) {
+                stmt.setString(1, plano.getProfessorAEE().getSiape());
+            } else {
+                stmt.setNull(1, Types.VARCHAR);
+            }
+            stmt.setString(2, plano.getAluno().getMatricula());
+            stmt.setDate(3, Date.valueOf(plano.getDataInicio()));
+            stmt.setString(4, plano.getRecomendacoes());
+            stmt.setString(5, plano.getObservacoes());
+
+            int affectedRows = stmt.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Falha ao inserir o PlanoAEE, nenhuma linha afetada.");
+            }
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Falha ao inserir o PlanoAEE, ID não obtido.");
+                }
+            }
+        }
+    }
+
+    public void adicionarMetaAoPlano(int planoId, Meta meta) throws SQLException {
+        String sqlMeta = "INSERT INTO Meta (descricao, status, plano_id) VALUES (?, ?, ?)";
+
+        try (PreparedStatement stmtMeta = conn.prepareStatement(sqlMeta, Statement.RETURN_GENERATED_KEYS)) {
+            stmtMeta.setString(1, meta.getDescricao());
+            stmtMeta.setString(2, meta.getStatus());
+            stmtMeta.setInt(3, planoId);
+            stmtMeta.executeUpdate();
+
+            try (ResultSet generatedKeys = stmtMeta.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    meta.setId(generatedKeys.getInt(1));
+                }
+            }
+        }
+    }
+
+    // --------------------- LEITURA ---------------------
+
     public List<Map<String, Object>> listarTodosComNomes() throws SQLException {
         List<Map<String, Object>> planos = new ArrayList<>();
         String sql = "SELECT p.id, " +
@@ -45,7 +96,6 @@ public class PlanoAEEDAO {
         return planos;
     }
 
-    // Método para buscar um plano por ID com objetos compostos
     public PlanoAEE buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM PlanoAEE WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -58,12 +108,10 @@ public class PlanoAEEDAO {
                     plano.setRecomendacoes(rs.getString("recomendacoes"));
                     plano.setObservacoes(rs.getString("observacoes"));
 
-                    // Carregar Aluno
                     AlunoDAO alunoDAO = new AlunoDAO(conn);
                     Aluno aluno = alunoDAO.buscarPorMatricula(rs.getString("aluno_matricula"));
                     plano.setAluno(aluno);
 
-                    // Carregar Professor (pode ser nulo)
                     String siape = rs.getString("professor_siape");
                     if (siape != null) {
                         ProfessorAEEDAO professorDAO = new ProfessorAEEDAO(conn);
@@ -75,69 +123,6 @@ public class PlanoAEEDAO {
             }
         }
         return null;
-    }
-
-    // Método para inserir um novo PlanoAEE e retornar o ID gerado
-    public int inserir(PlanoAEE plano) throws SQLException {
-        String sql = "INSERT INTO PlanoAEE (professor_siape, aluno_matricula, dataInicio, recomendacoes, observacoes) " +
-                "VALUES (?, ?, ?, ?, ?)";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            if (plano.getProfessorAEE() != null) {
-                stmt.setString(1, plano.getProfessorAEE().getSiape());
-            } else {
-                stmt.setNull(1, Types.VARCHAR);
-            }
-            stmt.setString(2, plano.getAluno().getMatricula());
-            stmt.setDate(3, Date.valueOf(plano.getDataInicio()));
-            stmt.setString(4, plano.getRecomendacoes());
-            stmt.setString(5, plano.getObservacoes());
-
-            int affectedRows = stmt.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new SQLException("Falha ao inserir o PlanoAEE, nenhuma linha afetada.");
-            }
-
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    return generatedKeys.getInt(1);  // Retorna o ID gerado
-                } else {
-                    throw new SQLException("Falha ao inserir o PlanoAEE, ID não obtido.");
-                }
-            }
-        }
-    }
-
-    // Método para atualizar um PlanoAEE existente
-    public boolean atualizar(PlanoAEE plano) throws SQLException {
-        String sql = "UPDATE PlanoAEE SET professor_siape = ?, dataInicio = ?, recomendacoes = ?, observacoes = ? " +
-                "WHERE id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            if (plano.getProfessorAEE() != null) {
-                stmt.setString(1, plano.getProfessorAEE().getSiape());
-            } else {
-                stmt.setNull(1, Types.VARCHAR);
-            }
-            stmt.setDate(2, Date.valueOf(plano.getDataInicio()));
-            stmt.setString(3, plano.getRecomendacoes());
-            stmt.setString(4, plano.getObservacoes());
-            stmt.setInt(5, plano.getId());
-
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
-        }
-    }
-
-
-    // Método para excluir plano
-    public boolean excluir(int id) throws SQLException {
-        String sql = "DELETE FROM PlanoAEE WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-        }
     }
 
     public PlanoAEE buscarPorMatriculaAluno(String matricula) throws SQLException {
@@ -154,12 +139,10 @@ public class PlanoAEEDAO {
                     plano.setRecomendacoes(rs.getString("recomendacoes"));
                     plano.setObservacoes(rs.getString("observacoes"));
 
-                    // Carregar Aluno
                     AlunoDAO alunoDAO = new AlunoDAO(conn);
                     Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
                     plano.setAluno(aluno);
 
-                    // Carregar Professor
                     String siape = rs.getString("professor_siape");
                     if (siape != null) {
                         ProfessorAEEDAO professorDAO = new ProfessorAEEDAO(conn);
@@ -183,16 +166,13 @@ public class PlanoAEEDAO {
                 PlanoAEE plano = new PlanoAEE();
                 plano.setId(rs.getInt("id"));
                 plano.setDataInicio(rs.getDate("dataInicio").toLocalDate());
-                // ADICIONE ESTES CAMPOS FALTANTES:
                 plano.setRecomendacoes(rs.getString("recomendacoes"));
                 plano.setObservacoes(rs.getString("observacoes"));
 
-                // Aluno básico
                 Aluno aluno = new Aluno();
                 aluno.setMatricula(rs.getString("aluno_matricula"));
                 plano.setAluno(aluno);
 
-                // Professor básico (se existir)
                 if (rs.getString("professor_siape") != null) {
                     ProfessorAEE professor = new ProfessorAEE();
                     professor.setSiape(rs.getString("professor_siape"));
@@ -204,50 +184,6 @@ public class PlanoAEEDAO {
         return null;
     }
 
-
-    // Método para adicionar uma nova meta ao plano
-    public void adicionarMetaAoPlano(int planoId, Meta meta) throws SQLException {
-        String sqlMeta = "INSERT INTO Meta (descricao, status, plano_id) VALUES (?, ?, ?)";
-
-        try (PreparedStatement stmtMeta = conn.prepareStatement(sqlMeta, Statement.RETURN_GENERATED_KEYS)) {
-            stmtMeta.setString(1, meta.getDescricao());
-            stmtMeta.setString(2, meta.getStatus());
-            stmtMeta.setInt(3, planoId);
-            stmtMeta.executeUpdate();
-
-            // Obter o ID gerado
-            try (ResultSet generatedKeys = stmtMeta.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    meta.setId(generatedKeys.getInt(1));
-                }
-            }
-        }
-    }
-
-    // Método para atualizar uma meta existente
-    public boolean atualizarMeta(Meta meta) throws SQLException {
-        String sql = "UPDATE Meta SET descricao = ?, status = ? WHERE id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, meta.getDescricao());
-            stmt.setString(2, meta.getStatus());
-            stmt.setInt(3, meta.getId());
-
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
-    // Método para excluir uma meta
-    public boolean excluirMeta(int metaId) throws SQLException {
-        String sql = "DELETE FROM Meta WHERE id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, metaId);
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
-    // Método para buscar uma meta por ID
     public Meta buscarMetaPorId(int metaId) throws SQLException {
         String sql = "SELECT * FROM Meta WHERE id = ?";
 
@@ -266,5 +202,57 @@ public class PlanoAEEDAO {
         }
         return null;
     }
-}
 
+    // --------------------- ATUALIZAÇÃO ---------------------
+
+    public boolean atualizar(PlanoAEE plano) throws SQLException {
+        String sql = "UPDATE PlanoAEE SET professor_siape = ?, dataInicio = ?, recomendacoes = ?, observacoes = ? " +
+                "WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            if (plano.getProfessorAEE() != null) {
+                stmt.setString(1, plano.getProfessorAEE().getSiape());
+            } else {
+                stmt.setNull(1, Types.VARCHAR);
+            }
+            stmt.setDate(2, Date.valueOf(plano.getDataInicio()));
+            stmt.setString(3, plano.getRecomendacoes());
+            stmt.setString(4, plano.getObservacoes());
+            stmt.setInt(5, plano.getId());
+
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        }
+    }
+
+    public boolean atualizarMeta(Meta meta) throws SQLException {
+        String sql = "UPDATE Meta SET descricao = ?, status = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, meta.getDescricao());
+            stmt.setString(2, meta.getStatus());
+            stmt.setInt(3, meta.getId());
+
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    // --------------------- EXCLUSÃO ---------------------
+
+    public boolean excluir(int id) throws SQLException {
+        String sql = "DELETE FROM PlanoAEE WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean excluirMeta(int metaId) throws SQLException {
+        String sql = "DELETE FROM Meta WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, metaId);
+            return stmt.executeUpdate() > 0;
+        }
+    }
+}

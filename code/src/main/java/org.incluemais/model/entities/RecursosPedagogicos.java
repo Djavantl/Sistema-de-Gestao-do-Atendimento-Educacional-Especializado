@@ -38,8 +38,10 @@ public class RecursosPedagogicos {
     public void setTempoEmpregadoAtividadesAvaliacoes(boolean tempoEmpregadoAtividadesAvaliacoes) { this.tempoEmpregadoAtividadesAvaliacoes = tempoEmpregadoAtividadesAvaliacoes; }
 
     public boolean temRecursos() {
-        return adaptacaoDidaticaAulasAvaliacoes || materialDidaticoAdaptado
-                || usoTecnologiaAssistiva || tempoEmpregadoAtividadesAvaliacoes;
+        return adaptacaoDidaticaAulasAvaliacoes ||
+                materialDidaticoAdaptado ||
+                usoTecnologiaAssistiva ||
+                tempoEmpregadoAtividadesAvaliacoes;
     }
 
 }

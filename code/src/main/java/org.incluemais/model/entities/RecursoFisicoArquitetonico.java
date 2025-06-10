@@ -50,8 +50,11 @@ public class RecursoFisicoArquitetonico {
     public void setOutrosEspecificado(String outrosEspecificado) { this.outrosEspecificado = outrosEspecificado; }
 
     public boolean temRecursos() {
-        return usoCadeiraDeRodas || auxilioTranscricaoEscrita
-                || mesaAdaptadaCadeiraDeRodas || usoDeMuleta || outrosFisicoArquitetonico;
+        return usoCadeiraDeRodas ||
+                auxilioTranscricaoEscrita ||
+                mesaAdaptadaCadeiraDeRodas ||
+                usoDeMuleta ||
+                outrosFisicoArquitetonico;
     }
 
 }

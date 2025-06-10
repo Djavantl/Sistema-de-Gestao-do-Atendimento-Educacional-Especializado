@@ -13,11 +13,13 @@ public class RecursosPedagogicosDAO {
         this.conn = connection;
     }
 
+    // --------------------- CRIAÇÃO ---------------------
+
     public void inserir(RecursosPedagogicos recurso) throws SQLException {
-        String sql = "INSERT INTO RecursosPedagogicos ("
-                + "adaptacaoDidaticaAulasAvaliacoes, materialDidaticoAdaptado, "
-                + "usoTecnologiaAssistiva, tempoEmpregadoAtividadesAvaliacoes) "
-                + "VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO RecursosPedagogicos (" +
+                "adaptacaoDidaticaAulasAvaliacoes, materialDidaticoAdaptado, " +
+                "usoTecnologiaAssistiva, tempoEmpregadoAtividadesAvaliacoes) " +
+                "VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -42,6 +44,8 @@ public class RecursosPedagogicosDAO {
         }
     }
 
+    // --------------------- LEITURA ---------------------
+
     public RecursosPedagogicos buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM RecursosPedagogicos WHERE id = ?";
         RecursosPedagogicos recurso = null;
@@ -62,13 +66,7 @@ public class RecursosPedagogicosDAO {
         return recurso;
     }
 
-    public boolean excluirP(int id) throws SQLException {
-        String sql = "DELETE FROM RecursosPedagogicos WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-        }
-    }
+    // --------------------- ATUALIZAÇÃO ---------------------
 
     public void atualizar(RecursosPedagogicos recurso) throws SQLException {
         String sql = """
@@ -90,5 +88,13 @@ public class RecursosPedagogicosDAO {
         }
     }
 
+    // --------------------- EXCLUSÃO ---------------------
 
+    public boolean excluirP(int id) throws SQLException {
+        String sql = "DELETE FROM RecursosPedagogicos WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }

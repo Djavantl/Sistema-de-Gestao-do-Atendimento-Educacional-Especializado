@@ -95,8 +95,4 @@ public class PlanoAEE {
     public void adicionarMeta(Meta meta) {
         this.metas.add(meta);
     }
-
-    public void removerMeta(Meta meta) {
-        this.metas.remove(meta);
-    }
 }

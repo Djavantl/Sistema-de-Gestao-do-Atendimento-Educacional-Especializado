@@ -14,8 +14,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.incluemais.model.connection.DBConnection.getConnection;
-
+/**
+ * Servlet responsável por exibir os detalhes de um plano AEE.
+ * Realiza busca de proposta pedagógica e metas associadas ao plano.
+ */
 @WebServlet(name = "DetalhesPlanoAEEServlet",
         urlPatterns = {"/templates/aee/detalhes-plano"})
 public class DetalhesPlanoAEEServlet extends HttpServlet {
@@ -26,6 +28,9 @@ public class DetalhesPlanoAEEServlet extends HttpServlet {
     private PropostaPedagogicaDAO propostaDAO;
     private MetaDAO metaDAO;
 
+    /**
+     * Inicializa os DAOs com a conexão compartilhada do contexto.
+     */
     @Override
     public void init() throws ServletException {
         Connection conn = (Connection) getServletContext().getAttribute("conexao");
@@ -34,6 +39,10 @@ public class DetalhesPlanoAEEServlet extends HttpServlet {
         this.metaDAO = new MetaDAO(conn);
     }
 
+    /**
+     * Realiza a busca e exibição dos detalhes de um plano AEE específico.
+     * Requer o parâmetro "id" para identificar o plano.
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -53,7 +62,6 @@ public class DetalhesPlanoAEEServlet extends HttpServlet {
                 return;
             }
 
-            // Buscar proposta e metas associadas ao plano
             PropostaPedagogica proposta = propostaDAO.buscarPorPlanoId(planoId);
             List<Meta> metas = metaDAO.buscarMetasPorPlanoId(planoId);
 
@@ -62,7 +70,6 @@ public class DetalhesPlanoAEEServlet extends HttpServlet {
 
             request.setAttribute("plano", plano);
 
-            // Mensagens de sucesso ou erro, se houver
             if (request.getParameter("success") != null) {
                 request.setAttribute("success", request.getParameter("success"));
             }

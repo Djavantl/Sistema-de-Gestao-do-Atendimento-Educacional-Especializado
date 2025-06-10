@@ -13,13 +13,15 @@ public class RecursosComunicacaoEInformacaoDAO {
         this.conn = connection;
     }
 
+    // --------------------- CRIAÇÃO ---------------------
+
     public void inserir(RecursosComunicacaoEInformacao recurso) throws SQLException {
-        String sql = "INSERT INTO RecursosComunicacaoEInformacao ("
-                + "comunicacaoAlternativa, tradutorInterprete, leitorTranscritor, "
-                + "interpreteOralizador, guiaInterprete, materialDidaticoBraille, "
-                + "materialDidaticoTextoAmpliado, materialDidaticoRelevo, leitorDeTela, "
-                + "fonteTamanhoEspecifico) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO RecursosComunicacaoEInformacao (" +
+                "comunicacaoAlternativa, tradutorInterprete, leitorTranscritor, " +
+                "interpreteOralizador, guiaInterprete, materialDidaticoBraille, " +
+                "materialDidaticoTextoAmpliado, materialDidaticoRelevo, leitorDeTela, " +
+                "fonteTamanhoEspecifico) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
@@ -50,6 +52,8 @@ public class RecursosComunicacaoEInformacaoDAO {
         }
     }
 
+    // --------------------- LEITURA ---------------------
+
     public RecursosComunicacaoEInformacao buscarPorId(int id) throws SQLException {
         String sql = "SELECT * FROM RecursosComunicacaoEInformacao WHERE id = ?";
         RecursosComunicacaoEInformacao recurso = null;
@@ -76,13 +80,7 @@ public class RecursosComunicacaoEInformacaoDAO {
         return recurso;
     }
 
-    public boolean excluirCI(int id) throws SQLException {
-        String sql = "DELETE FROM RecursosComunicacaoEInformacao WHERE id = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-        }
-    }
+    // --------------------- ATUALIZAÇÃO ---------------------
 
     public void atualizar(RecursosComunicacaoEInformacao recurso) throws SQLException {
         String sql = """
@@ -116,4 +114,13 @@ public class RecursosComunicacaoEInformacaoDAO {
         }
     }
 
+    // --------------------- EXCLUSÃO ---------------------
+
+    public boolean excluirCI(int id) throws SQLException {
+        String sql = "DELETE FROM RecursosComunicacaoEInformacao WHERE id = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        }
+    }
 }
