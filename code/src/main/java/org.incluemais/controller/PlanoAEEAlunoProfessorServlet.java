@@ -5,14 +5,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.incluemais.model.dao.AlunoDAO;
-import org.incluemais.model.dao.MetaDAO;
-import org.incluemais.model.dao.PlanoAEEDAO;
-import org.incluemais.model.dao.ProfessorAEEDAO;
-import org.incluemais.model.entities.Aluno;
-import org.incluemais.model.entities.Meta;
-import org.incluemais.model.entities.PlanoAEE;
-import org.incluemais.model.entities.ProfessorAEE;
+import org.incluemais.model.dao.*;
+import org.incluemais.model.entities.*;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,6 +16,14 @@ import org.incluemais.model.connection.DBConnection;
 
 @WebServlet("/templates/professor/visualizar-plano")
 public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
+
+    private PropostaPedagogicaDAO propostaDAO; // Adicionado
+
+    @Override
+    public void init() throws ServletException {
+        Connection conn = (Connection) getServletContext().getAttribute("conexao");
+        this.propostaDAO = new PropostaPedagogicaDAO(conn); // Inicializado
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -57,6 +60,8 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
             // Carregar metas associadas ao plano
             List<Meta> metas = metaDAO.buscarMetasPorPlanoId(plano.getId());
             plano.setMetas(metas); // Adiciona metas ao objeto plano
+            PropostaPedagogica proposta = propostaDAO.buscarPorPlanoId(plano.getId());
+            plano.setProposta(proposta);
 
             // Completar dados do professor se existir
             if (plano.getProfessorAEE() != null && plano.getProfessorAEE().getSiape() != null) {
@@ -79,4 +84,5 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
     }
+
 }
