@@ -550,11 +550,6 @@
                         <label for="local"><i class="fas fa-map-marker-alt"></i> Local:</label>
                         <input type="text" id="local" name="local" placeholder="Ex: Sala de AEE" required>
                     </div>
-
-                    <div class="input-group full-width">
-                        <label for="observacoes"><i class="fas fa-sticky-note"></i> Observações:</label>
-                        <textarea id="observacoes" name="observacoes" rows="4" placeholder="Descreva os objetivos ou pontos importantes desta sessão..."></textarea>
-                    </div>
                 </div>
 
                 <div class="botoes-formulario">

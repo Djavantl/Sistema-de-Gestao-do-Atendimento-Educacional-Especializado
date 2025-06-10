@@ -411,10 +411,7 @@
             <div class="titulo">
                 <h1>Atendimento Educacional Especializado<br></h1>
             </div>
-            <div class="user-info">
-                <p>Bem-vindo, Aluno!</p>
-                <div class="matricula">${nome}</div>
-            </div>
+
         </div>
 
         <!-- Mensagem de Boas-vindas -->

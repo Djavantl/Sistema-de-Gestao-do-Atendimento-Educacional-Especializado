@@ -45,6 +45,8 @@ public class SessaoServlet extends HttpServlet {
 
             if ("editar".equals(action)) {
                 carregarPaginaEdicao(request, response);
+            } else if ("criacao".equals(action)) {
+                carregarPaginaCriacao(request, response);
             } else {
                 String matriculaAluno = request.getParameter("matriculaAluno");
                 List<SessaoAtendimento> sessoesPorAluno = sessaoDAO.buscarPorAluno(matriculaAluno);
@@ -56,6 +58,13 @@ public class SessaoServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new ServletException("Erro de banco de dados", e);
         }
+    }
+
+    private void carregarPaginaCriacao(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        List<Aluno> todosAlunos = alunoDAO.buscarTodos();
+        request.setAttribute("todosAlunos", todosAlunos);
+        request.getRequestDispatcher("/templates/aee/CriarSessao.jsp").forward(request, response);
     }
 
     private void carregarPaginaEdicao(HttpServletRequest request, HttpServletResponse response)
@@ -114,7 +123,9 @@ public class SessaoServlet extends HttpServlet {
         try {
             if (action != null) {
                 switch (action) {
-                    case "criar" -> criarSessao(request, response);
+                    case "criar" ->
+                        criarSessao(request, response);
+
                     case "atualizar" -> atualizarSessao(request, response);
                     case "excluir" -> excluirSessao(request, response);
                     default -> response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Ação inválida");

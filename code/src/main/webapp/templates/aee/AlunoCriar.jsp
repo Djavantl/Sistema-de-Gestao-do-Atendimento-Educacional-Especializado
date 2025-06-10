@@ -222,6 +222,9 @@
         }
 
         .botao-detalhes {
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
             background-color: #e0e0e0;
             color: #333;
             border: none;
@@ -256,6 +259,9 @@
         }
 
         .botao-editar {
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
             background-color: #6a5fcc;
             color: #fff;
             border: none;
@@ -606,109 +612,9 @@
 
         <div class="conteudo-container">
             <div class="linha-superior">
-                <button class="botao-novo-aluno">+ Novo Aluno</button>
+                <button class="botao-novo-aluno" onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/PorAluno.jsp'">+ Novo Aluno</button>
             </div>
 
-            <!-- === Modal Novo Aluno === -->
-            <div class="modal-overlay" id="modalNovoAluno">
-                <div class="modal-conteudo">
-                    <h3>Cadastrar Novo Aluno</h3>
-                    <form id="formNovoAluno" action="${pageContext.request.contextPath}/templates/aee/alunos?acao=criar" method="POST">
-
-                        <!-- Seção: Informações Pessoais e Acadêmicas -->
-                        <div class="section-group">
-                            <h4>Informações do Aluno</h4>
-                            <div class="form-grid">
-                                <!-- Nome (linha inteira) -->
-                                <div class="input-group full-width">
-                                    <label for="nome">Nome Completo:</label>
-                                    <input type="text" id="nome" name="nome" required>
-                                </div>
-
-                                <!-- Data de Nascimento -->
-                                <div class="input-group">
-                                    <label for="dataNascimento">Data de Nascimento:</label>
-                                    <input type="date" id="dataNascimento" name="dataNascimento" required>
-                                </div>
-
-                                <!-- Sexo -->
-                                <div class="input-group">
-                                    <label for="sexo">Sexo:</label>
-                                    <select id="sexo" name="sexo">
-                                        <option value="Masculino">Masculino</option>
-                                        <option value="Feminino">Feminino</option>
-                                        <option value="Outro">Outro</option>
-                                    </select>
-                                </div>
-
-                                <!-- Naturalidade -->
-                                <div class="input-group">
-                                    <label for="naturalidade">Naturalidade:</label>
-                                    <input type="text" id="naturalidade" name="naturalidade">
-                                </div>
-
-                                <!-- Matrícula -->
-                                <div class="input-group">
-                                    <label for="matricula">Matrícula:</label>
-                                    <input type="text" id="matricula" name="matricula" required>
-                                </div>
-
-                                <!-- Curso -->
-                                <div class="input-group">
-                                    <label for="curso">Curso:</label>
-                                    <input type="text" id="curso" name="curso" required>
-                                </div>
-
-                                <!-- Turma -->
-                                <div class="input-group">
-                                    <label for="turma">Turma:</label>
-                                    <input type="text" id="turma" name="turma" required>
-                                </div>
-
-                                <!-- E-mail (linha inteira) -->
-                                <div class="input-group ">
-                                    <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email">
-                                </div>
-
-                                <!-- Telefone -->
-                                <div class="input-group">
-                                    <label for="telefone">Telefone:</label>
-                                    <input type="text" id="telefone" name="telefone">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Seção: Informações do Responsável -->
-                        <div class="section-group">
-                            <h4>Informações do Responsável</h4>
-                            <div class="form-grid">
-                                <!-- Nome do Responsável (ocupando metade da tela) -->
-                                <div class="input-group full-width">
-                                    <label for="responsavel">Nome do Responsável:</label>
-                                    <input type="text" id="responsavel" name="responsavel">
-                                </div>
-
-                                <!-- Telefone Responsável -->
-                                <div class="input-group">
-                                    <label for="telResponsavel">Tel. Responsável:</label>
-                                    <input type="text" id="telResponsavel" name="telResponsavel">
-                                </div>
-
-                                <!-- Telefone Trabalho -->
-                                <div class="input-group">
-                                    <label for="telTrabalho">Tel. Trabalho:</label>
-                                    <input type="text" id="telTrabalho" name="telTrabalho">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="botoes-modal">
-                            <button type="submit">Salvar</button>
-                            <button type="button" onclick="fecharModal(modalNovoAluno)">Cancelar</button>
-                        </div>
-                    </form>
-                </div>
             </div>
 
             <!-- Tabela de Alunos -->
@@ -754,10 +660,19 @@
                             <td>${aluno.responsavel}</td>
                             <td>
                                 <div class="botoes-acoes">
-                                    <button class="botao-detalhes"
-                                        onclick="window.location.href='detalhes-aluno?id=${aluno.id}'">Detalhes</button>
+                                    <a class="botao-detalhes"
+                                        href="${pageContext.request.contextPath}/templates/aee/alunos?acao=detalhar&id=${aluno.id}">
+                                        Detalhes
+                                    </a>
                                     <button class="botao-professores" onclick="window.location.href='/templates/aee/professores-aluno?matricula=${aluno.matricula}'">Professores</button>
-                                    <button class="botao-editar" onclick="abrirEdicao(this)">Editar</button>
+
+
+                                    <a class="botao-editar"
+                                        href="${pageContext.request.contextPath}/templates/aee/alunos?acao=editar&matricula=${aluno.matricula}">
+                                        Editar
+                                    </a>
+
+
                                     <button class="botao-excluir" onclick="confirmarExclusao(${aluno.id})">Excluir</button>
                                 </div>
                             </td>
@@ -765,107 +680,6 @@
                     </c:forEach>
                 </tbody>
             </table>
-
-            <!-- === Modal Editar Aluno === -->
-            <div class="modal-overlay" id="modalEditar">
-                <div class="modal-conteudo">
-                    <h3>Editar Aluno</h3>
-                    <form id="formEditarAluno" action="${pageContext.request.contextPath}/templates/aee/alunos?acao=atualizar" method="POST">
-                        <input type="hidden" name="id" id="editId">
-
-                        <!-- Seção: Informações do Aluno -->
-                        <div class="section-group">
-                            <h4>Informações do Aluno</h4>
-                            <div class="form-grid">
-                                <!-- Nome (linha inteira) -->
-                                <div class="input-group full-width">
-                                    <label for="editNome">Nome Completo:</label>
-                                    <input type="text" id="editNome" name="nome" required>
-                                </div>
-
-                                <!-- Data de Nascimento -->
-                                <div class="input-group">
-                                    <label for="editDataNascimento">Data de Nascimento:</label>
-                                    <input type="date" id="editDataNascimento" name="dataNascimento" required>
-                                </div>
-
-                                <!-- Sexo -->
-                                <div class="input-group">
-                                    <label for="editSexo">Sexo:</label>
-                                    <select id="editSexo" name="sexo">
-                                        <option value="Masculino">Masculino</option>
-                                        <option value="Feminino">Feminino</option>
-                                        <option value="Outro">Outro</option>
-                                    </select>
-                                </div>
-
-                                <!-- Naturalidade -->
-                                <div class="input-group">
-                                    <label for="editNaturalidade">Naturalidade:</label>
-                                    <input type="text" id="editNaturalidade" name="naturalidade">
-                                </div>
-
-                                <!-- Matrícula -->
-                                <div class="input-group">
-                                    <label for="editMatricula">Matrícula:</label>
-                                    <input type="text" id="editMatricula" name="matricula" required>
-                                </div>
-
-                                <!-- Curso -->
-                                <div class="input-group">
-                                    <label for="editCurso">Curso:</label>
-                                    <input type="text" id="editCurso" name="curso" required>
-                                </div>
-
-                                <!-- Turma -->
-                                <div class="input-group">
-                                    <label for="editTurma">Turma:</label>
-                                    <input type="text" id="editTurma" name="turma" required>
-                                </div>
-
-                                <!-- E-mail  -->
-                                <div class="input-group">
-                                    <label for="editEmail">Email:</label>
-                                    <input type="email" id="editEmail" name="email">
-                                </div>
-
-                                <!-- Telefone -->
-                                <div class="input-group">
-                                    <label for="editTelefone">Telefone:</label>
-                                    <input type="text" id="editTelefone" name="telefone">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Seção: Informações do Responsável -->
-                        <div class="section-group">
-                            <h4>Informações do Responsável</h4>
-                            <div class="form-grid">
-                                <!-- Nome Responsável -->
-                                <div class="input-group full-width">
-                                    <label for="editResponsavel">Nome do Responsável:</label>
-                                    <input type="text" id="editResponsavel" name="responsavel">
-                                </div>
-                                <!-- Tel. Responsável -->
-                                <div class="input-group">
-                                    <label for="editTelResponsavel">Tel. Responsável:</label>
-                                    <input type="text" id="editTelResponsavel" name="telResponsavel">
-                                </div>
-                                <!-- Tel. Trabalho -->
-                                <div class="input-group">
-                                    <label for="editTelTrabalho">Tel. Trabalho:</label>
-                                    <input type="text" id="editTelTrabalho" name="telTrabalho">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="botoes-modal">
-                            <button type="submit">Salvar</button>
-                            <button type="button" onclick="fecharModal(modalEditar)">Cancelar</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
 
             <!-- Modal Confirmação Exclusão -->
             <div class="modal-overlay" id="modalExcluir">
@@ -893,36 +707,8 @@
     <script>
         // Controle dos Modais
         const modais = {
-            novo: document.getElementById('modalNovoAluno'),
-            editar: document.getElementById('modalEditar'),
             excluir: document.getElementById('modalExcluir')
         };
-
-        document.querySelector('.botao-novo-aluno').addEventListener('click', () => {
-            modais.novo.style.display = 'flex';
-        });
-
-        function abrirEdicao(botaoEditar) {
-            const linha = botaoEditar.closest('tr');
-
-            // Preenche os campos do formulário
-            document.getElementById('editId').value = linha.dataset.id;
-            document.getElementById('editNome').value = linha.dataset.nome;
-            document.getElementById('editDataNascimento').value = linha.dataset.datanascimento;
-            document.getElementById('editEmail').value = linha.dataset.email;
-            document.getElementById('editSexo').value = linha.dataset.sexo;
-            document.getElementById('editNaturalidade').value = linha.dataset.naturalidade;
-            document.getElementById('editTelefone').value = linha.dataset.telefone;
-            document.getElementById('editMatricula').value = linha.dataset.matricula;
-            document.getElementById('editResponsavel').value = linha.dataset.responsavel;
-            document.getElementById('editTelResponsavel').value = linha.dataset.telresponsavel;
-            document.getElementById('editTelTrabalho').value = linha.dataset.teltrabalho;
-            document.getElementById('editCurso').value = linha.dataset.curso;
-            document.getElementById('editTurma').value = linha.dataset.turma;
-
-            // Abre o modal
-            document.getElementById('modalEditar').style.display = 'flex';
-        }
 
         function confirmarExclusao(id) {
             document.getElementById('idExcluir').value = id;

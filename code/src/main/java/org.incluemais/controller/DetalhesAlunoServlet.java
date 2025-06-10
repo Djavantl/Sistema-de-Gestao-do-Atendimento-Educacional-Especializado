@@ -20,7 +20,7 @@ import java.util.List;
 @WebServlet(name = "DetalhesAlunoServlet", urlPatterns = {"/templates/aee/detalhes-aluno"})
 public class DetalhesAlunoServlet extends HttpServlet {
     private AlunoDAO alunoDAO;
-    private DeficienciaDAO deficienciaDAO; // Adicione esta linha
+    private DeficienciaDAO deficienciaDAO;
 
     @Override
     public void init() throws ServletException {

@@ -577,6 +577,12 @@
             background-color: #cfcfcf;
             transform: translateY(-2px);
         }
+
+        /* ======================== NOVOS ESTILOS PARA BOTÕES DE METAS ======================== */
+        .acoes-meta {
+            display: flex;
+            gap: 15px; /* Mesmo espaçamento da seção de Metas Pedagógicas */
+        }
     </style>
 </head>
 <body>
@@ -714,20 +720,22 @@
                                         </span>
                                     </td>
                                     <td>
-                                        <form action="${pageContext.request.contextPath}/templates/aee/metas/form" method="GET" style="display: inline;">
-                                            <input type="hidden" name="planoId" value="${plano.id}">
-                                            <input type="hidden" name="metaId" value="${meta.id}">
-                                            <button class="btn-editar" type="submit">
-                                                Editar
-                                            </button>
-                                        </form>
-                                        <form action="${pageContext.request.contextPath}/templates/aee/metas/excluir" method="POST" style="display: inline;">
-                                            <input type="hidden" name="planoId" value="${plano.id}">
-                                            <input type="hidden" name="metaId" value="${meta.id}">
-                                            <button class="btn-excluir" type="submit" onclick="return confirm('Tem certeza que deseja excluir esta meta?')">
-                                                Excluir
-                                            </button>
-                                        </form>
+                                        <div class="acoes-meta">
+                                            <form action="${pageContext.request.contextPath}/templates/aee/metas/form" method="GET">
+                                                <input type="hidden" name="planoId" value="${plano.id}">
+                                                <input type="hidden" name="metaId" value="${meta.id}">
+                                                <button class="btn-editar" type="submit">
+                                                    Editar
+                                                </button>
+                                            </form>
+                                            <form action="${pageContext.request.contextPath}/templates/aee/metas/excluir" method="POST">
+                                                <input type="hidden" name="planoId" value="${plano.id}">
+                                                <input type="hidden" name="metaId" value="${meta.id}">
+                                                <button class="btn-excluir" type="submit" onclick="return confirm('Tem certeza que deseja excluir esta meta?')">
+                                                    Excluir
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>
@@ -917,7 +925,6 @@
         </div>
     </div>
 
-    //Modal Exclusão de Meta -->
     <!-- Modal Exclusão de Meta -->
     <div class="modal-overlay" id="modalExcluirMeta">
         <div class="modal-conteudo">

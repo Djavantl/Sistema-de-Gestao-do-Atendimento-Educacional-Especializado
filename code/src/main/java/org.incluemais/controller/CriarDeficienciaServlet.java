@@ -33,7 +33,6 @@ public class CriarDeficienciaServlet extends HttpServlet {
         }
 
         try (Connection conn = DBConnection.getConnection()) {
-            conn.setAutoCommit(false); // Inicia transação
 
             AlunoDAO alunoDAO = new AlunoDAO(conn);
             DeficienciaDAO deficienciaDAO = new DeficienciaDAO(conn);
@@ -52,7 +51,6 @@ public class CriarDeficienciaServlet extends HttpServlet {
                     throw new IllegalArgumentException("Ação inválida: " + acao);
             }
 
-            conn.commit();
 
         } catch (SQLException | IllegalArgumentException e) {
             handleError(request, response, alunoId, "Erro na operação: " + e.getMessage());

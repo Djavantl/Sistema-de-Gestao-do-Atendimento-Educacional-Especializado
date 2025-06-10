@@ -3,12 +3,18 @@ package org.incluemais.controller;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import org.incluemais.model.dao.AlunoDAO;
+import org.incluemais.model.dao.DeficienciaDAO;
+import org.incluemais.model.dao.OrganizacaoAtendimentoDAO;
 import org.incluemais.model.entities.Aluno;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.incluemais.model.entities.Deficiencia;
+import org.incluemais.model.entities.OrganizacaoAtendimento;
+import org.incluemais.model.entities.SessaoAtendimento;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,6 +31,7 @@ public class CriarAlunoServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(CriarAlunoServlet.class.getName());
     private AlunoDAO alunoDAO;
 
+
     @Override
     public void init() throws ServletException {
         Connection conn = (Connection) getServletContext().getAttribute("conexao");
@@ -33,6 +40,7 @@ public class CriarAlunoServlet extends HttpServlet {
             throw new ServletException("Banco de dados não disponível");
         }
         this.alunoDAO = new AlunoDAO(conn);
+
     }
 
     @Override
@@ -41,13 +49,16 @@ public class CriarAlunoServlet extends HttpServlet {
 
         try {
             String action = request.getParameter("acao");
-            listarAlunos(request, response);
 
             if ("editar".equals(action)) {
-                exibirFormularioEdicao(request, response);
+                carregarPaginaEdicao(request, response);
             } else if ("novo".equals(action)) {
                 exibirFormularioCriacao(request, response);
-            }
+            } else if ("detalhar".equals(action)) {
+                exibirDetalhesAluno(request, response);
+            } else {
+            listarAlunos(request, response);
+        }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro de banco de dados", e);
             encaminharErro(request, response, "Erro ao acessar dados");
@@ -75,6 +86,20 @@ public class CriarAlunoServlet extends HttpServlet {
             logger.log(Level.SEVERE, "Erro no processamento", e);
             encaminharErro(request, response, "Erro no processamento dos dados");
         }
+    }
+
+    private void carregarPaginaEdicao(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+        String matricula = request.getParameter("matricula");
+        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+
+        if (aluno == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "aluno não encontrado");
+            return;
+        }
+
+        request.setAttribute("aluno", aluno);
+        request.getRequestDispatcher("/templates/aee/EditarAluno.jsp").forward(request, response);
     }
 
     private void listarAlunos(HttpServletRequest request, HttpServletResponse response)
@@ -130,7 +155,7 @@ public class CriarAlunoServlet extends HttpServlet {
             request.setAttribute("erros", erros);
             request.setAttribute("aluno", extrairDadosFormulario(request));
             request.setAttribute("modo", "criar");
-            request.getRequestDispatcher("/templates/aee/AlunoCriar.jsp").forward(request, response);
+            request.getRequestDispatcher("/templates/aee/alunos").forward(request, response);
             return;
         }
 
@@ -265,13 +290,25 @@ public class CriarAlunoServlet extends HttpServlet {
             Aluno aluno = alunoDAO.buscarPorId(id);
 
             if (aluno != null) {
+                DeficienciaDAO deficienciaDAO = new DeficienciaDAO((Connection) getServletContext().getAttribute("conexao"));
+                List<Deficiencia> deficiencias = deficienciaDAO.findByAlunoMatricula(aluno.getMatricula());
+
+                OrganizacaoAtendimentoDAO orgDAO = new OrganizacaoAtendimentoDAO(
+                        (Connection) getServletContext().getAttribute("conexao")
+                );
+                OrganizacaoAtendimento organizacao = orgDAO.buscarPorAlunoMatricula(aluno.getMatricula());
+
                 request.setAttribute("aluno", aluno);
-                request.getRequestDispatcher("/templates/aee/detalhesAluno.jsp").forward(request, response);
+                request.setAttribute("deficiencias", deficiencias);
+                request.setAttribute("organizacao", organizacao);
+                request.getRequestDispatcher("/templates/aee/DetalhesAluno.jsp").forward(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
             }
         } catch (NumberFormatException e) {
             encaminharErro(request, response, "ID inválido");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

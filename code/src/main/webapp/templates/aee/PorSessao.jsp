@@ -169,6 +169,9 @@
         }
 
         .botao-nova-sessao {
+            display: inline-block;
+            text-decoration: none;
+            text-align: center;
             background-color: #4D44B5;
             color: #fff;
             border: none;
@@ -712,57 +715,11 @@
 
         <div class="conteudo-container">
         <div class="linha-superior">
-                        <button class="botao-nova-sessao">
-                            + Nova Sessão
-                        </button>
-
-                    </div>
-
-
-
-            <!-- Modal Nova Sessão -->
-            <div class="modal-overlay" id="modalNovaSessao">
-                <div class="modal-conteudo">
-                    <h3>Criar Nova Sessão</h3>
-                    <form id="formNovaSessao" action="${pageContext.request.contextPath}/templates/aee/sessoes?acao=criar" method="POST">
-                        <div class="form-grid">
-                            <div class="input-group">
-                                <label for="aluno">Nome do Aluno:</label>
-                                <select name="aluno_matricula" id="aluno" required>
-                                    <option value="" disabled selected>Selecione um aluno</option>
-                                    <c:forEach items="${todosAlunos}" var="aluno">
-                                        <option value="${aluno.matricula}">${aluno.nome}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="data">Data:</label>
-                                <input type="date" id="data" name="data" required>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="horario">Horário:</label>
-                                <input type="time" id="horario" name="horario" required>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="local">Local:</label>
-                                <input type="text" id="local" name="local" required>
-                            </div>
-                        </div>
-
-                        <div class="botoes-modal">
-                            <button type="submit">
-                                Salvar
-                            </button>
-                            <button type="button" onclick="fecharModal(modalNovaSessao)">
-                                Cancelar
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+            <a class="botao-nova-sessao"
+               href="${pageContext.request.contextPath}/templates/aee/sessoes?action=criacao">
+                + Nova Sessão
+            </a>
+        </div>
 
             <!-- Nova Seção: Sessões por Aluno -->
             <div class="secao-tabela">
@@ -1120,15 +1077,10 @@
     <script>
         // Controle dos Modais
         const modais = {
-            nova: document.getElementById('modalNovaSessao'),
+
             editar: document.getElementById('modalEditar'),
             excluir: document.getElementById('modalExcluir')
         };
-
-        // Abrir modais
-        document.querySelector('.botao-nova-sessao').addEventListener('click', () => {
-            modais.nova.style.display = 'flex';
-        });
 
         function abrirEdicao(id) {
             console.log("Abrindo edição para sessão ID:", id);

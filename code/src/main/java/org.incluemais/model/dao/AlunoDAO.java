@@ -30,14 +30,12 @@ public class AlunoDAO {
         String sqlAluno = "INSERT INTO Aluno (matricula, pessoa_id, responsavel, telResponsavel, telTrabalho,  curso, turma) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
-            conn.setAutoCommit(false);
 
             int pessoaId = inserirPessoa(aluno, sqlPessoa);
             if (pessoaId == 0) return false;
 
             if (!inserirDadosAluno(aluno, pessoaId, sqlAluno)) return false;
 
-            conn.commit();
             return true;
 
         } catch (SQLException e) {
@@ -86,12 +84,12 @@ public class AlunoDAO {
         String sqlAluno = "UPDATE Aluno SET matricula=?, responsavel=?, telResponsavel=?, telTrabalho=?, curso=?, turma=?  WHERE pessoa_id=?";
 
         try {
-            conn.setAutoCommit(false);
+
 
             if (!atualizarPessoa(aluno, sqlPessoa)) return false;
             if (!atualizarDadosAluno(aluno, sqlAluno)) return false;
 
-            conn.commit();
+
             return true;
 
         } catch (SQLException e) {
@@ -134,7 +132,7 @@ public class AlunoDAO {
         String sqlPessoa = "DELETE FROM Pessoa WHERE id=?";
 
         try {
-            conn.setAutoCommit(false);
+
 
             try (PreparedStatement stmtAluno = conn.prepareStatement(sqlAluno)) {
                 stmtAluno.setInt(1, alunoId);
@@ -152,7 +150,6 @@ public class AlunoDAO {
                 }
             }
 
-            conn.commit();
             return true;
 
         } catch (SQLException e) {
