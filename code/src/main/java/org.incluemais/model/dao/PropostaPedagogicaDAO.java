@@ -33,9 +33,9 @@ public class PropostaPedagogicaDAO {
             stmt.setString(1, proposta.getObjetivos());
             stmt.setString(2, proposta.getMetodologias());
             stmt.setString(3, proposta.getObservacoes());
-            setResourceId(stmt, 4, proposta.getRecursoP());
-            setResourceId(stmt, 5, proposta.getRecursoFA());
-            setResourceId(stmt, 6, proposta.getRecursoCI());
+            setRecursoId(stmt, 4, proposta.getRecursoP());
+            setRecursoId(stmt, 5, proposta.getRecursoFA());
+            setRecursoId(stmt, 6, proposta.getRecursoCI());
             stmt.setInt(7, proposta.getPlanoAEE().getId());
 
             int affectedRows = stmt.executeUpdate();
@@ -66,7 +66,7 @@ public class PropostaPedagogicaDAO {
         }
     }
 
-    private void setResourceId(PreparedStatement stmt, int parameterIndex, Object recurso) throws SQLException {
+    private void setRecursoId(PreparedStatement stmt, int parameterIndex, Object recurso) throws SQLException {
         if (recurso != null) {
             int id = -1;
 
@@ -101,9 +101,9 @@ public class PropostaPedagogicaDAO {
             stmt.setString(1, proposta.getObjetivos());
             stmt.setString(2, proposta.getMetodologias());
             stmt.setString(3, proposta.getObservacoes());
-            setResourceId(stmt, 4, proposta.getRecursoP());
-            setResourceId(stmt, 5, proposta.getRecursoFA());
-            setResourceId(stmt, 6, proposta.getRecursoCI());
+            setRecursoId(stmt, 4, proposta.getRecursoP());
+            setRecursoId(stmt, 5, proposta.getRecursoFA());
+            setRecursoId(stmt, 6, proposta.getRecursoCI());
             stmt.setInt(7, proposta.getId());
 
             stmt.executeUpdate();
