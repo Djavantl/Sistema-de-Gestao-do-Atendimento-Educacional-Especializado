@@ -563,10 +563,10 @@
                                                     onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/detalhes-plano?id=${plano.id}'">
                                                     Detalhes
                                                 </button>
-                                                <a href="${pageContext.request.contextPath}/templates/aee/editarPlanoAEE?id=${plano.id}"
-                                                   class="botao-editar">
+                                                <button class="botao-editar"
+                                                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/editarPlanoAEE?id=${plano.id}'">
                                                     Editar
-                                                </a>
+                                                </button>
                                                 <button class="botao-excluir"
                                                         onclick="abrirModalExcluir(${plano.id})">
                                                     Excluir
