@@ -8,22 +8,26 @@ public class PropostaPedagogica {
     private RecursosPedagogicos recursoP;
     private RecursoFisicoArquitetonico recursoFA;
     private RecursosComunicacaoEInformacao recursoCI;
-    private int planoAEEId;
+    private PlanoAEE planoAEE; // Composição
 
     public PropostaPedagogica() {
     }
 
-    public PropostaPedagogica(String objetivos, String metodologias, String observacoes, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI, int planoAEEId) {
+    public PropostaPedagogica(String objetivos, String metodologias, String observacoes,
+                              RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA,
+                              RecursosComunicacaoEInformacao recursoCI, PlanoAEE planoAEE) {
         this.objetivos = objetivos;
         this.metodologias = metodologias;
         this.observacoes = observacoes;
         this.recursoP = recursoP;
         this.recursoFA = recursoFA;
         this.recursoCI = recursoCI;
-        this.planoAEEId = planoAEEId;
+        this.planoAEE = planoAEE;
     }
 
-    public PropostaPedagogica(int id, String objetivos, String metodologias, String observacoes, RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA, RecursosComunicacaoEInformacao recursoCI, int planoAEEId) {
+    public PropostaPedagogica(int id, String objetivos, String metodologias, String observacoes,
+                              RecursosPedagogicos recursoP, RecursoFisicoArquitetonico recursoFA,
+                              RecursosComunicacaoEInformacao recursoCI, PlanoAEE planoAEE) {
         this.id = id;
         this.objetivos = objetivos;
         this.metodologias = metodologias;
@@ -31,7 +35,7 @@ public class PropostaPedagogica {
         this.recursoP = recursoP;
         this.recursoFA = recursoFA;
         this.recursoCI = recursoCI;
-        this.planoAEEId = planoAEEId;
+        this.planoAEE = planoAEE;
     }
 
     public int getId() {
@@ -90,11 +94,11 @@ public class PropostaPedagogica {
         this.recursoCI = recursoCI;
     }
 
-    public int getPlanoAEEId() {
-        return planoAEEId;
+    public PlanoAEE getPlanoAEE() {
+        return planoAEE;
     }
 
-    public void setPlanoAEEId(int planoAEEId) {
-        this.planoAEEId = planoAEEId;
+    public void setPlanoAEE(PlanoAEE planoAEE) {
+        this.planoAEE = planoAEE;
     }
 }

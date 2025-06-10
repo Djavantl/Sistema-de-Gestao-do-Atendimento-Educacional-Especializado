@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.incluemais.model.dao.PropostaPedagogicaDAO;
+import org.incluemais.model.entities.PlanoAEE;
 import org.incluemais.model.entities.PropostaPedagogica;
 import org.incluemais.model.entities.RecursosComunicacaoEInformacao;
 import org.incluemais.model.entities.RecursosPedagogicos;
@@ -35,7 +36,6 @@ public class PropostaPedagogicaServlet extends HttpServlet {
         if ("/editarProposta".equals(path)) {
             carregarPaginaEdicao(request, response);
         } else if ("/propostas".equals(path)) {
-            // Passar o planoAEEId para o JSP
             request.setAttribute("planoAEEId", request.getParameter("planoAEEId"));
             request.getRequestDispatcher("/templates/aee/PropostaPedagogica.jsp").forward(request, response);
         }
@@ -78,13 +78,10 @@ public class PropostaPedagogicaServlet extends HttpServlet {
                 return;
             }
 
-            // Obter planoId da proposta
-            int planoId = proposta.getPlanoAEEId();
-
+            // Obter planoId do objeto PlanoAEE
+            int planoId = proposta.getPlanoAEE().getId();
             request.setAttribute("proposta", proposta);
             request.setAttribute("planoId", planoId);
-
-            // Encaminhar para a página de edição
             request.getRequestDispatcher("/templates/aee/EditarPropostaPedagogica.jsp").forward(request, response);
 
         } catch (SQLException | NumberFormatException e) {
@@ -113,47 +110,45 @@ public class PropostaPedagogicaServlet extends HttpServlet {
             int propostaId = Integer.parseInt(request.getParameter("propostaId"));
             int planoId = Integer.parseInt(request.getParameter("planoId"));
 
-            // BUSCAR PROPOSTA EXISTENTE (PARA OBTER OS IDs DOS RECURSOS)
+            // BUSCAR PROPOSTA EXISTENTE
             PropostaPedagogica propostaExistente = propostaDAO.buscarPorId(propostaId);
             if (propostaExistente == null) {
                 throw new SQLException("Proposta não encontrada para atualização");
             }
 
-            // ATUALIZAR OS RECURSOS EXISTENTES EM VEZ DE CRIAR NOVOS
+            // ATUALIZAR OS RECURSOS EXISTENTES
             atualizarRecursoExistente(propostaExistente.getRecursoP(), request);
             atualizarRecursoExistente(propostaExistente.getRecursoFA(), request);
             atualizarRecursoExistente(propostaExistente.getRecursoCI(), request);
 
-            // Criar proposta atualizada COM OS RECURSOS EXISTENTES (que agora têm valores atualizados)
+            // Criar objeto PlanoAEE com ID
+            PlanoAEE plano = new PlanoAEE();
+            plano.setId(planoId);
+
+            // Criar proposta atualizada com objeto PlanoAEE
             PropostaPedagogica proposta = new PropostaPedagogica(
                     propostaId,
                     request.getParameter("objetivos"),
                     request.getParameter("metodologias"),
-                    request.getParameter("observacoes"), // NOVO CAMPO
+                    request.getParameter("observacoes"),
                     propostaExistente.getRecursoP(),
                     propostaExistente.getRecursoFA(),
                     propostaExistente.getRecursoCI(),
-                    planoId
+                    plano  // Objeto PlanoAEE
             );
 
             // Atualizar no banco
             propostaDAO.atualizar(proposta);
 
-            // Redirecionar para detalhes do plano com mensagem de sucesso
+            // Redirecionar para detalhes do plano
             response.sendRedirect(request.getContextPath() +
                     "/templates/aee/detalhes-plano?id=" + planoId +
                     "&success=Proposta+atualizada+com+sucesso");
 
         } catch (SQLException | NumberFormatException e) {
             logger.log(Level.SEVERE, "Erro ao atualizar proposta", e);
-
-            // Tentar manter os dados para nova tentativa
             request.setAttribute("erro", "Erro ao atualizar proposta: " + e.getMessage());
-
-            // Recarregar página de edição
-            request.setAttribute("propostaId", request.getParameter("propostaId"));
             carregarPaginaEdicao(request, response);
-
         } finally {
             if (conn != null) {
                 try {
@@ -206,7 +201,6 @@ public class PropostaPedagogicaServlet extends HttpServlet {
             conn = getConnection();
             int planoAEEId = Integer.parseInt(request.getParameter("planoAEEId"));
 
-            // Criar DAO primeiro (necessário para persistir recursos)
             PropostaPedagogicaDAO propostaDAO = new PropostaPedagogicaDAO(conn);
 
             // Construir recursos
@@ -214,7 +208,11 @@ public class PropostaPedagogicaServlet extends HttpServlet {
             RecursoFisicoArquitetonico recursoFA = construirRecursoFisico(request);
             RecursosComunicacaoEInformacao recursoCI = construirRecursoComunicacao(request);
 
-            // Criar a proposta COM OS RECURSOS
+            // Criar objeto PlanoAEE com ID
+            PlanoAEE plano = new PlanoAEE();
+            plano.setId(planoAEEId);
+
+            // Criar proposta com objeto PlanoAEE
             PropostaPedagogica proposta = new PropostaPedagogica(
                     request.getParameter("objetivos"),
                     request.getParameter("metodologias"),
@@ -222,14 +220,13 @@ public class PropostaPedagogicaServlet extends HttpServlet {
                     recursoP,
                     recursoFA,
                     recursoCI,
-                    planoAEEId
+                    plano
             );
 
-            // INSERIR usando o DAO (que cuidará dos recursos)
             propostaDAO.inserir(proposta);
-
-            // Redirecionar para a página de detalhes do plano com mensagem de sucesso
-            response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoAEEId + "&success=Proposta+criada+com+sucesso");
+            response.sendRedirect(request.getContextPath() +
+                    "/templates/aee/detalhes-plano?id=" + planoAEEId +
+                    "&success=Proposta+criada+com+sucesso");
 
         } catch (SQLException | NumberFormatException e) {
             logger.log(Level.SEVERE, "Erro ao criar proposta", e);
@@ -262,13 +259,17 @@ public class PropostaPedagogicaServlet extends HttpServlet {
             PropostaPedagogicaDAO propostaDAO = new PropostaPedagogicaDAO(conn);
             propostaDAO.excluirPropostaComRecursos(propostaId);
 
-            // Redirecionar de volta para a página de detalhes do plano com mensagem de sucesso
-            response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&success=Proposta+excluída+com+sucesso");
+            // Redirecionar de volta para a página de detalhes do plano
+            response.sendRedirect(request.getContextPath() +
+                    "/templates/aee/detalhes-plano?id=" + planoId +
+                    "&success=Proposta+excluída+com+sucesso");
 
         } catch (SQLException | NumberFormatException e) {
             logger.log(Level.SEVERE, "Erro ao excluir proposta", e);
             String planoId = request.getParameter("planoId");
-            response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&erro=Erro+ao+excluir+proposta");
+            response.sendRedirect(request.getContextPath() +
+                    "/templates/aee/detalhes-plano?id=" + planoId +
+                    "&erro=Erro+ao+excluir+proposta");
         } finally {
             if (conn != null) {
                 try {

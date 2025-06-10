@@ -8,6 +8,7 @@ public class PropostaPedagogicaDAO {
     private final RecursosPedagogicosDAO recursosPedagogicosDAO;
     private final RecursoFisicoArquitetonicoDAO recursoFisicoDAO;
     private final RecursosComunicacaoEInformacaoDAO recursoComunicacaoDAO;
+    private final PlanoAEEDAO planoAEEDAO; // Adicionado para manipular objetos PlanoAEE
 
     public PropostaPedagogicaDAO(Connection connection) {
         if (connection == null) {
@@ -17,6 +18,7 @@ public class PropostaPedagogicaDAO {
         this.recursosPedagogicosDAO = new RecursosPedagogicosDAO(connection);
         this.recursoFisicoDAO = new RecursoFisicoArquitetonicoDAO(connection);
         this.recursoComunicacaoDAO = new RecursosComunicacaoEInformacaoDAO(connection);
+        this.planoAEEDAO = new PlanoAEEDAO(connection); // Inicializado
     }
 
     public void inserir(PropostaPedagogica proposta) throws SQLException {
@@ -32,7 +34,7 @@ public class PropostaPedagogicaDAO {
             setResourceId(stmt, 4, proposta.getRecursoP());
             setResourceId(stmt, 5, proposta.getRecursoFA());
             setResourceId(stmt, 6, proposta.getRecursoCI());
-            stmt.setInt(7, proposta.getPlanoAEEId());
+            stmt.setInt(7, proposta.getPlanoAEE().getId());
 
             int affectedRows = stmt.executeUpdate();
 
@@ -63,7 +65,8 @@ public class PropostaPedagogicaDAO {
                     proposta.setObjetivos(rs.getString("objetivos"));
                     proposta.setMetodologias(rs.getString("metodologias"));
                     proposta.setObservacoes(rs.getString("observacoes"));
-                    proposta.setPlanoAEEId(rs.getInt("planoAEE_id"));
+                    PlanoAEE plano = planoAEEDAO.buscarPorId(rs.getInt("planoAEE_id"));
+                    proposta.setPlanoAEE(plano);
 
                     int recursoPId = rs.getInt("recursoP_id");
                     int recursoFAId = rs.getInt("recursoFA_id");
@@ -89,19 +92,22 @@ public class PropostaPedagogicaDAO {
         return proposta;
     }
 
-    // Método para atualizar proposta existente
     public void atualizar(PropostaPedagogica proposta) throws SQLException {
-        // Atualizar recursos primeiro
         atualizarRecursos(proposta);
 
-        // Atualizar proposta principal
-        String sql = "UPDATE PropostaPedagogica SET objetivos = ?, metodologias = ?, observacoes = ? WHERE id = ?";
+        String sql = "UPDATE PropostaPedagogica SET objetivos = ?, metodologias = ?, observacoes = ?, " +
+                "recursoP_id = ?, recursoFA_id = ?, recursoCI_id = ? " +
+                "WHERE id = ?";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, proposta.getObjetivos());
             stmt.setString(2, proposta.getMetodologias());
             stmt.setString(3, proposta.getObservacoes());
-            stmt.setInt(4, proposta.getId());
+            setResourceId(stmt, 4, proposta.getRecursoP());
+            setResourceId(stmt, 5, proposta.getRecursoFA());
+            setResourceId(stmt, 6, proposta.getRecursoCI());
+            stmt.setInt(7, proposta.getId());
+
             stmt.executeUpdate();
         }
     }
@@ -193,7 +199,10 @@ public class PropostaPedagogicaDAO {
                     proposta.setObjetivos(rs.getString("objetivos"));
                     proposta.setMetodologias(rs.getString("metodologias"));
                     proposta.setObservacoes(rs.getString("observacoes"));
-                    proposta.setPlanoAEEId(rs.getInt("planoAEE_id"));
+
+                    // Carrega o objeto PlanoAEE completo
+                    PlanoAEE plano = planoAEEDAO.buscarPorId(rs.getInt("planoAEE_id"));
+                    proposta.setPlanoAEE(plano);
 
                     int recursoPId = rs.getInt("recursoP_id");
                     int recursoFAId = rs.getInt("recursoFA_id");

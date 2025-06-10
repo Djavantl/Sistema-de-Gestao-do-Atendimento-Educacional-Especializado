@@ -475,194 +475,193 @@
             </button>
         </div>
     </div>
-
-    <!-- Conteúdo Principal -->
     <div class="conteudo-principal">
-        <div class="header">
-            <div class="titulo">
-                <h1>Propostas Pedagógicas</h1>
-            </div>
-        </div>
+       <div class="header">
+           <div class="titulo">
+               <h1>Propostas Pedagógicas</h1>
+           </div>
+       </div>
 
-        <div class="conteudo-container">
-            <!-- Mensagens de Sucesso/Erro -->
-            <c:if test="${not empty propostaId}">
-                <div class="alert-sucesso">
-                    ✅ Proposta criada com ID: <strong>${propostaId}</strong>
-                </div>
-            </c:if>
+       <div class="conteudo-container">
+           <!-- Mensagens de Sucesso/Erro -->
+           <c:if test="${not empty propostaId}">
+               <div class="alert-sucesso">
+                   ✅ Proposta criada com ID: <strong>${propostaId}</strong>
+               </div>
+           </c:if>
 
-            <c:if test="${not empty erro}">
-                <div class="alert-erro">
-                    ❌ Erro: ${erro}
-                </div>
-            </c:if>
+           <c:if test="${not empty erro}">
+               <div class="alert-erro">
+                   ❌ Erro: ${erro}
+               </div>
+           </c:if>
 
-            <form class="form-proposta" action="${pageContext.request.contextPath}/propostas" method="POST">
-                <input type="hidden" name="planoAEEId" value="${param.planoAEEId}">
+           <form class="form-proposta" action="${pageContext.request.contextPath}/propostas" method="POST">
+               <input type="hidden" name="planoAEEId" value="${param.planoAEEId}">
 
-                <!-- Seção: Objetivos e Metodologias -->
-                <div class="section-group">
-                    <h4>Informações da Proposta</h4>
-                    <div class="form-grid">
-                        <div class="input-group">
-                            <label for="objetivos">Objetivos:</label>
-                            <textarea id="objetivos" name="objetivos" required></textarea>
-                        </div>
+               <!-- Seção: Objetivos e Metodologias -->
+               <div class="section-group">
+                   <h4>Informações da Proposta</h4>
+                   <div class="form-grid">
+                       <div class="input-group">
+                           <label for="objetivos">Objetivos:</label>
+                           <textarea id="objetivos" name="objetivos" required></textarea>
+                       </div>
 
-                        <div class="input-group">
-                            <label for="metodologias">Metodologias:</label>
-                            <textarea id="metodologias" name="metodologias" required></textarea>
-                        </div>
-                    </div>
-                </div>
+                       <div class="input-group">
+                           <label for="metodologias">Metodologias:</label>
+                           <textarea id="metodologias" name="metodologias" required></textarea>
+                       </div>
+                   </div>
+               </div>
 
-                <!-- Seção: Recursos Pedagógicos -->
-                <div class="section-group">
-                    <h4>Recursos Pedagógicos</h4>
-                    <div class="secao-recursos">
-                        <div class="grupo-checkbox">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="adaptacaoDidaticaAulasAvaliacoes"
-                                    name="recursoP_adaptacaoDidaticaAulasAvaliacoes">
-                                <label for="adaptacaoDidaticaAulasAvaliacoes">Adaptação didática nas aulas e avaliações</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="materialDidaticoAdaptado"
-                                    name="recursoP_materialDidaticoAdaptado">
-                                <label for="materialDidaticoAdaptado">Material didático adaptado</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="usoTecnologiaAssistiva"
-                                    name="recursoP_usoTecnologiaAssistiva">
-                                <label for="usoTecnologiaAssistiva">Uso de tecnologia assistiva</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="tempoEmpregadoAtividadesAvaliacoes"
-                                    name="recursoP_tempoEmpregadoAtividadesAvaliacoes">
-                                <label for="tempoEmpregadoAtividadesAvaliacoes">Tempo adicional para atividades/avaliações</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               <!-- Seção: Recursos Pedagógicos -->
+               <div class="section-group">
+                   <h4>Recursos Pedagógicos</h4>
+                   <div class="secao-recursos">
+                       <div class="grupo-checkbox">
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="adaptacaoDidaticaAulasAvaliacoes"
+                                   name="recursoP_adaptacaoDidaticaAulasAvaliacoes">
+                               <label for="adaptacaoDidaticaAulasAvaliacoes">Adaptação didática nas aulas e avaliações</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="materialDidaticoAdaptado"
+                                   name="recursoP_materialDidaticoAdaptado">
+                               <label for="materialDidaticoAdaptado">Material didático adaptado</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="usoTecnologiaAssistiva"
+                                   name="recursoP_usoTecnologiaAssistiva">
+                               <label for="usoTecnologiaAssistiva">Uso de tecnologia assistiva</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="tempoEmpregadoAtividadesAvaliacoes"
+                                   name="recursoP_tempoEmpregadoAtividadesAvaliacoes">
+                               <label for="tempoEmpregadoAtividadesAvaliacoes">Tempo adicional para atividades/avaliações</label>
+                           </div>
+                       </div>
+                   </div>
+               </div>
 
-                <!-- Seção: Recursos Físicos/Arquitetônicos -->
-                <div class="section-group">
-                    <h4>Recursos Físicos/Arquitetônicos</h4>
-                    <div class="secao-recursos">
-                        <div class="grupo-checkbox">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="usoCadeiraDeRodas"
-                                    name="recursoFA_usoCadeiraDeRodas">
-                                <label for="usoCadeiraDeRodas">Uso de cadeira de rodas</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="auxilioTranscricaoEscrita"
-                                    name="recursoFA_auxilioTranscricaoEscrita">
-                                <label for="auxilioTranscricaoEscrita">Auxílio para transcrição escrita</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="mesaAdaptadaCadeiraDeRodas"
-                                    name="recursoFA_mesaAdaptadaCadeiraDeRodas">
-                                <label for="mesaAdaptadaCadeiraDeRodas">Mesa adaptada para cadeira de rodas</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="usoDeMuleta"
-                                    name="recursoFA_usoDeMuleta">
-                                <label for="usoDeMuleta">Uso de muleta</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="outrosFisicoArquitetonico"
-                                    name="recursoFA_outrosFisicoArquitetonico"
-                                    onchange="toggleOutrosEspecificado(this)">
-                                <label for="outrosFisicoArquitetonico">Outros recursos</label>
-                            </div>
-                            <div class="input-group" id="outrosEspecificadoContainer" style="display: none; grid-column: span 2;">
-                                <label for="outrosEspecificado">Especificar outros recursos:</label>
-                                <input type="text" id="outrosEspecificado"
-                                    name="recursoFA_outrosEspecificado"
-                                    placeholder="Digite os recursos adicionais">
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               <!-- Seção: Recursos Físicos/Arquitetônicos -->
+               <div class="section-group">
+                   <h4>Recursos Físicos/Arquitetônicos</h4>
+                   <div class="secao-recursos">
+                       <div class="grupo-checkbox">
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="usoCadeiraDeRodas"
+                                   name="recursoFA_usoCadeiraDeRodas">
+                               <label for="usoCadeiraDeRodas">Uso de cadeira de rodas</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="auxilioTranscricaoEscrita"
+                                   name="recursoFA_auxilioTranscricaoEscrita">
+                               <label for="auxilioTranscricaoEscrita">Auxílio para transcrição escrita</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="mesaAdaptadaCadeiraDeRodas"
+                                   name="recursoFA_mesaAdaptadaCadeiraDeRodas">
+                               <label for="mesaAdaptadaCadeiraDeRodas">Mesa adaptada para cadeira de rodas</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="usoDeMuleta"
+                                   name="recursoFA_usoDeMuleta">
+                               <label for="usoDeMuleta">Uso de muleta</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="outrosFisicoArquitetonico"
+                                   name="recursoFA_outrosFisicoArquitetonico"
+                                   onchange="toggleOutrosEspecificado(this)">
+                               <label for="outrosFisicoArquitetonico">Outros recursos</label>
+                           </div>
+                           <div class="input-group" id="outrosEspecificadoContainer" style="display: none; grid-column: span 2;">
+                               <label for="outrosEspecificado">Especificar outros recursos:</label>
+                               <input type="text" id="outrosEspecificado"
+                                   name="recursoFA_outrosEspecificado"
+                                   placeholder="Digite os recursos adicionais">
+                           </div>
+                       </div>
+                   </div>
+               </div>
 
-                <!-- Seção: Recursos de Comunicação e Informação -->
-                <div class="section-group">
-                    <h4>Recursos de Comunicação e Informação</h4>
-                    <div class="secao-recursos">
-                        <div class="grupo-checkbox">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="comunicacaoAlternativa"
-                                    name="recursoCI_comunicacaoAlternativa">
-                                <label for="comunicacaoAlternativa">Comunicação alternativa</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="tradutorInterprete"
-                                    name="recursoCI_tradutorInterprete">
-                                <label for="tradutorInterprete">Tradutor/intérprete</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="leitorTranscritor"
-                                    name="recursoCI_leitorTranscritor">
-                                <label for="leitorTranscritor">Leitor/transcritor</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="interpreteOralizador"
-                                    name="recursoCI_interpreteOralizador">
-                                <label for="interpreteOralizador">Intérprete oralizador</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="guiaInterprete"
-                                    name="recursoCI_guiaInterprete">
-                                <label for="guiaInterprete">Guia-intérprete</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="materialDidaticoBraille"
-                                    name="recursoCI_materialDidaticoBraille">
-                                <label for="materialDidaticoBraille">Material em Braille</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="materialDidaticoTextoAmpliado"
-                                    name="recursoCI_materialDidaticoTextoAmpliado">
-                                <label for="materialDidaticoTextoAmpliado">Texto ampliado</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="materialDidaticoRelevo"
-                                    name="recursoCI_materialDidaticoRelevo">
-                                <label for="materialDidaticoRelevo">Material em relevo</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="leitorDeTela"
-                                    name="recursoCI_leitorDeTela">
-                                <label for="leitorDeTela">Leitor de tela</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="fonteTamanhoEspecifico"
-                                    name="recursoCI_fonteTamanhoEspecifico">
-                                <label for="fonteTamanhoEspecifico">Fonte com tamanho específico</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+               <!-- Seção: Recursos de Comunicação e Informação -->
+               <div class="section-group">
+                   <h4>Recursos de Comunicação e Informação</h4>
+                   <div class="secao-recursos">
+                       <div class="grupo-checkbox">
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="comunicacaoAlternativa"
+                                   name="recursoCI_comunicacaoAlternativa">
+                               <label for="comunicacaoAlternativa">Comunicação alternativa</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="tradutorInterprete"
+                                   name="recursoCI_tradutorInterprete">
+                               <label for="tradutorInterprete">Tradutor/intérprete</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="leitorTranscritor"
+                                   name="recursoCI_leitorTranscritor">
+                               <label for="leitorTranscritor">Leitor/transcritor</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="interpreteOralizador"
+                                   name="recursoCI_interpreteOralizador">
+                               <label for="interpreteOralizador">Intérprete oralizador</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="guiaInterprete"
+                                   name="recursoCI_guiaInterprete">
+                               <label for="guiaInterprete">Guia-intérprete</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="materialDidaticoBraille"
+                                   name="recursoCI_materialDidaticoBraille">
+                               <label for="materialDidaticoBraille">Material em Braille</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="materialDidaticoTextoAmpliado"
+                                   name="recursoCI_materialDidaticoTextoAmpliado">
+                               <label for="materialDidaticoTextoAmpliado">Texto ampliado</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="materialDidaticoRelevo"
+                                   name="recursoCI_materialDidaticoRelevo">
+                               <label for="materialDidaticoRelevo">Material em relevo</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="leitorDeTela"
+                                   name="recursoCI_leitorDeTela">
+                               <label for="leitorDeTela">Leitor de tela</label>
+                           </div>
+                           <div class="checkbox-item">
+                               <input type="checkbox" id="fonteTamanhoEspecifico"
+                                   name="recursoCI_fonteTamanhoEspecifico">
+                               <label for="fonteTamanhoEspecifico">Fonte com tamanho específico</label>
+                           </div>
+                       </div>
+                   </div>
+               </div>
 
-                <!-- Observações -->
-                <div class="section-group">
-                    <h4>Observações Adicionais</h4>
-                    <div class="input-group">
-                        <label for="observacoes">Informações complementares:</label>
-                        <textarea id="observacoes" name="observacoes"></textarea>
-                    </div>
-                </div>
+               <!-- Observações -->
+               <div class="section-group">
+                   <h4>Observações Adicionais</h4>
+                   <div class="input-group">
+                       <label for="observacoes">Informações complementares:</label>
+                       <textarea id="observacoes" name="observacoes"></textarea>
+                   </div>
+               </div>
 
-                <div class="botoes-acoes">
-                    <button type="submit" class="botao-salvar">Salvar Proposta</button>
-                    <button type="button" class="botao-cancelar" onclick="window.history.back()">Cancelar</button>
-                </div>
-            </form>
-        </div>
+               <div class="botoes-acoes">
+                   <button type="submit" class="botao-salvar">Salvar Proposta</button>
+                   <button type="button" class="botao-cancelar" onclick="window.history.back()">Cancelar</button>
+               </div>
+           </form>
+       </div>
+    </div>
 
-        <!-- Rodapé -->
+    <!-- Rodapé -->
         <div class="footer">
             <p>© 2025 AEE+ - Atendimento Educacional Especializado | Todos os direitos reservados</p>
             <p>Desenvolvido com ❤️ para promover uma educação inclusiva e transformadora</p>
@@ -670,10 +669,10 @@
     </div>
 
     <script>
-        function toggleOutrosEspecificado(checkbox) {
-            const container = document.getElementById('outrosEspecificadoContainer');
-            container.style.display = checkbox.checked ? 'block' : 'none';
-        }
+       function toggleOutrosEspecificado(checkbox) {
+           const container = document.getElementById('outrosEspecificadoContainer');
+           container.style.display = checkbox.checked ? 'block' : 'none';
+       }
     </script>
 </body>
 </html>
