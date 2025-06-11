@@ -309,6 +309,19 @@
                 flex-wrap: wrap;
             }
         }
+        .logout-btn {
+          margin-top: auto; /* Empurra para o final da sidebar */
+          background-color: transparent !important; /* Mantém o fundo normal */
+          color: #ffffff !important; /* Mantém o texto branco */
+      }
+
+      .logout-btn:hover {
+          background-color: #ff6b6b !important; /* Vermelho no hover */
+          color: #ffffff !important; /* Texto branco no hover */
+      }
+
+      .logout-btn img {
+          filter: brightness(0) invert(1); /* Ícone branco sempre */
     </style>
 </head>
 <body>
@@ -377,7 +390,7 @@
                                     </button>
                                     <!-- NOVO BOTÃO DE RELATÓRIOS -->
                                     <button class="botao-relatorios"
-                                        onclick="window.location.href='${pageContext.request.contextPath}/relatorios/professor?matricula=${aluno.matricula}'">
+                                        onclick="window.location.href='${pageContext.request.contextPath}/relatorios/professor?matricula=${aluno.matricula}&siape=${siape}'">
                                         Relatórios
                                     </button>
                                 </div>

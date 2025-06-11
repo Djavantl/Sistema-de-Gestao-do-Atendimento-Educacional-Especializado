@@ -38,6 +38,7 @@ public class AlunosServlet extends HttpServlet {
         try {
             List<Aluno> alunosVinculados = professorAlunoDAO.getAlunosByProfessor(siape);
             request.setAttribute("alunosVinculados", alunosVinculados);
+            request.setAttribute("siape", siape);
 
             request.getRequestDispatcher("/templates/professor/Alunos.jsp")
                     .forward(request, response);
