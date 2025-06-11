@@ -578,19 +578,36 @@
             transform: translateY(-2px);
         }
          .logout-btn {
-                   margin-top: auto; /* Empurra para o final da sidebar */
-                   background-color: transparent !important; /* Mantém o fundo normal */
-                   color: #ffffff !important; /* Mantém o texto branco */
-               }
+           margin-top: auto; /* Empurra para o final da sidebar */
+           background-color: transparent !important; /* Mantém o fundo normal */
+           color: #ffffff !important; /* Mantém o texto branco */
+       }
 
-               .logout-btn:hover {
-                   background-color: #ff6b6b !important; /* Vermelho no hover */
-                   color: #ffffff !important; /* Texto branco no hover */
-               }
+           .logout-btn:hover {
+               background-color: #ff6b6b !important; /* Vermelho no hover */
+               color: #ffffff !important; /* Texto branco no hover */
+           }
 
-               .logout-btn img {
-                   filter: brightness(0) invert(1); /* Ícone branco sempre */
+           .logout-btn img {
+               filter: brightness(0) invert(1); /* Ícone branco sempre */
+           }
+           .info-item.full-width {
+               grid-column: 1 / -1; /* Ocupa todas as colunas */
+           }
+           .text-block {
+               display: block;
+               padding: 12px;
+               background: #f5f5ff;
+               border-radius: 8px;
+               margin-top: 8px;
+               line-height: 1.5;
+               white-space: pre-wrap; /* Preserva quebras de linha */
+           }
+           @media (max-width: 768px) {
+               .info-item.full-width {
+                   grid-column: auto;
                }
+           }
     </style>
 </head>
 <body>
@@ -676,14 +693,14 @@
                         <div class="info-grid">
                             <div class="info-item">
                                 <label>Aluno</label>
-                                <p>${plano.aluno.nome} (${plano.aluno.matricula})</p>
+                                <p>${plano.aluno.nome}</p>
                             </div>
                             <div class="info-item">
                                 <label>Professor Responsável</label>
                                 <p>
                                     <c:choose>
                                         <c:when test="${not empty plano.professorAEE}">
-                                            ${plano.professorAEE.nome} (${plano.professorAEE.siape})
+                                            ${plano.professorAEE.nome}
                                         </c:when>
                                         <c:otherwise>
                                             Não atribuído
@@ -699,11 +716,11 @@
                                 <label>Curso/Turma</label>
                                 <p>${plano.aluno.curso} - ${plano.aluno.turma}</p>
                             </div>
-                            <div class="info-item">
+                            <div class="info-item full-width">
                                 <label>Recomendações</label>
                                 <p>${empty plano.recomendacoes ? 'Nenhuma recomendação' : plano.recomendacoes}</p>
                             </div>
-                            <div class="info-item">
+                            <div class="info-item full-width">
                                 <label>Observações</label>
                                 <p>${empty plano.observacoes ? 'Nenhuma observação' : plano.observacoes}</p>
                             </div>
