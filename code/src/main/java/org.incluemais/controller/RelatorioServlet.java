@@ -36,7 +36,8 @@ import java.util.logging.Logger;
         "/relatorios/excluir",
         "/meus-relatorios",
         "/relatorios/meus-detalhes",
-        "/relatorios/todos"
+        "/relatorios/todos",
+        "/relatorios/professor"
 })
 public class RelatorioServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RelatorioServlet.class.getName());
@@ -80,6 +81,8 @@ public class RelatorioServlet extends HttpServlet {
                 exibirDetalhesMeuRelatorio(id, request, response);
             } else if (path.equals("/relatorios/todos")) {
                 listarTodosRelatorios(request, response);
+            } else if (path.equals("/relatorios/professor")) {
+                exibirRelatoriosAluno(request, response);
             }
 
         } catch (SQLException e) {
@@ -110,6 +113,25 @@ public class RelatorioServlet extends HttpServlet {
             logger.log(Level.SEVERE, "Erro no processamento", e);
             encaminharErro(request, response, "Erro no processamento dos dados");
         }
+    }
+
+    private void exibirRelatoriosAluno(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        // Corrigir o nome do parâmetro (de 'matricula' para 'matricula')
+        String matricula = request.getParameter("matricula");
+
+        // Buscar relatórios
+        List<Relatorio> relatorios = relatorioDAO.buscarPorAlunoMatricula(matricula);
+
+        // Usar o mesmo nome de atributo que a JSP espera
+        request.setAttribute("relatoriosLista", relatorios);
+
+        // Adicionar o aluno como atributo se necessário
+        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+        request.setAttribute("aluno", aluno);
+
+        request.getRequestDispatcher("/templates/professor/RelatoriosAlunos.jsp").forward(request, response);
     }
 
     private void listarTodosRelatorios(HttpServletRequest request, HttpServletResponse response)
