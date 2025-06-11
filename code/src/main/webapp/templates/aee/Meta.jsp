@@ -391,10 +391,6 @@
             <div class="titulo">
                 <h1>${meta != null ? 'Editar Meta' : 'Adicionar Nova Meta'}</h1>
             </div>
-            <div class="user-info">
-                <p>Bem-vindo(a), Professor!</p>
-                <div class="funcao">${nome}</div>
-            </div>
         </div>
 
         <!-- Formulário de Meta -->
