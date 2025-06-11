@@ -161,6 +161,7 @@
 
         .form-plano {
             display: grid;
+            grid-template-columns: repeat(2,1fr);
             gap: 25px;
         }
 
@@ -242,6 +243,7 @@
             gap: 15px;
             justify-content: flex-end;
             width: 100%;
+            grid-column: 1 / -1;
         }
 
         .botao-salvar {

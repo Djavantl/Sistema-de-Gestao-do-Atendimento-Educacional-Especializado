@@ -160,6 +160,7 @@
 
         .form-plano {
             display: grid;
+            grid-template-columns: repeat(2,1fr);
             gap: 25px;
         }
 
@@ -243,6 +244,7 @@
             gap: 15px;
             justify-content: flex-end;
             width: 100%;
+            grid-column: 1 / -1;
         }
 
         .botao-salvar {
@@ -387,6 +389,9 @@
                .logout-btn img {
                    filter: brightness(0) invert(1); /* Ícone branco sempre */
                }
+        .info-item.full-width {
+           grid-column: 1 / -1; /* Ocupa todas as colunas */
+        }
     </style>
 </head>
 <body>
@@ -514,6 +519,7 @@
                     </button>
                 </div>
             </form>
+
         </div>
 
         <!-- Rodapé -->

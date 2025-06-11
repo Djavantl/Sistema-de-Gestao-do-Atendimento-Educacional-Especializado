@@ -614,6 +614,15 @@
                 grid-column: auto;
             }
         }
+        .acoes-meta {
+              display: flex;
+              justify-content: flex-end;
+              gap: 10px;
+              padding: 10px;
+            }
+            .acoes-meta form {
+              margin: 0;
+            }
 
     </style>
 </head>
@@ -738,7 +747,7 @@
                             <tr>
                                 <th>Descrição</th>
                                 <th>Status</th>
-                                <th>Ações</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
