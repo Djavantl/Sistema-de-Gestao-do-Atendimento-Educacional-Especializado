@@ -12,6 +12,7 @@ import org.incluemais.model.dao.AvaliacaoDAO;
 import org.incluemais.model.dao.ProfessorAEEDAO;
 import org.incluemais.model.dao.RelatorioDAO;
 import org.incluemais.model.entities.Aluno;
+import org.incluemais.model.entities.Avaliacao;
 import org.incluemais.model.entities.ProfessorAEE;
 import org.incluemais.model.entities.Relatorio;
 
@@ -37,7 +38,8 @@ import java.util.logging.Logger;
         "/meus-relatorios",
         "/relatorios/meus-detalhes",
         "/relatorios/todos",
-        "/relatorios/professor"
+        "/relatorios/professor",
+        "/relatorios/detalhes-professor"
 })
 public class RelatorioServlet extends HttpServlet {
     private static final Logger logger = Logger.getLogger(RelatorioServlet.class.getName());
@@ -83,7 +85,11 @@ public class RelatorioServlet extends HttpServlet {
                 listarTodosRelatorios(request, response);
             } else if (path.equals("/relatorios/professor")) {
                 exibirRelatoriosAluno(request, response);
+            } else if (path.equals("/relatorios/detalhes-professor")) {
+                int id = Integer.parseInt(request.getParameter("id"));
+                carregarDetalhesRelatorioProfessor(request, response);
             }
+
 
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Erro de banco de dados", e);
@@ -115,17 +121,40 @@ public class RelatorioServlet extends HttpServlet {
         }
     }
 
+    private void carregarDetalhesRelatorioProfessor(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException, SQLException {
+
+        int id = Integer.parseInt(request.getParameter("id"));
+        String siape = request.getParameter("siape");
+        Relatorio relatorio = relatorioDAO.buscarPorId(id);
+
+        HttpSession session = request.getSession();
+
+        if (relatorio != null) {
+
+
+
+            request.setAttribute("relatorio", relatorio);
+            request.setAttribute("siape", siape);
+            request.getRequestDispatcher("/templates/professor/DetalhesRelatoriosP.jsp").forward(request, response);
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "Relatório não encontrado");
+        }
+    }
+
     private void exibirRelatoriosAluno(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
         // Corrigir o nome do parâmetro (de 'matricula' para 'matricula')
         String matricula = request.getParameter("matricula");
+        String siape = request.getParameter("siape");
 
         // Buscar relatórios
         List<Relatorio> relatorios = relatorioDAO.buscarPorAlunoMatricula(matricula);
 
         // Usar o mesmo nome de atributo que a JSP espera
         request.setAttribute("relatoriosLista", relatorios);
+        request.setAttribute("siape", siape);
 
         // Adicionar o aluno como atributo se necessário
         Aluno aluno = alunoDAO.buscarPorMatricula(matricula);

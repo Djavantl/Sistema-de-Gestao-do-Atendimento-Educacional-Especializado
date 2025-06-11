@@ -347,6 +347,20 @@
                 font-size: 14px;
             }
         }
+
+        .logout-btn {
+          margin-top: auto; /* Empurra para o final da sidebar */
+          background-color: transparent !important; /* Mantém o fundo normal */
+          color: #ffffff !important; /* Mantém o texto branco */
+      }
+
+      .logout-btn:hover {
+          background-color: #ff6b6b !important; /* Vermelho no hover */
+          color: #ffffff !important; /* Texto branco no hover */
+      }
+
+      .logout-btn img {
+          filter: brightness(0) invert(1); /* Ícone branco sempre */
     </style>
 </head>
 <body>
@@ -369,7 +383,7 @@
                 Início
             </button>
             <button class="menu-btn ativo"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/professor/meus-alunos'">
+                    onclick="window.location.href='${pageContext.request.contextPath}/templates/professor/professor-alunos?siape=${siape}'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
                 Meus Alunos
             </button>
@@ -430,7 +444,7 @@
                                                         <div class="botoes-acoes">
                                                             <!-- Botão Detalhes -->
                                                             <button class="botao-detalhes"
-                                                                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/meus-detalhes?id=${relatorio.id}'">
+                                                                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios/detalhes-professor?id=${relatorio.id}&siape=${siape}'">
                                                                 Detalhes
                                                             </button>
                                                         </div>
