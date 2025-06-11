@@ -52,6 +52,20 @@
             height: 80px;
             object-fit: contain;
         }
+        .logout-btn {
+               margin-top: auto; /* Empurra para o final da sidebar */
+               background-color: transparent !important; /* Mantém o fundo normal */
+               color: #ffffff !important; /* Mantém o texto branco */
+        }
+
+        .logout-btn:hover {
+           background-color: #ff6b6b !important; /* Vermelho no hover */
+           color: #ffffff !important; /* Texto branco no hover */
+        }
+
+        .logout-btn img {
+           filter: brightness(0) invert(1); /* Ícone branco sempre */
+        }
 
         .logo h2 {
             color: #ffffff;
@@ -583,6 +597,7 @@
             display: flex;
             gap: 15px; /* Mesmo espaçamento da seção de Metas Pedagógicas */
         }
+
     </style>
 </head>
 <body>
@@ -592,40 +607,40 @@
     <div class="decorative-circle circle-3"></div>
 
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
-            <h2>AEE +</h2>
-        </div>
+        <div class="sidebar">
+            <div class="logo">
+                <img src="${pageContext.request.contextPath}/static/images/logoAEE.png" alt="Logo AEE+" />
+                <h2>AEE +</h2>
+            </div>
 
-        <div class="menu">
-            <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
-                Início
-            </button>
-            <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
-                Estudantes
-            </button>
-            <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
-                Sessões
-            </button>
-            <button class="menu-btn ativo"
-                    onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
-                <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
-                Planos AEE
-            </button>
-            <button class="menu-btn"
-                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
-                <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
-                Relatórios
-            </button>
+            <div class="menu">
+                <button class="menu-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/TelaInicial.jsp'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/inicio.svg" alt="Início" />
+                    Início
+                </button>
+                <button class="menu-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/alunos'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
+                    Estudantes
+                </button>
+                <button class="menu-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/sessoes'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/sessoes.svg" alt="Sessões" />
+                    Sessões
+                </button>
+                <button class="menu-btn  ativo"
+                        onclick="window.location.href='${pageContext.request.contextPath}/templates/aee/planosAEE'">
+                    <img src="${pageContext.request.contextPath}/static/images/meuplano.svg" alt="Planos AEE" />
+                    Planos AEE
+                </button>
+                <button class="menu-btn logout-btn"
+                        onclick="window.location.href='${pageContext.request.contextPath}/logout'">
+                    <img src="${pageContext.request.contextPath}/static/images/sidebar/Logout.svg" alt="Sair" />
+                    Sair
+                </button>
+            </div>
         </div>
-    </div>
 
     <!-- Conteúdo Principal -->
     <div class="conteudo-principal">

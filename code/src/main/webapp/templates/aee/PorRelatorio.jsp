@@ -459,33 +459,47 @@
         }
 
         .botao-voltar {
-                    background-color: #e0e0e0;
-                    color: #black;
-                    border: none;
-                    padding: 12px 22px;
-                    border-radius: 12px;
-                    cursor: pointer;
-                    font-size: 16px;
-                    font-weight: 600;
-                    transition: all 0.3s ease;
-                    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-                    display: flex;
-                    align-items: center;
-                    gap: 8px;
-                    margin-right: 15px;
-                }
+            background-color: #e0e0e0;
+            color: #black;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 15px;
+        }
 
-                .botao-voltar:hover {
-                    background-color: #e0e0e0;
-                    transform: translateY(-2px);
-                    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-                }
+        .botao-voltar:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
 
-                .container-botoes {
-                            display: flex;
-                            justify-content: flex-end;
-                            margin-bottom: 20px;
-                        }
+        .container-botoes {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+        .logout-btn {
+                   margin-top: auto; /* Empurra para o final da sidebar */
+                   background-color: transparent !important; /* Mantém o fundo normal */
+                   color: #ffffff !important; /* Mantém o texto branco */
+               }
+
+               .logout-btn:hover {
+                   background-color: #ff6b6b !important; /* Vermelho no hover */
+                   color: #ffffff !important; /* Texto branco no hover */
+               }
+
+               .logout-btn img {
+                   filter: brightness(0) invert(1); /* Ícone branco sempre */
+               }
     </style>
 </head>
 <body>
@@ -526,6 +540,11 @@
                     onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
                 Relatórios
+            </button>
+            <button class="menu-btn logout-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/logout'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/Logout.svg" alt="Sair" />
+                Sair
             </button>
         </div>
     </div>

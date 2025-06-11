@@ -423,6 +423,20 @@
                 flex-wrap: wrap;
             }
         }
+        .logout-btn {
+                   margin-top: auto; /* Empurra para o final da sidebar */
+                   background-color: transparent !important; /* Mantém o fundo normal */
+                   color: #ffffff !important; /* Mantém o texto branco */
+               }
+
+               .logout-btn:hover {
+                   background-color: #ff6b6b !important; /* Vermelho no hover */
+                   color: #ffffff !important; /* Texto branco no hover */
+               }
+
+               .logout-btn img {
+                   filter: brightness(0) invert(1); /* Ícone branco sempre */
+               }
     </style>
 </head>
 <body>
@@ -463,6 +477,11 @@
                     onclick="window.location.href='${pageContext.request.contextPath}/relatorios/todos'">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
                 Relatórios
+            </button>
+            <button class="menu-btn logout-btn"
+                    onclick="window.location.href='${pageContext.request.contextPath}/logout'">
+                <img src="${pageContext.request.contextPath}/static/images/sidebar/Logout.svg" alt="Sair" />
+                Sair
             </button>
         </div>
     </div>
