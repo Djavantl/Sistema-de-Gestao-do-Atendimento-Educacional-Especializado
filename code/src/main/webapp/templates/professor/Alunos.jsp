@@ -230,6 +230,24 @@
             transform: translateY(-2px);
         }
 
+        /* NOVO BOTÃO DE RELATÓRIOS */
+        .botao-relatorios {
+            background-color: #6a5fcc; /* Verde para diferenciar */
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .botao-relatorios:hover {
+            background-color: #6a5fcc;
+            transform: translateY(-2px);
+        }
+
         /* ======================== RODAPÉ ======================== */
         .footer {
             text-align: center;
@@ -312,6 +330,11 @@
                     <img src="${pageContext.request.contextPath}/static/images/sidebar/alunos.svg" alt="Estudantes" />
                     Meus Alunos
                 </button>
+                <button class="menu-btn logout-btn"
+                          onclick="window.location.href='${pageContext.request.contextPath}/logout'">
+                          <img src="${pageContext.request.contextPath}/static/images/sidebar/Logout.svg" alt="Sair" />
+                          Sair
+                </button>
             </div>
         </div>
 
@@ -341,8 +364,6 @@
                             <td>${aluno.matricula}</td>
                             <td>${aluno.nome}</td>
                             <td>${aluno.responsavel}</td>
-
-
                             <td>${aluno.telefone}</td>
                             <td>
                                 <div class="botoes-acoes">
@@ -353,6 +374,11 @@
                                     <button class="botao-plano"
                                         onclick="window.location.href='${pageContext.request.contextPath}/templates/professor/visualizar-plano?matricula=${aluno.matricula}'">
                                         PlanoAEE
+                                    </button>
+                                    <!-- NOVO BOTÃO DE RELATÓRIOS -->
+                                    <button class="botao-relatorios"
+                                        onclick="window.location.href='${pageContext.request.contextPath}/relatorios/professor?matricula=${aluno.matricula}'">
+                                        Relatórios
                                     </button>
                                 </div>
                             </td>
