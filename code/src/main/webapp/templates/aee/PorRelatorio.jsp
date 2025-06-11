@@ -537,7 +537,7 @@
                 Planos AEE
             </button>
             <button class="menu-btn ativo"
-                    onclick="window.location.href='${pageContext.request.contextPath}/relatorios'">
+                    onclick="window.location.reload();">
                 <img src="${pageContext.request.contextPath}/static/images/sidebar/relatorios.svg" alt="Relatórios" />
                 Relatórios
             </button>

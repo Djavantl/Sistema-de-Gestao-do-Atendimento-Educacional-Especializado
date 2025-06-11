@@ -208,7 +208,7 @@
         }
 
         .botao-detalhes {
-            background-color: #17a2b8;
+            background-color: #6a5fcc;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -220,7 +220,7 @@
         }
 
         .botao-detalhes:hover {
-            background-color: #138496;
+            background-color: #6a5fcc;
             transform: translateY(-2px);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }

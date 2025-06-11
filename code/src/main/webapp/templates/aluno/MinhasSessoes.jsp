@@ -303,20 +303,96 @@
             color: #ffc107;
             font-weight: 600;
         }
-         .logout-btn {
-                   margin-top: auto; /* Empurra para o final da sidebar */
-                   background-color: transparent !important; /* Mantém o fundo normal */
-                   color: #ffffff !important; /* Mantém o texto branco */
-               }
 
-               .logout-btn:hover {
-                   background-color: #ff6b6b !important; /* Vermelho no hover */
-                   color: #ffffff !important; /* Texto branco no hover */
-               }
+        .logout-btn {
+            margin-top: auto; /* Empurra para o final da sidebar */
+            background-color: transparent !important; /* Mantém o fundo normal */
+            color: #ffffff !important; /* Mantém o texto branco */
+        }
 
-               .logout-btn img {
-                   filter: brightness(0) invert(1); /* Ícone branco sempre */
-               }
+        .logout-btn:hover {
+            background-color: #ff6b6b !important; /* Vermelho no hover */
+            color: #ffffff !important; /* Texto branco no hover */
+        }
+
+        .logout-btn img {
+            filter: brightness(0) invert(1); /* Ícone branco sempre */
+        }
+
+        /* Estilos para observações expandíveis */
+        .observacoes-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .observacoes-resumo {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .observacoes-completas {
+            display: none;
+            background-color: #f9f9ff;
+            border: 1px solid #e0e0ff;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .observacoes-completas::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 20px;
+            width: 15px;
+            height: 15px;
+            background-color: #f9f9ff;
+            border-top: 1px solid #e0e0ff;
+            border-left: 1px solid #e0e0ff;
+            transform: rotate(45deg);
+        }
+
+        .observacoes-container.expandido .observacoes-completas {
+            display: block;
+        }
+
+        .observacoes-container.expandido .seta-observacao {
+            transform: rotate(180deg);
+        }
+
+        .seta-observacao {
+            transition: transform 0.3s;
+            color: #4D44B5;
+            font-size: 12px;
+        }
+
+        /* Estilo para tabela de observações */
+        .tabela-observacoes {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .tabela-observacoes th {
+            background-color: #e0e0ff;
+            padding: 8px 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .tabela-observacoes td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+        }
+
+        .tabela-observacoes tr:last-child td {
+            border-bottom: none;
+        }
     </style>
 </head>
 <body>
@@ -422,7 +498,17 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${not empty sessao.observacoes}">
-                                                ${fn:substring(sessao.observacoes, 0, 30)}${fn:length(sessao.observacoes) > 30 ? '...' : ''}
+                                                <div class="observacoes-container">
+                                                    <div class="observacoes-resumo">
+                                                        ${fn:substring(sessao.observacoes, 0, 30)}${fn:length(sessao.observacoes) > 30 ? '...' : ''}
+                                                        <c:if test="${fn:length(sessao.observacoes) > 30}">
+                                                            <i class="fas fa-chevron-down seta-observacao"></i>
+                                                        </c:if>
+                                                    </div>
+                                                    <div class="observacoes-completas">
+                                                        ${sessao.observacoes}
+                                                    </div>
+                                                </div>
                                             </c:when>
                                             <c:otherwise>
                                                 -
@@ -482,7 +568,17 @@
                                     <td>
                                         <c:choose>
                                             <c:when test="${not empty sessao.observacoes}">
-                                                ${fn:substring(sessao.observacoes, 0, 30)}${fn:length(sessao.observacoes) > 30 ? '...' : ''}
+                                                <div class="observacoes-container">
+                                                    <div class="observacoes-resumo">
+                                                        ${fn:substring(sessao.observacoes, 0, 30)}${fn:length(sessao.observacoes) > 30 ? '...' : ''}
+                                                        <c:if test="${fn:length(sessao.observacoes) > 30}">
+                                                            <i class="fas fa-chevron-down seta-observacao"></i>
+                                                        </c:if>
+                                                    </div>
+                                                    <div class="observacoes-completas">
+                                                        ${sessao.observacoes}
+                                                    </div>
+                                                </div>
                                             </c:when>
                                             <c:otherwise>
                                                 -
@@ -502,11 +598,32 @@
             </c:choose>
         </div>
     </div>
+
     <script>
         // Botão Voltar
         document.querySelector('.botao-voltar').onclick = function() {
             window.location.href = '${pageContext.request.contextPath}/telaInicialAluno';
         };
+
+        // Funcionalidade para expandir observações
+        document.querySelectorAll('.observacoes-container').forEach(container => {
+            container.addEventListener('click', function(e) {
+                // Evita que o clique propague para elementos pais
+                e.stopPropagation();
+
+                // Alterna a classe 'expandido' para mostrar/ocultar as observações completas
+                this.classList.toggle('expandido');
+            });
+        });
+
+        // Fechar observações ao clicar em qualquer lugar fora
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.observacoes-container')) {
+                document.querySelectorAll('.observacoes-container').forEach(container => {
+                    container.classList.remove('expandido');
+                });
+            }
+        });
     </script>
 </body>
 </html>

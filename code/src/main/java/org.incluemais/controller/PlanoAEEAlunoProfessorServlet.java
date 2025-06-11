@@ -63,7 +63,7 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
             PlanoAEE plano = planoAeeDAO.buscarPorAluno(matricula);
             if (plano == null) {
                 request.setAttribute("erro", "Nenhum plano encontrado para este aluno");
-                request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+                request.getRequestDispatcher("/templates/professor/PlanoAEEAlunoP.jsp").forward(request, response);
                 return;
             }
 
