@@ -53,7 +53,7 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
             MetaDAO metaDAO = new MetaDAO(conn);
 
             // Busca de aluno e plano
-            Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+            Aluno aluno = alunoDAO.buscar(matricula);
             if (aluno == null) {
                 request.setAttribute("erro", "Aluno não encontrado");
                 request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);

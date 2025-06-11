@@ -516,10 +516,7 @@
                     </div>
                     <h3>Relatórios</h3>
                     <p>Visualize e acompanhe relatórios detalhados sobre o progresso dos estudantes.</p>
-                    <button class="card-btn"
-                            onclick="window.location.href='${pageContext.request.contextPath}/relatorios/todos'">
-                        Relatorios <i>→</i>
-                    </button>
+
                 </div>
             </div>
         </div>

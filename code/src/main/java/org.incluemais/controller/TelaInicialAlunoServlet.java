@@ -31,9 +31,10 @@ public class TelaInicialAlunoServlet extends HttpServlet {
             return;
         }
         String matricula = (String) session.getAttribute("identificacao");
-        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+        Aluno aluno = alunoDAO.buscar(matricula);
 
         request.setAttribute("matricula", matricula);
+        request.setAttribute("aluno", aluno);
         request.getRequestDispatcher("/templates/aluno/PaginaInicial.jsp").forward(request, response);
     }
 }

@@ -41,7 +41,9 @@ public class DetalhesAlunoServlet extends HttpServlet {
 
         try {
             int id = Integer.parseInt(idParam);
-            Aluno aluno = alunoDAO.obterPorId(id);
+            Connection conn = (Connection) getServletContext().getAttribute("conexao");
+            AlunoDAO alunoDAO = new AlunoDAO(conn);
+            Aluno aluno = alunoDAO.buscar(id);
 
             if (aluno == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");

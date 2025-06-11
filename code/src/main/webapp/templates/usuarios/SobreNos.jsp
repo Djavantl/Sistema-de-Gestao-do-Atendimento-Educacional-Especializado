@@ -455,12 +455,12 @@
             <div class="team-members">
                 <div class="team-member">
                     <div class="member-avatar">
-                        <img src="imagens/aparecida.jpg" alt="Aparecida">
+                        <img src="${pageContext.request.contextPath}/static/images/avatar/aparecida.jpg" alt="Aparecida">
                     </div>
                     <h3>
-                        <a href="https://github.com/ajoxxavier" target="_blank">Aparecida</a>
+                        <a href="https://github.com/ajoxxavier" target="_blank">Aparecida Jaine de Oliveira Xavier</a>
                     </h3>
-                    <p>Desenvolvedora</p>
+                    <p>Desenvolvedora<br>Full Stack</p>
                 </div>
 
                 <div class="team-member">
@@ -470,7 +470,7 @@
                     <h3>
                         <a href="https://github.com/Djavantl" target="_blank">Djavan Teixeira Lopes</a>
                     </h3>
-                    <p>Desenvolvedor</p>
+                    <p>Desenvolvedor<br>Full Stack</p>
                 </div>
 
                 <div class="team-member">
@@ -480,7 +480,7 @@
                     <h3>
                         <a href="https://github.com/Rocha0919" target="_blank">Gabriel Rocha Gomes</a>
                     </h3>
-                    <p>Desenvolvedor</p>
+                    <p>Desenvolvedor<br>Full Stack</p>
                 </div>
 
                 <div class="team-member">
@@ -490,7 +490,7 @@
                     <h3>
                         <a href="https://github.com/Mxrlrey" target="_blank">Marley Teixeira Meira</a>
                     </h3>
-                    <p>Desenvolvedor</p>
+                    <p>Desenvolvedor<br>Full Stack</p>
                 </div>
 
                 <div class="team-member">
@@ -500,14 +500,21 @@
                     <h3>
                         <a href="https://github.com/Little-hair77" target="_blank">Pablo Henrique Azevedo</a>
                     </h3>
-                    <p>Desenvolvedor</p>
+                    <p>Desenvolvedor<br>Full Stack</p>
+                </div>
+
+                <div class="team-member">
+                    <div class="member-avatar">
+                        <img src="${pageContext.request.contextPath}/static/images/avatar/woquiton.png" alt="Woquiton Lima Fernandes">
+                    </div>
+                    <h3>
+                        <a href="https://github.com/Woquiton" target="_blank">Woquiton Lima Fernandes</a>
+                    </h3>
+                    <p>Professor<br>Orientador do Projeto</p>
                 </div>
             </div>
 
-            <div class="advisor">
-                <h2><i class="fas fa-user-graduate"></i> Orientação</h2>
-                <p>Professor <span class="highlight">Woquiton Lima Fernandes</span></p>
-            </div>
+
         </section>
 
         <section id="auth-section" class="auth-container">

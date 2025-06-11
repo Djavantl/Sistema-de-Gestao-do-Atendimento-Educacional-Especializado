@@ -67,7 +67,7 @@ public class OrganizacaoServlet extends HttpServlet {
                     if (org != null) {
                         org.setId(orgId);
                         // Busca dados do Aluno para exibir junto no formulário
-                        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+                        Aluno aluno = alunoDAO.buscar(matricula);
                         request.setAttribute("aluno", aluno);
                         request.setAttribute("organizacao", org);
                         // Encaminha para JSP de edição
@@ -151,13 +151,13 @@ public class OrganizacaoServlet extends HttpServlet {
             String matricula = request.getParameter("matricula");
 
             // Verifica existência do aluno pela matrícula
-            Aluno alunoM = alunoDAO.buscarPorMatricula(matricula);
+            Aluno alunoM = alunoDAO.buscar(matricula);
             if (alunoM == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado pela matrícula");
                 return;
             }
             // Verifica existência do aluno por ID (redundante, mas mantido conforme lógica original)
-            Aluno alunoID = alunoDAO.buscarPorId(id);
+            Aluno alunoID = alunoDAO.buscar(id);
             if (alunoID == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado pelo ID");
                 return;
@@ -255,7 +255,7 @@ public class OrganizacaoServlet extends HttpServlet {
 
             // Cria objeto OrganizacaoAtendimento com novos dados
             OrganizacaoAtendimento org = new OrganizacaoAtendimento(
-                    alunoDAO.buscarPorMatricula(matricula),
+                    alunoDAO.buscar(matricula),
                     request.getParameter("periodo"),
                     request.getParameter("duracao"),
                     request.getParameter("frequencia"),

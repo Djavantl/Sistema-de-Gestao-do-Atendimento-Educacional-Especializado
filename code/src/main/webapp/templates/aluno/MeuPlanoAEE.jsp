@@ -680,6 +680,13 @@
                 <div class="alert error">${erro}</div>
             </c:if>
 
+            <div class="detalhes-header">
+                <div></div>
+                <button class="botao-voltar" onclick="window.history.back()">
+                    Voltar
+                </button>
+            </div>
+
             <c:choose>
                 <c:when test="${semPlano}">
                     <div class="info-section">

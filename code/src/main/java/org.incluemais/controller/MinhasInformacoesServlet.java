@@ -38,7 +38,7 @@ public class MinhasInformacoesServlet extends HttpServlet {
         }
 
         try {
-            Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+            Aluno aluno = alunoDAO.buscar(matricula);
             if (aluno == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
                 return;

@@ -145,7 +145,7 @@ public class SessaoAtendimentoDAO {
         // Log do valor da presença
         System.out.println("Valor de presenca: " + presenca + " (" + (presenca == null ? "null" : presenca.toString()) + ")");
 
-        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+        Aluno aluno = alunoDAO.buscar(matricula);
         if (aluno == null) {
             // Solução segura em vez de exceção
             aluno = new Aluno();

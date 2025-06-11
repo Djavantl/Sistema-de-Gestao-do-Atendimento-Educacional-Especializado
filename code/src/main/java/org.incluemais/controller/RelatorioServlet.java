@@ -8,11 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import jakarta.servlet.http.HttpSession;
 import org.incluemais.model.dao.AlunoDAO;
-import org.incluemais.model.dao.AvaliacaoDAO;
 import org.incluemais.model.dao.ProfessorAEEDAO;
 import org.incluemais.model.dao.RelatorioDAO;
 import org.incluemais.model.entities.Aluno;
-import org.incluemais.model.entities.Avaliacao;
 import org.incluemais.model.entities.ProfessorAEE;
 import org.incluemais.model.entities.Relatorio;
 
@@ -157,7 +155,7 @@ public class RelatorioServlet extends HttpServlet {
         request.setAttribute("siape", siape);
 
         // Adicionar o aluno como atributo se necessário
-        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+        Aluno aluno = alunoDAO.buscar(matricula);
         request.setAttribute("aluno", aluno);
 
         request.getRequestDispatcher("/templates/professor/RelatoriosAlunos.jsp").forward(request, response);
@@ -234,7 +232,7 @@ public class RelatorioServlet extends HttpServlet {
 
         try {
             String alunoMatricula = request.getParameter("alunoMatricula");
-            Aluno aluno = alunoDAO.buscarPorMatricula(alunoMatricula);
+            Aluno aluno = alunoDAO.buscar(alunoMatricula);
             if (aluno == null) {
                 throw new ServletException("Aluno não encontrado");
             }
@@ -292,7 +290,7 @@ public class RelatorioServlet extends HttpServlet {
 
             // 2) Lê o alunoMatricula do <select> e busca o objeto Aluno no banco:
             String alunoMatricula = request.getParameter("alunoMatricula");
-            Aluno aluno = alunoDAO.buscarPorMatricula(alunoMatricula);
+            Aluno aluno = alunoDAO.buscar(alunoMatricula);
             if (aluno == null) {
                 throw new ServletException("Aluno não encontrado para a matrícula: " + alunoMatricula);
             }
@@ -382,7 +380,7 @@ public class RelatorioServlet extends HttpServlet {
         List<Relatorio> relatorios;
 
         if (alunoMatricula != null && !alunoMatricula.isEmpty()) {
-            Aluno alunoID = alunoDAO.buscarPorMatricula(alunoMatricula);
+            Aluno alunoID = alunoDAO.buscar(alunoMatricula);
             int Id = alunoID.getId();
             request.setAttribute("id", Id);
             relatorios = relatorioDAO.buscarPorAlunoMatricula(alunoMatricula);
@@ -404,11 +402,11 @@ public class RelatorioServlet extends HttpServlet {
         if (matricula == null || matricula.isEmpty()) {
             throw new ServletException("Matrícula do aluno não fornecida.");
         }
-        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+        Aluno aluno = alunoDAO.buscar(matricula);
         request.setAttribute("aluno", aluno);
 
         // Lista todas as opções de alunos para o <select> do JSP
-        List<Aluno> todosAlunos = alunoDAO.buscarTodos();
+        List<Aluno> todosAlunos = alunoDAO.buscar();
         request.setAttribute("alunosLista", todosAlunos);
 
         request.setAttribute("aluno", aluno);           // Pode ser null para novo
@@ -421,7 +419,7 @@ public class RelatorioServlet extends HttpServlet {
         Relatorio relatorio = relatorioDAO.buscarPorId(id);
         if (relatorio != null) {
             // Busca todos os alunos para preencher o <select>
-            List<Aluno> todosAlunos = alunoDAO.buscarTodos();
+            List<Aluno> todosAlunos = alunoDAO.buscar();
             request.setAttribute("alunosLista", todosAlunos);
 
             request.setAttribute("relatorio", relatorio);

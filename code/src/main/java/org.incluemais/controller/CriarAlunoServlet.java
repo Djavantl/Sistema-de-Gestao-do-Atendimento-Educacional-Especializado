@@ -1,7 +1,5 @@
 package org.incluemais.controller;
 
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
 import org.incluemais.model.dao.AlunoDAO;
 import org.incluemais.model.dao.DeficienciaDAO;
 import org.incluemais.model.dao.OrganizacaoAtendimentoDAO;
@@ -13,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.incluemais.model.entities.Deficiencia;
 import org.incluemais.model.entities.OrganizacaoAtendimento;
-import org.incluemais.model.entities.SessaoAtendimento;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -91,7 +88,7 @@ public class CriarAlunoServlet extends HttpServlet {
     private void carregarPaginaEdicao(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         String matricula = request.getParameter("matricula");
-        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+        Aluno aluno = alunoDAO.buscar(matricula);
 
         if (aluno == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "aluno não encontrado");
@@ -110,9 +107,9 @@ public class CriarAlunoServlet extends HttpServlet {
             List<Aluno> alunos;
 
             if (filtro != null && !filtro.isEmpty()) {
-                alunos = alunoDAO.buscarPorNome(filtro);
+                alunos = alunoDAO.buscar(filtro, 1);
             } else {
-                alunos = alunoDAO.buscarTodos();
+                alunos = alunoDAO.buscar();
             }
 
             request.setAttribute("alunos", alunos);
@@ -135,7 +132,7 @@ public class CriarAlunoServlet extends HttpServlet {
             throws SQLException, ServletException, IOException {
 
         int id = Integer.parseInt(request.getParameter("id"));
-        Aluno aluno = alunoDAO.buscarPorId(id);
+        Aluno aluno = alunoDAO.buscar(id);
 
         if (aluno != null) {
             request.setAttribute("aluno", aluno);
@@ -287,7 +284,7 @@ public class CriarAlunoServlet extends HttpServlet {
             throws ServletException, IOException {
         try {
             int id = Integer.parseInt(request.getParameter("id"));
-            Aluno aluno = alunoDAO.buscarPorId(id);
+            Aluno aluno = alunoDAO.buscar(id);
 
             if (aluno != null) {
                 DeficienciaDAO deficienciaDAO = new DeficienciaDAO((Connection) getServletContext().getAttribute("conexao"));

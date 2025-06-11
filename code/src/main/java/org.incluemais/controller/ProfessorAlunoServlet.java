@@ -35,7 +35,7 @@ public class ProfessorAlunoServlet extends HttpServlet {
 
         String matricula = request.getParameter("matricula");
         try {
-            Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+            Aluno aluno = alunoDAO.buscar(matricula);
             if (aluno == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Aluno não encontrado");
                 return;

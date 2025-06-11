@@ -2,9 +2,6 @@ package org.incluemais.model.dao;
 
 import org.incluemais.model.connection.DBConnection;
 import org.incluemais.model.entities.Aluno;
-import org.incluemais.model.entities.OrganizacaoAtendimento;
-import org.incluemais.model.entities.Pessoa;
-import org.incluemais.model.entities.PlanoAEE;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -159,7 +156,8 @@ public class AlunoDAO {
         }
     }
 
-    public Aluno buscarPorMatricula(String matricula) {
+    //buscar por matricula
+    public Aluno buscar(String matricula) {
         String sql = """
             SELECT p.*, a.* 
             FROM Aluno a
@@ -179,7 +177,8 @@ public class AlunoDAO {
         }
     }
 
-    public Aluno buscarPorId(int id) {
+    //buscar por id
+    public Aluno buscar(int id) {
         String sql = """
         SELECT p.*, a.* 
         FROM Aluno a
@@ -199,7 +198,29 @@ public class AlunoDAO {
         }
     }
 
-    public List<Aluno> buscarPorNome(String nome) {
+
+
+    //buscar todos
+    public List<Aluno> buscar() throws SQLException {
+        String sql = """
+    SELECT p.*, a.* 
+    FROM Aluno a
+    INNER JOIN Pessoa p ON a.pessoa_id = p.id
+    """;
+
+        List<Aluno> alunos = new ArrayList<>(); // declarar aqui
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                alunos.add(mapearAluno(rs));
+            }
+        }
+        logger.info("Alunos encontrados: " + alunos.size());
+        return alunos;
+    }
+
+    //buscar por nome
+    public List<Aluno> buscar(String nome, int id) {
         String sql = """
             SELECT p.*, a.* 
             FROM Aluno a
@@ -222,25 +243,6 @@ public class AlunoDAO {
         }
         return alunos;
     }
-
-    public List<Aluno> buscarTodos() throws SQLException {
-        String sql = """
-    SELECT p.*, a.* 
-    FROM Aluno a
-    INNER JOIN Pessoa p ON a.pessoa_id = p.id
-    """;
-
-        List<Aluno> alunos = new ArrayList<>(); // declarar aqui
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                alunos.add(mapearAluno(rs));
-            }
-        }
-        logger.info("Alunos encontrados: " + alunos.size());
-        return alunos;
-    }
-
 
     public Aluno mapearAluno(ResultSet rs) throws SQLException {
         Aluno aluno = new Aluno();

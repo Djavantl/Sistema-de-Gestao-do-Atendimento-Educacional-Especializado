@@ -563,7 +563,7 @@
                             <select id="professorSelect" name="siape" required>
                                 <option value="">Selecione um professor</option>
                                 <c:forEach items="${todosProfessores}" var="prof">
-                                    <option value="${prof.siape}">${prof.nome} (${prof.especialidade})</option>
+                                    <option value="${prof.siape}">${prof.nome}</option>
                                 </c:forEach>
                             </select>
                         </div>

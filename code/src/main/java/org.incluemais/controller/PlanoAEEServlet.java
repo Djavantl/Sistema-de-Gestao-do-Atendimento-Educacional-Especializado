@@ -39,7 +39,7 @@ public class PlanoAEEServlet extends HttpServlet {
             try (Connection conn = getConnection()) {
                 AlunoDAO alunoDAO = new AlunoDAO(conn);
                 ProfessorAEEDAO professorAEEDAO = new ProfessorAEEDAO(conn);
-                request.setAttribute("alunos", alunoDAO.buscarTodos());
+                request.setAttribute("alunos", alunoDAO.buscar());
                 request.setAttribute("professores", professorAEEDAO.getAll());
                 request.getRequestDispatcher("/templates/aee/CriarPlanoAEE.jsp").forward(request, response);
             } catch (SQLException e) {
@@ -83,7 +83,7 @@ public class PlanoAEEServlet extends HttpServlet {
             String recomendacoes = request.getParameter("recomendacoes");
             String observacoes = request.getParameter("observacoes");
 
-            Aluno aluno = alunoDAO.buscarPorMatricula(matriculaAluno);
+            Aluno aluno = alunoDAO.buscar(matriculaAluno);
             ProfessorAEE professor = (siapeProfessor != null && !siapeProfessor.isEmpty())
                     ? professorDAO.buscarPorSiape(siapeProfessor)
                     : null;
@@ -103,7 +103,7 @@ public class PlanoAEEServlet extends HttpServlet {
             try (Connection connReload = getConnection()) {
                 AlunoDAO alunoDAO = new AlunoDAO(connReload);
                 ProfessorAEEDAO professorAEEDAO = new ProfessorAEEDAO(connReload);
-                request.setAttribute("alunos", alunoDAO.buscarTodos());
+                request.setAttribute("alunos", alunoDAO.buscar());
                 request.setAttribute("professores", professorAEEDAO.getAll());
                 request.getRequestDispatcher("/templates/aee/CriarPlanoAEE.jsp").forward(request, response);
             } catch (SQLException ex) {

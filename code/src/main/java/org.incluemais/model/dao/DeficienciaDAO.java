@@ -76,7 +76,7 @@ public class DeficienciaDAO {
             stmt.setString(1, matricula);
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+                    Aluno aluno = alunoDAO.buscar(matricula);
                     if(aluno != null) {
                         deficiencias.add(new Deficiencia(
                                 rs.getInt("id"),
@@ -104,7 +104,7 @@ public class DeficienciaDAO {
                 if (rs.next()) {
                     String matriculaAluno = rs.getString("aluno_matricula");
                     AlunoDAO alunoDAO = new AlunoDAO(conn);
-                    Aluno aluno = alunoDAO.buscarPorMatricula(matriculaAluno);
+                    Aluno aluno = alunoDAO.buscar(matriculaAluno);
                     return new Deficiencia(
                             rs.getInt("id"),
                             rs.getString("nome"),

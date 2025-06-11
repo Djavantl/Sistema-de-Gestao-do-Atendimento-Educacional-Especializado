@@ -107,7 +107,7 @@ public class CriarDeficienciaServlet extends HttpServlet {
     private void criarDeficiencia(HttpServletRequest request, Connection conn, AlunoDAO alunoDAO, DeficienciaDAO deficienciaDAO, String matricula)
             throws SQLException {
         System.out.println("entrou criar");
-        Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+        Aluno aluno = alunoDAO.buscar(matricula);
         if (aluno == null) {
             throw new SQLException("Aluno não encontrado com a matrícula: " + matricula);
         }

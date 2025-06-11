@@ -443,9 +443,7 @@
                     <input type="checkbox" id="lembrar">
                     <label for="lembrar">Lembrar-me</label>
                 </div>
-                <a href="#" class="esqueci-senha">
-                    <i class="fas fa-key"></i> Esqueci minha senha
-                </a>
+
             </div>
 
             <button type="submit" class="botao-login">

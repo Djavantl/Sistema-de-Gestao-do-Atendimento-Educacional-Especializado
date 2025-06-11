@@ -109,7 +109,7 @@ public class PlanoAEEDAO {
                     plano.setObservacoes(rs.getString("observacoes"));
 
                     AlunoDAO alunoDAO = new AlunoDAO(conn);
-                    Aluno aluno = alunoDAO.buscarPorMatricula(rs.getString("aluno_matricula"));
+                    Aluno aluno = alunoDAO.buscar(rs.getString("aluno_matricula"));
                     plano.setAluno(aluno);
 
                     String siape = rs.getString("professor_siape");
@@ -140,7 +140,7 @@ public class PlanoAEEDAO {
                     plano.setObservacoes(rs.getString("observacoes"));
 
                     AlunoDAO alunoDAO = new AlunoDAO(conn);
-                    Aluno aluno = alunoDAO.buscarPorMatricula(matricula);
+                    Aluno aluno = alunoDAO.buscar(matricula);
                     plano.setAluno(aluno);
 
                     String siape = rs.getString("professor_siape");
