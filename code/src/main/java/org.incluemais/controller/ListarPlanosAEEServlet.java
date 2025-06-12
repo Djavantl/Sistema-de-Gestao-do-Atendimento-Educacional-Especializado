@@ -50,7 +50,7 @@ public class ListarPlanosAEEServlet extends HttpServlet {
 
         if ("/templates/aee/planosAEE".equals(path)) {
             try {
-                List<Map<String,Object>> planos = planoAEEDAO.listarTodosComNomes();
+                List<Map<String,Object>> planos = planoAEEDAO.find();
                 request.setAttribute("planosLista", planos);
                 request.getRequestDispatcher("/templates/aee/PlanosAEE.jsp").forward(request, response);
             } catch (SQLException e) {
@@ -74,7 +74,7 @@ public class ListarPlanosAEEServlet extends HttpServlet {
         }
         try {
             int planoId = Integer.parseInt(idParam);
-            PlanoAEE plano = planoAEEDAO.buscarPorId(planoId);
+            PlanoAEE plano = planoAEEDAO.find(planoId);
             if (plano == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Plano não encontrado");
                 return;
@@ -105,7 +105,7 @@ public class ListarPlanosAEEServlet extends HttpServlet {
             }
             try {
                 int planoId = Integer.parseInt(idParam);
-                boolean excluido = planoAEEDAO.excluir(planoId);
+                boolean excluido = planoAEEDAO.delete(planoId);
                 String redirect = response.encodeRedirectURL(
                         request.getContextPath() + "/templates/aee/planosAEE" +
                                 (excluido ? "" : "?erro=Falha+ao+excluir+plano")

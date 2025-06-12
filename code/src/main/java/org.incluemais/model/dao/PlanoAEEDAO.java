@@ -17,7 +17,7 @@ public class PlanoAEEDAO {
 
     // --------------------- CRIAÇÃO ---------------------
 
-    public int inserir(PlanoAEE plano) throws SQLException {
+    public int insert(PlanoAEE plano) throws SQLException {
         String sql = "INSERT INTO PlanoAEE (professor_siape, aluno_matricula, dataInicio, recomendacoes, observacoes) " +
                 "VALUES (?, ?, ?, ?, ?)";
 
@@ -48,26 +48,9 @@ public class PlanoAEEDAO {
         }
     }
 
-    public void adicionarMetaAoPlano(int planoId, Meta meta) throws SQLException {
-        String sqlMeta = "INSERT INTO Meta (descricao, status, plano_id) VALUES (?, ?, ?)";
-
-        try (PreparedStatement stmtMeta = conn.prepareStatement(sqlMeta, Statement.RETURN_GENERATED_KEYS)) {
-            stmtMeta.setString(1, meta.getDescricao());
-            stmtMeta.setString(2, meta.getStatus());
-            stmtMeta.setInt(3, planoId);
-            stmtMeta.executeUpdate();
-
-            try (ResultSet generatedKeys = stmtMeta.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    meta.setId(generatedKeys.getInt(1));
-                }
-            }
-        }
-    }
-
     // --------------------- LEITURA ---------------------
 
-    public List<Map<String, Object>> listarTodosComNomes() throws SQLException {
+    public List<Map<String, Object>> find() throws SQLException {
         List<Map<String, Object>> planos = new ArrayList<>();
         String sql = "SELECT p.id, " +
                 "a.matricula AS aluno_matricula, " +
@@ -96,7 +79,7 @@ public class PlanoAEEDAO {
         return planos;
     }
 
-    public PlanoAEE buscarPorId(int id) throws SQLException {
+    public PlanoAEE find(int id) throws SQLException {
         String sql = "SELECT * FROM PlanoAEE WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
@@ -125,7 +108,7 @@ public class PlanoAEEDAO {
         return null;
     }
 
-    public PlanoAEE buscarPorMatriculaAluno(String matricula) throws SQLException {
+    public PlanoAEE find(String matricula) throws SQLException {
         String sql = "SELECT * FROM PlanoAEE WHERE aluno_matricula = ? LIMIT 1";
 
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -157,55 +140,9 @@ public class PlanoAEEDAO {
         return null;
     }
 
-    public PlanoAEE buscarPorAluno(String matricula) throws SQLException {
-        String sql = "SELECT * FROM PlanoAEE WHERE aluno_matricula = ?";
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, matricula);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                PlanoAEE plano = new PlanoAEE();
-                plano.setId(rs.getInt("id"));
-                plano.setDataInicio(rs.getDate("dataInicio").toLocalDate());
-                plano.setRecomendacoes(rs.getString("recomendacoes"));
-                plano.setObservacoes(rs.getString("observacoes"));
-
-                Aluno aluno = new Aluno();
-                aluno.setMatricula(rs.getString("aluno_matricula"));
-                plano.setAluno(aluno);
-
-                if (rs.getString("professor_siape") != null) {
-                    ProfessorAEE professor = new ProfessorAEE();
-                    professor.setSiape(rs.getString("professor_siape"));
-                    plano.setProfessorAEE(professor);
-                }
-                return plano;
-            }
-        }
-        return null;
-    }
-
-    public Meta buscarMetaPorId(int metaId) throws SQLException {
-        String sql = "SELECT * FROM Meta WHERE id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, metaId);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Meta meta = new Meta();
-                    meta.setId(rs.getInt("id"));
-                    meta.setDescricao(rs.getString("descricao"));
-                    meta.setStatus(rs.getString("status"));
-                    return meta;
-                }
-            }
-        }
-        return null;
-    }
-
     // --------------------- ATUALIZAÇÃO ---------------------
 
-    public boolean atualizar(PlanoAEE plano) throws SQLException {
+    public boolean update(PlanoAEE plano) throws SQLException {
         String sql = "UPDATE PlanoAEE SET professor_siape = ?, dataInicio = ?, recomendacoes = ?, observacoes = ? " +
                 "WHERE id = ?";
 
@@ -225,33 +162,12 @@ public class PlanoAEEDAO {
         }
     }
 
-    public boolean atualizarMeta(Meta meta) throws SQLException {
-        String sql = "UPDATE Meta SET descricao = ?, status = ? WHERE id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, meta.getDescricao());
-            stmt.setString(2, meta.getStatus());
-            stmt.setInt(3, meta.getId());
-
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
     // --------------------- EXCLUSÃO ---------------------
 
-    public boolean excluir(int id) throws SQLException {
+    public boolean delete(int id) throws SQLException {
         String sql = "DELETE FROM PlanoAEE WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-        }
-    }
-
-    public boolean excluirMeta(int metaId) throws SQLException {
-        String sql = "DELETE FROM Meta WHERE id = ?";
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, metaId);
             return stmt.executeUpdate() > 0;
         }
     }

@@ -17,15 +17,18 @@ public class MetaDAO {
         this.conn = conn;
     }
 
-    public void insert(Meta meta) throws SQLException {
-        String sql = "INSERT INTO Meta (descricao, status) VALUES (?, ?)";
+    // --------------------- CRIAÇÃO ---------------------
 
-        try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            stmt.setString(1, meta.getDescricao());
-            stmt.setString(2, meta.getStatus());
-            stmt.executeUpdate();
+    public void insert(int planoId, Meta meta) throws SQLException {
+        String sqlMeta = "INSERT INTO Meta (descricao, status, plano_id) VALUES (?, ?, ?)";
 
-            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+        try (PreparedStatement stmtMeta = conn.prepareStatement(sqlMeta, Statement.RETURN_GENERATED_KEYS)) {
+            stmtMeta.setString(1, meta.getDescricao());
+            stmtMeta.setString(2, meta.getStatus());
+            stmtMeta.setInt(3, planoId);
+            stmtMeta.executeUpdate();
+
+            try (ResultSet generatedKeys = stmtMeta.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     meta.setId(generatedKeys.getInt(1));
                 }
@@ -33,17 +36,25 @@ public class MetaDAO {
         }
     }
 
-    public void update(Meta meta) throws SQLException {
-        String sql = "UPDATE Meta SET descricao = ?, status = ? WHERE id = ?";
+    // --------------------- LEITURA ---------------------
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public Meta find(int metaId) throws SQLException {
+        String sql = "SELECT * FROM Meta WHERE id = ?";
 
-            stmt.setString(1, meta.getDescricao());
-            stmt.setString(2, meta.getStatus());
-            stmt.setInt(3, meta.getId());
-            stmt.executeUpdate();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, metaId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    Meta meta = new Meta();
+                    meta.setId(rs.getInt("id"));
+                    meta.setDescricao(rs.getString("descricao"));
+                    meta.setStatus(rs.getString("status"));
+                    return meta;
+                }
+            }
         }
+        return null;
     }
 
     public List<Meta> buscarMetasPorPlanoId(int planoId) throws SQLException {
@@ -64,14 +75,28 @@ public class MetaDAO {
         return metas;
     }
 
-    public void delete(int id) throws SQLException {
+    // --------------------- ATUALIZAÇÃO ---------------------
+
+    public boolean update(Meta meta) throws SQLException {
+        String sql = "UPDATE Meta SET descricao = ?, status = ? WHERE id = ?";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, meta.getDescricao());
+            stmt.setString(2, meta.getStatus());
+            stmt.setInt(3, meta.getId());
+
+            return stmt.executeUpdate() > 0;
+        }
+    }
+
+    // --------------------- EXCLUSÃO ---------------------
+
+    public boolean delete(int metaId) throws SQLException {
         String sql = "DELETE FROM Meta WHERE id = ?";
 
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            stmt.executeUpdate();
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, metaId);
+            return stmt.executeUpdate() > 0;
         }
     }
 

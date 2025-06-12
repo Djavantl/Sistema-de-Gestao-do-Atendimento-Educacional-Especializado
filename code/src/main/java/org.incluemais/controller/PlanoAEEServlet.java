@@ -89,7 +89,7 @@ public class PlanoAEEServlet extends HttpServlet {
                     : null;
 
             PlanoAEE novoPlano = new PlanoAEE(professor, aluno, dataInicio, recomendacoes, observacoes);
-            int planoId = planoDAO.inserir(novoPlano);
+            int planoId = planoDAO.insert(novoPlano);
 
             response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId);
         } catch (SQLException | IllegalArgumentException e) {
@@ -134,7 +134,7 @@ public class PlanoAEEServlet extends HttpServlet {
             String recomendacoes = request.getParameter("recomendacoes");
             String observacoes = request.getParameter("observacoes");
 
-            PlanoAEE plano = planoDAO.buscarPorId(id);
+            PlanoAEE plano = planoDAO.find(id);
             if (plano == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Plano não encontrado");
                 return;
@@ -151,7 +151,7 @@ public class PlanoAEEServlet extends HttpServlet {
             plano.setRecomendacoes(recomendacoes);
             plano.setObservacoes(observacoes);
 
-            boolean atualizado = planoDAO.atualizar(plano);
+            boolean atualizado = planoDAO.update(plano);
             if (atualizado) {
                 response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + id + "&success=Plano+atualizado+com+sucesso");
             } else {

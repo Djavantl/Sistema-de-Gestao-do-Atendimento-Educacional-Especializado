@@ -81,7 +81,7 @@ public class PropostaPedagogicaServlet extends HttpServlet {
                     recursoCI,
                     plano
             );
-            propostaDAO.inserir(proposta);
+            propostaDAO.insert(proposta);
             response.sendRedirect(request.getContextPath() +
                     "/templates/aee/detalhes-plano?id=" + planoAEEId +
                     "&success=Proposta+criada+com+sucesso");
@@ -155,7 +155,7 @@ public class PropostaPedagogicaServlet extends HttpServlet {
                 return;
             }
             int propostaId = Integer.parseInt(propostaIdParam);
-            PropostaPedagogica proposta = propostaDAO.buscarPorId(propostaId);
+            PropostaPedagogica proposta = propostaDAO.findbyPropostaId(propostaId);
             if (proposta == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Proposta não encontrada");
                 return;
@@ -188,7 +188,7 @@ public class PropostaPedagogicaServlet extends HttpServlet {
 
             int propostaId = Integer.parseInt(request.getParameter("propostaId"));
             int planoId = Integer.parseInt(request.getParameter("planoId"));
-            PropostaPedagogica existente = propostaDAO.buscarPorId(propostaId);
+            PropostaPedagogica existente = propostaDAO.findbyPropostaId(propostaId);
             if (existente == null) {
                 throw new SQLException("Proposta não encontrada para atualização");
             }
@@ -211,21 +211,21 @@ public class PropostaPedagogicaServlet extends HttpServlet {
             // Verifica se os recursos estão vazios após atualização
             if (recursoP != null && !recursoP.temRecursos()) {
                 if (recursoP.getId() > 0) {
-                    new RecursosPedagogicosDAO(conn).excluirP(recursoP.getId());
+                    new RecursosPedagogicosDAO(conn).delete(recursoP.getId());
                 }
                 recursoP = null;
             }
 
             if (recursoFA != null && !recursoFA.temRecursos()) {
                 if (recursoFA.getId() > 0) {
-                    new RecursoFisicoArquitetonicoDAO(conn).excluirFA(recursoFA.getId());
+                    new RecursoFisicoArquitetonicoDAO(conn).delete(recursoFA.getId());
                 }
                 recursoFA = null;
             }
 
             if (recursoCI != null && !recursoCI.temRecursos()) {
                 if (recursoCI.getId() > 0) {
-                    new RecursosComunicacaoEInformacaoDAO(conn).excluirCI(recursoCI.getId());
+                    new RecursosComunicacaoEInformacaoDAO(conn).delete(recursoCI.getId());
                 }
                 recursoCI = null;
             }
@@ -247,7 +247,7 @@ public class PropostaPedagogicaServlet extends HttpServlet {
                     plano
             );
 
-            propostaDAO.atualizar(atualizada);
+            propostaDAO.update(atualizada);
             response.sendRedirect(request.getContextPath() +
                     "/templates/aee/detalhes-plano?id=" + planoId +
                     "&success=Proposta+atualizada+com+sucesso");
@@ -273,13 +273,13 @@ public class PropostaPedagogicaServlet extends HttpServlet {
 
         // Só persiste novos recursos que não estão vazios
         if (recursoP != null && recursoP.getId() == 0 && recursoP.temRecursos()) {
-            new RecursosPedagogicosDAO(conn).inserir(recursoP);
+            new RecursosPedagogicosDAO(conn).insert(recursoP);
         }
         if (recursoFA != null && recursoFA.getId() == 0 && recursoFA.temRecursos()) {
-            new RecursoFisicoArquitetonicoDAO(conn).inserir(recursoFA);
+            new RecursoFisicoArquitetonicoDAO(conn).insert(recursoFA);
         }
         if (recursoCI != null && recursoCI.getId() == 0 && recursoCI.temRecursos()) {
-            new RecursosComunicacaoEInformacaoDAO(conn).inserir(recursoCI);
+            new RecursosComunicacaoEInformacaoDAO(conn).insert(recursoCI);
         }
     }
 
@@ -332,7 +332,7 @@ public class PropostaPedagogicaServlet extends HttpServlet {
             int propostaId = Integer.parseInt(propostaIdParam);
             int planoId = Integer.parseInt(planoIdParam);
             PropostaPedagogicaDAO propostaDAO = new PropostaPedagogicaDAO(conn);
-            propostaDAO.excluirPropostaComRecursos(propostaId);
+            propostaDAO.deletePropostaERecursos(propostaId);
             response.sendRedirect(request.getContextPath() +
                     "/templates/aee/detalhes-plano?id=" + planoId +
                     "&success=Proposta+excluída+com+sucesso");

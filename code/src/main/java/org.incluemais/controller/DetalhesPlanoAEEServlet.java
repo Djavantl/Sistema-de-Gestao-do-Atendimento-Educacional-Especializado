@@ -55,14 +55,14 @@ public class DetalhesPlanoAEEServlet extends HttpServlet {
 
         try {
             int planoId = Integer.parseInt(idParam);
-            PlanoAEE plano = planoAEEDAO.buscarPorId(planoId);
+            PlanoAEE plano = planoAEEDAO.find(planoId);
 
             if (plano == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Plano não encontrado");
                 return;
             }
 
-            PropostaPedagogica proposta = propostaDAO.buscarPorPlanoId(planoId);
+            PropostaPedagogica proposta = propostaDAO.findByPlanoAEE(planoId);
             List<Meta> metas = metaDAO.buscarMetasPorPlanoId(planoId);
 
             plano.setProposta(proposta);
