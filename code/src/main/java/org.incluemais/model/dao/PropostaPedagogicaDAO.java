@@ -142,7 +142,7 @@ public class PropostaPedagogicaDAO {
         return proposta;
     }
 
-    public PropostaPedagogica findbyPropostaId(int id) throws SQLException {
+    public PropostaPedagogica findById(int id) throws SQLException {
         String sql = "SELECT * FROM PropostaPedagogica WHERE id = ?";
         PropostaPedagogica proposta = null;
 
@@ -181,7 +181,7 @@ public class PropostaPedagogicaDAO {
     // --------------------- EXCLUSÃO ---------------------
 
     public void deletePropostaERecursos(int propostaId) throws SQLException {
-        PropostaPedagogica proposta = findbyPropostaId(propostaId);
+        PropostaPedagogica proposta = findById(propostaId);
 
         if (proposta == null) {
             throw new SQLException("Proposta não encontrada com ID: " + propostaId);

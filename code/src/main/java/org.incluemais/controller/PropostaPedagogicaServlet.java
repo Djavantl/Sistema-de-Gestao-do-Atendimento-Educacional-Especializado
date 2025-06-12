@@ -155,7 +155,7 @@ public class PropostaPedagogicaServlet extends HttpServlet {
                 return;
             }
             int propostaId = Integer.parseInt(propostaIdParam);
-            PropostaPedagogica proposta = propostaDAO.findbyPropostaId(propostaId);
+            PropostaPedagogica proposta = propostaDAO.findById(propostaId);
             if (proposta == null) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Proposta não encontrada");
                 return;
@@ -188,7 +188,7 @@ public class PropostaPedagogicaServlet extends HttpServlet {
 
             int propostaId = Integer.parseInt(request.getParameter("propostaId"));
             int planoId = Integer.parseInt(request.getParameter("planoId"));
-            PropostaPedagogica existente = propostaDAO.findbyPropostaId(propostaId);
+            PropostaPedagogica existente = propostaDAO.findById(propostaId);
             if (existente == null) {
                 throw new SQLException("Proposta não encontrada para atualização");
             }
