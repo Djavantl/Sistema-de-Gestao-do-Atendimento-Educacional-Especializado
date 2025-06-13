@@ -79,20 +79,56 @@ https://github.com/Djavantl/Sistema-de-Gestao-do-Atendimento-Educacional-Especia
 
 ---
 
-## Início Rápido
+## Como Executar o Sistema com Docker
 
-1. **Clone o repositório:**
+Siga estas etapas para configurar e executar a aplicação:
+
+1. **Pré-requisitos**
+
+Docker instalado (Instalação do Docker)
+Docker Compose (Instalação do Docker Compose)
+Git (opcional)
+
+2. **Clone o repositório:**
 
    ```bash
    git clone https://github.com/Djavantl/Sistema-de-Gestao-do-Atendimento-Educacional-Especializado.git
    cd Sistema-de-Gestao-do-Atendimento-Educacional-Especializado
    ```
+   
+3. **Execute o Docker Compose:**
 
----
+No terminal de sua IDE execute o comando: 
+docker-compose up --build
 
-## Licença
+4. **Acesse o sistema:** 
 
-Este projeto está licenciado sob os termos da [Licença MIT](LICENSE).
+Após executar, e o docker já estiver rodando, acesse o sistema a partir da página de login/cadastro:
+Digite no navegador: http://localhost:8080/templates/usuarios/login.jsp
+
+5. **Credenciais de Acesso (Pre-definidas)**
+
+Dados pre-definidos já foram inseridos para realizar o teste, para:
+
+Aluno utilize alguma dessas matriculas:
+ADS20230001
+ADS20230002
+ADS20230003
+ADS20230004
+
+Professor utilize algum desses siapes:
+SP987654321
+PE876543210
+BA765432109
+DF654321098
+
+ProfessorAEE utilize o siape:
+SC543210987
+
+
+A senha deverá ser criada. Faça isso na página de cadastro, caso ainda não tenha cadastrado os usuários.
+Após cadastrar, realize o login com os dados.
+Agora só utilizar o sistema!!
 
 ---
 
