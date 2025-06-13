@@ -46,7 +46,7 @@ public class MinhasSessoesServlet extends HttpServlet {
                 return;
             }
 
-            List<SessaoAtendimento> todasSessoes = sessaoDAO.buscarPorAluno(matricula);
+            List<SessaoAtendimento> todasSessoes = sessaoDAO.buscar(matricula);
             List<SessaoAtendimento> sessoesFuturas = new ArrayList<>();
             List<SessaoAtendimento> sessoesPassadas = new ArrayList<>();
 

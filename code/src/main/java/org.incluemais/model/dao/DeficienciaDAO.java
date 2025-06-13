@@ -68,7 +68,7 @@ public class DeficienciaDAO {
         }
     }
 
-    public List<Deficiencia> findByAlunoMatricula(String matricula) throws SQLException {
+    public List<Deficiencia> buscar(String matricula) throws SQLException {
         List<Deficiencia> deficiencias = new ArrayList<>();
         String sql = "SELECT * FROM Deficiencia WHERE aluno_matricula = ?";
 
@@ -93,7 +93,7 @@ public class DeficienciaDAO {
         return deficiencias;
     }
 
-    public Deficiencia findById(int id) throws SQLException {
+    public Deficiencia buscar(int id) throws SQLException {
         String sql = "SELECT * FROM Deficiencia WHERE id = ?";
 
         try (Connection conn = DBConnection.getConnection();

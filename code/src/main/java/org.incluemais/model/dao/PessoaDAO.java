@@ -8,7 +8,7 @@ import java.util.List;
 
 public class PessoaDAO {
 
-    // Método para inserir uma pessoa
+
     public int inserirPessoa(Pessoa pessoa) {
         String sql = "INSERT INTO Pessoa (nome, dataNascimento, email, sexo, naturalidade, telefone) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
@@ -37,7 +37,7 @@ public class PessoaDAO {
         return -1;
     }
 
-    // Método para buscar uma pessoa pelo ID
+
     public Pessoa buscarPessoaPorId(int id) {
         String sql = "SELECT * FROM Pessoa WHERE id = ?";
 
@@ -63,7 +63,7 @@ public class PessoaDAO {
         return null;
     }
 
-    // Método para listar todas as pessoas
+
     public List<Pessoa> listarPessoas() {
         List<Pessoa> pessoas = new ArrayList<>();
         String sql = "SELECT * FROM Pessoa";
@@ -88,7 +88,7 @@ public class PessoaDAO {
         return pessoas;
     }
 
-    // Método para excluir uma pessoa
+
     public boolean excluirPessoa(int id) {
         String sql = "DELETE FROM Pessoa WHERE id = ?";
 

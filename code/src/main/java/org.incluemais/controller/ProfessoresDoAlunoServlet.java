@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/templates/aee/professores-aluno")
-public class ProfessorAlunoServlet extends HttpServlet {
+public class ProfessoresDoAlunoServlet extends HttpServlet {
     private ProfessorAlunoDAO professorAlunoDAO;
     private AlunoDAO alunoDAO;
     private ProfessorDAO professorDAO;
@@ -43,7 +43,7 @@ public class ProfessorAlunoServlet extends HttpServlet {
             System.out.println("Aluno encontrado: " + aluno.getNome()); // Debug
             request.setAttribute("aluno", aluno);
 
-            List<Professor> professores = professorAlunoDAO.getProfessoresByAluno(matricula);
+            List<Professor> professores = professorAlunoDAO.buscarProfessoresDoAluno(matricula);
             List<Professor> todosProfessores = professorDAO.getAll();
 
             request.setAttribute("professoresAluno", professores);

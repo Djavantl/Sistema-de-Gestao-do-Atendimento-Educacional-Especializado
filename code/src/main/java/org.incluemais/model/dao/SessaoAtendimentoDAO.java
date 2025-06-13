@@ -44,23 +44,7 @@ public class SessaoAtendimentoDAO {
         }
     }
 
-    public List<SessaoAtendimento> buscarPorAluno(String matricula) throws SQLException {
-        List<SessaoAtendimento> lista = new ArrayList<>();
-        String sql = "SELECT * FROM SessaoAtendimento WHERE aluno_matricula = ? ORDER BY "
-                + "  CASE WHEN data >= CURDATE() THEN 0 ELSE 1 END, "
-                + "  CASE WHEN data >= CURDATE() THEN data END ASC, "
-                + "  CASE WHEN data < CURDATE() THEN data END DESC;";
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, matricula);
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    lista.add(construirSessao(rs));
-                }
-            }
-        }
-        return lista;
-    }
 
     public void atualizar(SessaoAtendimento s) throws SQLException {
         String sql = "UPDATE SessaoAtendimento SET aluno_matricula = ?, data = ?, horario = ?, local = ?, presenca = ?, observacoes = ? WHERE id = ?";
@@ -90,7 +74,8 @@ public class SessaoAtendimentoDAO {
         }
     }
 
-    public SessaoAtendimento buscarPorId(int id) throws SQLException {
+    // buacar por id
+    public SessaoAtendimento buscar(int id) throws SQLException {
         String sql = "SELECT * FROM SessaoAtendimento WHERE id = ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -106,7 +91,27 @@ public class SessaoAtendimentoDAO {
         return null;
     }
 
-    public List<SessaoAtendimento> listarTodos() throws SQLException {
+    // buscar com a matricula do aluno
+    public List<SessaoAtendimento> buscar(String matricula) throws SQLException {
+        List<SessaoAtendimento> lista = new ArrayList<>();
+        String sql = "SELECT * FROM SessaoAtendimento WHERE aluno_matricula = ? ORDER BY "
+                + "  CASE WHEN data >= CURDATE() THEN 0 ELSE 1 END, "
+                + "  CASE WHEN data >= CURDATE() THEN data END ASC, "
+                + "  CASE WHEN data < CURDATE() THEN data END DESC;";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, matricula);
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(construirSessao(rs));
+                }
+            }
+        }
+        return lista;
+    }
+
+    //buscar todas sessoes
+    public List<SessaoAtendimento> buscar() throws SQLException {
         List<SessaoAtendimento> lista = new ArrayList<>();
         String sql = "SELECT * FROM SessaoAtendimento "
                 + "WHERE presenca IS NULL "
@@ -133,21 +138,20 @@ public class SessaoAtendimentoDAO {
         LocalTime horario = rs.getTime("horario").toLocalTime();
         String local = rs.getString("local");
 
-        // Log importante para diagnóstico
+
         System.out.println("Construindo sessão ID: " + id);
 
-        // Tratar presença de forma mais segura
+
         Boolean presenca = null;
         if (rs.getObject("presenca") != null) {
             presenca = rs.getBoolean("presenca");
         }
 
-        // Log do valor da presença
+
         System.out.println("Valor de presenca: " + presenca + " (" + (presenca == null ? "null" : presenca.toString()) + ")");
 
         Aluno aluno = alunoDAO.buscar(matricula);
         if (aluno == null) {
-            // Solução segura em vez de exceção
             aluno = new Aluno();
             aluno.setNome("Aluno não encontrado");
             aluno.setMatricula(matricula);

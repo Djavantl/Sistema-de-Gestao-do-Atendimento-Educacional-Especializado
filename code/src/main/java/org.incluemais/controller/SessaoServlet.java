@@ -49,7 +49,7 @@ public class SessaoServlet extends HttpServlet {
                 carregarPaginaCriacao(request, response);
             } else {
                 String matriculaAluno = request.getParameter("matriculaAluno");
-                List<SessaoAtendimento> sessoesPorAluno = sessaoDAO.buscarPorAluno(matriculaAluno);
+                List<SessaoAtendimento> sessoesPorAluno = sessaoDAO.buscar(matriculaAluno);
 
                 request.setAttribute("sessoesPorAluno", sessoesPorAluno);
             }
@@ -95,7 +95,7 @@ public class SessaoServlet extends HttpServlet {
     private void carregarPaginaEdicao(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         int id = Integer.parseInt(request.getParameter("id"));
-        SessaoAtendimento sessao = sessaoDAO.buscarPorId(id);
+        SessaoAtendimento sessao = sessaoDAO.buscar(id);
 
         if (sessao == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND, "Sessão não encontrada");
@@ -142,7 +142,7 @@ public class SessaoServlet extends HttpServlet {
             throws SQLException, ServletException, IOException {
 
         try {
-            List<SessaoAtendimento> sessoes = sessaoDAO.listarTodos();
+            List<SessaoAtendimento> sessoes = sessaoDAO.buscar();
             System.out.println("Total de sessões encontradas: " + sessoes.size());
 
             for (SessaoAtendimento sessao : sessoes) {
@@ -187,7 +187,7 @@ public class SessaoServlet extends HttpServlet {
         String observacoes = request.getParameter("observacoes");
         String alunoMatricula = request.getParameter("alunoMatricula");
 
-        SessaoAtendimento sessao = sessaoDAO.buscarPorId(id);
+        SessaoAtendimento sessao = sessaoDAO.buscar(id);
         sessao.setData(data);
         sessao.setHorario(horario);
         sessao.setLocal(local);
@@ -202,7 +202,7 @@ public class SessaoServlet extends HttpServlet {
             throws SQLException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
 
-        SessaoAtendimento sessaoParaExcluir = sessaoDAO.buscarPorId(id);
+        SessaoAtendimento sessaoParaExcluir = sessaoDAO.buscar(id);
 
         if (sessaoParaExcluir == null) {
             // Sessão não encontrada - redirecionar com mensagem de erro

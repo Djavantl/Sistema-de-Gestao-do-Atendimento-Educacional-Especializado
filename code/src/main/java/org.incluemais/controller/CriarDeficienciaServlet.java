@@ -70,7 +70,7 @@ public class CriarDeficienciaServlet extends HttpServlet {
             try (Connection conn = DBConnection.getConnection()) {
                 int id = Integer.parseInt(idParam);
                 DeficienciaDAO dao = new DeficienciaDAO(conn);
-                Deficiencia deficiencia = dao.findById(id);
+                Deficiencia deficiencia = dao.buscar(id);
 
                 if (deficiencia != null) {
                     request.setAttribute("deficiencia", deficiencia);
@@ -89,7 +89,7 @@ public class CriarDeficienciaServlet extends HttpServlet {
         try (Connection conn = DBConnection.getConnection()) {
             int id = Integer.parseInt(idParam);
             DeficienciaDAO dao = new DeficienciaDAO(conn);
-            Deficiencia deficiencia = dao.findById(id);
+            Deficiencia deficiencia = dao.buscar(id);
 
             if (deficiencia != null) {
                 request.setAttribute("deficiencia", deficiencia);

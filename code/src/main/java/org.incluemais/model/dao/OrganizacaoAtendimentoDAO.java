@@ -44,47 +44,6 @@ public class OrganizacaoAtendimentoDAO {
         return -1;
     }
 
-    public OrganizacaoAtendimento getById(int id) throws SQLException {
-        String sql = """
-        SELECT 
-            o.id,
-            o.periodo,
-            o.duracao,
-            o.frequencia,
-            o.composicao,
-            o.tipo,
-            a.pessoa_id,
-            a.matricula
-        FROM OrganizacaoAtendimento o
-        INNER JOIN Aluno a ON o.aluno_matricula = a.matricula
-        WHERE o.id = ?
-        """;
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    Aluno aluno = new Aluno();
-                    aluno.setId(rs.getInt("pessoa_id"));
-                    aluno.setMatricula(rs.getString("matricula"));
-                    aluno.setNome(rs.getString("nome"));
-
-                    OrganizacaoAtendimento org = new OrganizacaoAtendimento(
-                            aluno,
-                            rs.getString("periodo"),
-                            rs.getString("duracao"),
-                            rs.getString("frequencia"),
-                            rs.getString("composicao"),
-                            rs.getString("tipo")
-                    );
-                    org.setId(id);
-                    return org;
-                }
-            }
-        }
-        return null;
-    }
 
 
     public OrganizacaoAtendimento buscarPorAlunoMatricula(String matricula) throws SQLException {

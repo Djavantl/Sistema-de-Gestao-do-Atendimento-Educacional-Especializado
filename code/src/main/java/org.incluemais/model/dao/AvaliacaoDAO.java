@@ -5,7 +5,6 @@ import org.incluemais.model.entities.Avaliacao;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class AvaliacaoDAO {
     private final Connection conn;
@@ -131,7 +130,8 @@ public class AvaliacaoDAO {
         }
     }
 
-    public List<Avaliacao> listarPorRelatorio(int relatorioId) throws SQLException {
+
+    public List<Avaliacao> buscarPorRelatorio(int relatorioId) throws SQLException {
         String sql =
                 "SELECT a.id, a.area, a.desempenhoVerificado, a.observacoes " +
                         "FROM Avaliacao a " +

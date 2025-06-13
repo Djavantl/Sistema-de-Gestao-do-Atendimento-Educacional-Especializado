@@ -8,7 +8,6 @@ import org.incluemais.model.entities.Relatorio;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RelatorioDAO {
@@ -102,7 +101,8 @@ public class RelatorioDAO {
         }
     }
 
-    public List<Relatorio> buscarTodos() throws SQLException {
+    // buscar todos
+    public List<Relatorio> buscar() throws SQLException {
         List<Relatorio> relatorios = new ArrayList<>();
         String sql = "SELECT r.*, p.nome AS aluno_nome, a.matricula, " +
                 "p2.nome AS professor_nome, prof.siape " +
@@ -119,7 +119,7 @@ public class RelatorioDAO {
                 Relatorio relatorio = mapearRelatorio(rs);
 
                 // Carregar lista de avaliações associadas
-                List<Avaliacao> avaliacoes = avaliacaoDAO.listarPorRelatorio(relatorio.getId());
+                List<Avaliacao> avaliacoes = avaliacaoDAO.buscarPorRelatorio(relatorio.getId());
                 relatorio.setAvaliacoes(avaliacoes);
 
                 relatorios.add(relatorio);
@@ -129,7 +129,8 @@ public class RelatorioDAO {
         return relatorios;
     }
 
-    public Relatorio buscarPorId(int id) throws SQLException {
+    // buscar por id
+    public Relatorio buscar(int id) throws SQLException {
         logger.info("Buscando relatório por ID: " + id);
 
         String sql = "SELECT r.*, p.nome AS aluno_nome, a.matricula, " +
@@ -148,7 +149,7 @@ public class RelatorioDAO {
                     Relatorio relatorio = mapearRelatorio(rs);
 
                     // Carregar lista de avaliações associadas
-                    List<Avaliacao> avaliacoes = avaliacaoDAO.listarPorRelatorio(id);
+                    List<Avaliacao> avaliacoes = avaliacaoDAO.buscarPorRelatorio(id);
                     relatorio.setAvaliacoes(avaliacoes);
 
                     logger.info("Relatório encontrado: " + relatorio.getTitulo());
@@ -160,7 +161,8 @@ public class RelatorioDAO {
         return null;
     }
 
-    public List<Relatorio> buscarPorAlunoMatricula(String matricula) throws SQLException {
+    // buscar relatorio por matricula do aluno
+    public List<Relatorio> buscar(String matricula) throws SQLException {
         List<Relatorio> relatorios = new ArrayList<>();
         String sql = "SELECT r.*, p.nome AS aluno_nome, a.matricula, " +
                 "p2.nome AS professor_nome, prof.siape " +
@@ -178,7 +180,7 @@ public class RelatorioDAO {
                     Relatorio relatorio = mapearRelatorio(rs);
 
                     // Carregar lista de avaliações associadas
-                    List<Avaliacao> avaliacoes = avaliacaoDAO.listarPorRelatorio(relatorio.getId());
+                    List<Avaliacao> avaliacoes = avaliacaoDAO.buscarPorRelatorio(relatorio.getId());
                     relatorio.setAvaliacoes(avaliacoes);
 
                     relatorios.add(relatorio);

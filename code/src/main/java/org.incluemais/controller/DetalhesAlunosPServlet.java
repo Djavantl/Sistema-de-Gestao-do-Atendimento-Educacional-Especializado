@@ -50,7 +50,7 @@ public class DetalhesAlunosPServlet extends HttpServlet {
             }
 
             // 2) busca possíveis deficiências
-            List<Deficiencia> deficiencias = deficienciaDAO.findByAlunoMatricula(matricula);
+            List<Deficiencia> deficiencias = deficienciaDAO.buscar(matricula);
 
             // 3) busca organização de atendimento
             OrganizacaoAtendimento organizacao =

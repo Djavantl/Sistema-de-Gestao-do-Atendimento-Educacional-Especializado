@@ -20,7 +20,7 @@ public class ProfessorAlunoDAO {
         this.conn = connection;
     }
 
-    public List<Professor> getProfessoresByAluno(String alunoMatricula) throws SQLException {
+    public List<Professor> buscarProfessoresDoAluno(String alunoMatricula) throws SQLException {
         List<Professor> professores = new ArrayList<>();
         String sql = "SELECT " +
                 "prof.siape, " +
@@ -64,7 +64,7 @@ public class ProfessorAlunoDAO {
         return professores;
     }
 
-    public List<Aluno> getAlunosByProfessor(String siape) throws SQLException {
+    public List<Aluno> buscarAlunosDoProfessor(String siape) throws SQLException {
         List<Aluno> alunos = new ArrayList<>();
         String sql = "SELECT " +
                 "a.matricula, a.curso, a.turma, a.responsavel, " +

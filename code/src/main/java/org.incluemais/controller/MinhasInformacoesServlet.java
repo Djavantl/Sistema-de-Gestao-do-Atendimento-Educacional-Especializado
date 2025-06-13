@@ -44,7 +44,7 @@ public class MinhasInformacoesServlet extends HttpServlet {
                 return;
             }
 
-            List<Deficiencia> deficiencias = deficienciaDAO.findByAlunoMatricula(matricula);
+            List<Deficiencia> deficiencias = deficienciaDAO.buscar(matricula);
 
             request.setAttribute("aluno", aluno);
             request.setAttribute("deficiencias", deficiencias);

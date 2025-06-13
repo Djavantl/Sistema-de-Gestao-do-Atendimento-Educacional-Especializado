@@ -124,7 +124,7 @@ public class RelatorioServlet extends HttpServlet {
 
         int id = Integer.parseInt(request.getParameter("id"));
         String siape = request.getParameter("siape");
-        Relatorio relatorio = relatorioDAO.buscarPorId(id);
+        Relatorio relatorio = relatorioDAO.buscar(id);
 
         HttpSession session = request.getSession();
 
@@ -148,7 +148,7 @@ public class RelatorioServlet extends HttpServlet {
         String siape = request.getParameter("siape");
 
         // Buscar relatórios
-        List<Relatorio> relatorios = relatorioDAO.buscarPorAlunoMatricula(matricula);
+        List<Relatorio> relatorios = relatorioDAO.buscar(matricula);
 
         // Usar o mesmo nome de atributo que a JSP espera
         request.setAttribute("relatoriosLista", relatorios);
@@ -164,7 +164,7 @@ public class RelatorioServlet extends HttpServlet {
     private void listarTodosRelatorios(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
-        List<Relatorio> relatorios = relatorioDAO.buscarTodos();
+        List<Relatorio> relatorios = relatorioDAO.buscar();
         request.setAttribute("relatoriosLista", relatorios);
         request.getRequestDispatcher("/templates/aee/ListarTodosRelatorios.jsp").forward(request, response);
     }
@@ -182,7 +182,7 @@ public class RelatorioServlet extends HttpServlet {
         }
 
         // Filtrar relatórios apenas do aluno logado
-        List<Relatorio> relatorios = relatorioDAO.buscarPorAlunoMatricula(matriculaSessao);
+        List<Relatorio> relatorios = relatorioDAO.buscar(matriculaSessao);
 
         request.setAttribute("relatoriosLista", relatorios);
         request.setAttribute("matricula", matriculaSessao);
@@ -194,7 +194,7 @@ public class RelatorioServlet extends HttpServlet {
     private void exibirDetalhesMeuRelatorio(int id, HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        Relatorio relatorio = relatorioDAO.buscarPorId(id);
+        Relatorio relatorio = relatorioDAO.buscar(id);
         HttpSession session = request.getSession();
         String matriculaSessao = (String) session.getAttribute("identificacao");
 
@@ -329,7 +329,7 @@ public class RelatorioServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         try {
             // Buscar relatório antes de excluir para obter matrícula do aluno
-            Relatorio relatorio = relatorioDAO.buscarPorId(id);
+            Relatorio relatorio = relatorioDAO.buscar(id);
             String alunoMatricula = null;
             if (relatorio != null && relatorio.getAluno() != null) {
                 alunoMatricula = relatorio.getAluno().getMatricula();
@@ -383,11 +383,11 @@ public class RelatorioServlet extends HttpServlet {
             Aluno alunoID = alunoDAO.buscar(alunoMatricula);
             int Id = alunoID.getId();
             request.setAttribute("id", Id);
-            relatorios = relatorioDAO.buscarPorAlunoMatricula(alunoMatricula);
+            relatorios = relatorioDAO.buscar(alunoMatricula);
             // opcional: passar de volta para o JSP o próprio alunoMatricula, se quiser exibir
             request.setAttribute("alunoMatricula", alunoMatricula);
         } else {
-            relatorios = relatorioDAO.buscarTodos();
+            relatorios = relatorioDAO.buscar();
         }
 
         request.setAttribute("relatoriosLista", relatorios);
@@ -416,7 +416,7 @@ public class RelatorioServlet extends HttpServlet {
 
     private void exibirFormularioEdicao(int id, HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
-        Relatorio relatorio = relatorioDAO.buscarPorId(id);
+        Relatorio relatorio = relatorioDAO.buscar(id);
         if (relatorio != null) {
             // Busca todos os alunos para preencher o <select>
             List<Aluno> todosAlunos = alunoDAO.buscar();
@@ -433,7 +433,7 @@ public class RelatorioServlet extends HttpServlet {
             throws ServletException, IOException, SQLException {
 
         logger.info("Buscando relatório com ID: " + id);
-        Relatorio relatorio = relatorioDAO.buscarPorId(id);
+        Relatorio relatorio = relatorioDAO.buscar(id);
 
         if (relatorio != null) {
             logger.info("Relatório encontrado: " + relatorio.getTitulo());

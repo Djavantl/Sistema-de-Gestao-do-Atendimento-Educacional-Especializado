@@ -277,41 +277,4 @@ public class AlunoDAO {
             logger.log(Level.WARNING, "Erro ao fazer rollback", e);
         }
     }
-
-    public Aluno obterPorId(int id) {
-        Aluno aluno = null;
-        String sql = """
-        SELECT p.*, a.* 
-        FROM Aluno a
-        INNER JOIN Pessoa p ON a.pessoa_id = p.id
-        WHERE p.id = ?
-        """;
-
-        try (Connection conexao = DBConnection.getConnection();
-             PreparedStatement stmt = conexao.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                aluno = new Aluno();
-                aluno.setId(rs.getInt("id"));
-                aluno.setNome(rs.getString("nome"));
-                aluno.setDataNascimento(rs.getDate("dataNascimento").toLocalDate());
-                aluno.setEmail(rs.getString("email"));
-                aluno.setSexo(rs.getString("sexo"));
-                aluno.setNaturalidade(rs.getString("naturalidade"));
-                aluno.setTelefone(rs.getString("telefone"));
-                aluno.setMatricula(rs.getString("matricula"));
-                aluno.setCurso(rs.getString("curso"));
-                aluno.setTurma(rs.getString("turma"));
-                aluno.setResponsavel(rs.getString("responsavel"));
-                aluno.setTelResponsavel(rs.getString("telResponsavel"));
-                aluno.setTelTrabalho(rs.getString("telTrabalho"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return aluno;
-    }
 }

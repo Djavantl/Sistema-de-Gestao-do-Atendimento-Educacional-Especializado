@@ -51,7 +51,7 @@ public class DetalhesAlunoServlet extends HttpServlet {
             }
 
 
-            List<Deficiencia> deficiencias = deficienciaDAO.findByAlunoMatricula(aluno.getMatricula());
+            List<Deficiencia> deficiencias = deficienciaDAO.buscar(aluno.getMatricula());
 
             OrganizacaoAtendimentoDAO orgDAO = new OrganizacaoAtendimentoDAO(
                     (Connection) getServletContext().getAttribute("conexao")

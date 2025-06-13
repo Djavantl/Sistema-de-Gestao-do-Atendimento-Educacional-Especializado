@@ -5,7 +5,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import org.incluemais.model.dao.ProfessorAlunoDAO;
 import org.incluemais.model.entities.Aluno;
 
@@ -15,7 +14,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/templates/professor/professor-alunos")
-public class AlunosServlet extends HttpServlet {
+public class AlunosDoProfessorServlet extends HttpServlet {
     private ProfessorAlunoDAO professorAlunoDAO;
 
     @Override
@@ -36,7 +35,7 @@ public class AlunosServlet extends HttpServlet {
         }
 
         try {
-            List<Aluno> alunosVinculados = professorAlunoDAO.getAlunosByProfessor(siape);
+            List<Aluno> alunosVinculados = professorAlunoDAO.buscarAlunosDoProfessor(siape);
             request.setAttribute("alunosVinculados", alunosVinculados);
             request.setAttribute("siape", siape);
 

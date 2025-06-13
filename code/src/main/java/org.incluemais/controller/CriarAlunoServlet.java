@@ -288,7 +288,7 @@ public class CriarAlunoServlet extends HttpServlet {
 
             if (aluno != null) {
                 DeficienciaDAO deficienciaDAO = new DeficienciaDAO((Connection) getServletContext().getAttribute("conexao"));
-                List<Deficiencia> deficiencias = deficienciaDAO.findByAlunoMatricula(aluno.getMatricula());
+                List<Deficiencia> deficiencias = deficienciaDAO.buscar(aluno.getMatricula());
 
                 OrganizacaoAtendimentoDAO orgDAO = new OrganizacaoAtendimentoDAO(
                         (Connection) getServletContext().getAttribute("conexao")
