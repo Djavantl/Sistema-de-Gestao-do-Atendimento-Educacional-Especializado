@@ -103,8 +103,8 @@ docker-compose up --build
 
 4. **Acesse o sistema:** 
 
-Após executar, e o docker já estiver rodando, acesse o sistema a partir da página de login/cadastro:
-Digite no navegador: http://localhost:8080/templates/usuarios/login.jsp
+Após executar, e o docker já estiver rodando:
+Digite no navegador: http://localhost:8080/templates/usuarios/SobreNos.jsp, escolha no final da página as opções de login ou cadastro, para suas respectivas funções.
 
 5. **Credenciais de Acesso (Pre-definidas)**
 
