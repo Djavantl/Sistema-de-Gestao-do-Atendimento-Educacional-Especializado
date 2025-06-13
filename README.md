@@ -111,20 +111,13 @@ Digite no navegador: http://localhost:8080/templates/usuarios/login.jsp
 Dados pre-definidos já foram inseridos para realizar o teste, para:
 
 Aluno utilize alguma dessas matriculas:
-ADS20230001
-ADS20230002
-ADS20230003
-ADS20230004
+ADS20230001, ADS20230002, ADS20230003, ADS20230004
 
 Professor utilize algum desses siapes:
-SP987654321
-PE876543210
-BA765432109
-DF654321098
+SP987654321, PE876543210, BA765432109, DF654321098
 
 ProfessorAEE utilize o siape:
 SC543210987
-
 
 A senha deverá ser criada. Faça isso na página de cadastro, caso ainda não tenha cadastrado os usuários.
 Após cadastrar, realize o login com os dados.
