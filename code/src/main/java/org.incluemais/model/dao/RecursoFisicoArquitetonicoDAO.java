@@ -15,7 +15,7 @@ public class RecursoFisicoArquitetonicoDAO {
 
     // --------------------- CRIAÇÃO ---------------------
 
-    public void inserir(RecursoFisicoArquitetonico recurso) throws SQLException {
+    public void insert(RecursoFisicoArquitetonico recurso) throws SQLException {
         String sql = "INSERT INTO RecursoFisicoArquitetonico (" +
                 "usoCadeiraDeRodas, auxilioTranscricaoEscrita, mesaAdaptadaCadeiraDeRodas, " +
                 "usoDeMuleta, outrosFisicoArquitetonico, outrosEspecificado) " +
@@ -53,7 +53,7 @@ public class RecursoFisicoArquitetonicoDAO {
 
     // --------------------- LEITURA ---------------------
 
-    public RecursoFisicoArquitetonico buscarPorId(int id) throws SQLException {
+    public RecursoFisicoArquitetonico find(int id) throws SQLException {
         String sql = "SELECT * FROM RecursoFisicoArquitetonico WHERE id = ?";
         RecursoFisicoArquitetonico recurso = null;
 
@@ -77,7 +77,7 @@ public class RecursoFisicoArquitetonicoDAO {
 
     // --------------------- ATUALIZAÇÃO ---------------------
 
-    public void atualizar(RecursoFisicoArquitetonico recurso) throws SQLException {
+    public void update(RecursoFisicoArquitetonico recurso) throws SQLException {
         String sql = """
         UPDATE RecursoFisicoArquitetonico 
         SET usoCadeiraDeRodas = ?,
@@ -103,7 +103,7 @@ public class RecursoFisicoArquitetonicoDAO {
 
     // --------------------- EXCLUSÃO ---------------------
 
-    public boolean excluirFA(int id) throws SQLException {
+    public boolean delete(int id) throws SQLException {
         String sql = "DELETE FROM RecursoFisicoArquitetonico WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);

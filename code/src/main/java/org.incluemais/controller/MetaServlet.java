@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.incluemais.model.dao.PlanoAEEDAO;
+import org.incluemais.model.dao.MetaDAO;
 import org.incluemais.model.entities.Meta;
 
 import java.io.IOException;
@@ -24,8 +24,8 @@ public class MetaServlet extends HttpServlet {
         if (metaId != null && !metaId.isEmpty()) {
             try {
                 Connection conn = (Connection) getServletContext().getAttribute("conexao");
-                PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
-                meta = planoDAO.buscarMetaPorId(Integer.parseInt(metaId));
+                MetaDAO metaDAO = new MetaDAO(conn);
+                meta = metaDAO.find(Integer.parseInt(metaId));
             } catch (SQLException | NumberFormatException e) {
                 e.printStackTrace();
             }

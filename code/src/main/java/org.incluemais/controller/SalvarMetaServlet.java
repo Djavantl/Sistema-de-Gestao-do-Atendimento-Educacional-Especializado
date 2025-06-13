@@ -5,9 +5,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.incluemais.model.dao.PlanoAEEDAO;
+import org.incluemais.model.dao.MetaDAO;
 import org.incluemais.model.entities.Meta;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -23,23 +22,21 @@ public class SalvarMetaServlet extends HttpServlet {
         String status = request.getParameter("status");
 
         Connection conn = (Connection) getServletContext().getAttribute("conexao");
-        PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
+        MetaDAO metaDAO = new MetaDAO(conn);
 
         try {
             if (metaId == null || metaId.isEmpty()) {
-                // Nova meta
                 Meta novaMeta = new Meta();
                 novaMeta.setDescricao(descricao);
                 novaMeta.setStatus(status);
-                planoDAO.adicionarMetaAoPlano(Integer.parseInt(planoId), novaMeta);
+                metaDAO.insert(Integer.parseInt(planoId), novaMeta);
                 response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&success=Meta adicionada com sucesso!");
             } else {
-                // Atualizar meta existente
                 Meta metaExistente = new Meta();
                 metaExistente.setId(Integer.parseInt(metaId));
                 metaExistente.setDescricao(descricao);
                 metaExistente.setStatus(status);
-                planoDAO.atualizarMeta(metaExistente);
+                metaDAO.update(metaExistente);
                 response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&success=Meta atualizada com sucesso!");
             }
         } catch (SQLException | NumberFormatException e) {

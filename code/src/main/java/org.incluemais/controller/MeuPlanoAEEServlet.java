@@ -63,7 +63,7 @@ public class MeuPlanoAEEServlet extends HttpServlet {
 
         try {
             // Busca o plano do aluno
-            PlanoAEE plano = planoAEEDAO.buscarPorMatriculaAluno(matricula);
+            PlanoAEE plano = planoAEEDAO.find(matricula);
             if (plano == null) {
                 // Nenhum plano existente: sinaliza para a JSP
                 request.setAttribute("semPlano", true);
@@ -73,7 +73,7 @@ public class MeuPlanoAEEServlet extends HttpServlet {
             }
 
             // Recupera proposta pedagógica associada
-            PropostaPedagogica proposta = propostaDAO.buscarPorPlanoId(plano.getId());
+            PropostaPedagogica proposta = propostaDAO.findByPlanoAEE(plano.getId());
             // Carrega metas do plano
             List<Meta> metas = metaDAO.buscarMetasPorPlanoId(plano.getId());
 

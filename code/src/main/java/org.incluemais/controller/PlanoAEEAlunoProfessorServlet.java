@@ -60,7 +60,7 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
                 return;
             }
 
-            PlanoAEE plano = planoAeeDAO.buscarPorAluno(matricula);
+            PlanoAEE plano = planoAeeDAO.find(matricula);
             if (plano == null) {
                 request.setAttribute("erro", "Nenhum plano encontrado para este aluno");
                 request.getRequestDispatcher("/templates/professor/PlanoAEEAlunoP.jsp").forward(request, response);
@@ -70,7 +70,7 @@ public class PlanoAEEAlunoProfessorServlet extends HttpServlet {
             // Carregamento de metas e proposta
             List<Meta> metas = metaDAO.buscarMetasPorPlanoId(plano.getId());
             plano.setMetas(metas);
-            PropostaPedagogica proposta = propostaDAO.buscarPorPlanoId(plano.getId());
+            PropostaPedagogica proposta = propostaDAO.findByPlanoAEE(plano.getId());
             plano.setProposta(proposta);
 
             // Completa dados do professor, se houver

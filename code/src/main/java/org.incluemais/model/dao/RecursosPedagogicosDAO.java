@@ -15,7 +15,7 @@ public class RecursosPedagogicosDAO {
 
     // --------------------- CRIAÇÃO ---------------------
 
-    public void inserir(RecursosPedagogicos recurso) throws SQLException {
+    public void insert(RecursosPedagogicos recurso) throws SQLException {
         String sql = "INSERT INTO RecursosPedagogicos (" +
                 "adaptacaoDidaticaAulasAvaliacoes, materialDidaticoAdaptado, " +
                 "usoTecnologiaAssistiva, tempoEmpregadoAtividadesAvaliacoes) " +
@@ -46,7 +46,7 @@ public class RecursosPedagogicosDAO {
 
     // --------------------- LEITURA ---------------------
 
-    public RecursosPedagogicos buscarPorId(int id) throws SQLException {
+    public RecursosPedagogicos find(int id) throws SQLException {
         String sql = "SELECT * FROM RecursosPedagogicos WHERE id = ?";
         RecursosPedagogicos recurso = null;
 
@@ -68,7 +68,7 @@ public class RecursosPedagogicosDAO {
 
     // --------------------- ATUALIZAÇÃO ---------------------
 
-    public void atualizar(RecursosPedagogicos recurso) throws SQLException {
+    public void update(RecursosPedagogicos recurso) throws SQLException {
         String sql = """
         UPDATE RecursosPedagogicos 
         SET adaptacaoDidaticaAulasAvaliacoes = ?,
@@ -90,7 +90,7 @@ public class RecursosPedagogicosDAO {
 
     // --------------------- EXCLUSÃO ---------------------
 
-    public boolean excluirP(int id) throws SQLException {
+    public boolean delete(int id) throws SQLException {
         String sql = "DELETE FROM RecursosPedagogicos WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);

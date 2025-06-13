@@ -5,7 +5,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.incluemais.model.dao.PlanoAEEDAO;
+import org.incluemais.model.dao.MetaDAO;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -20,10 +20,10 @@ public class ExcluirMetaServlet extends HttpServlet {
         String metaId = request.getParameter("metaId");
 
         Connection conn = (Connection) getServletContext().getAttribute("conexao");
-        PlanoAEEDAO planoDAO = new PlanoAEEDAO(conn);
+        MetaDAO metaDAO = new MetaDAO(conn);
 
         try {
-            if (planoDAO.excluirMeta(Integer.parseInt(metaId))) {
+            if (metaDAO.delete(Integer.parseInt(metaId))) {
                 response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&success=Meta excluída com sucesso!");
             } else {
                 response.sendRedirect(request.getContextPath() + "/templates/aee/detalhes-plano?id=" + planoId + "&erro=Falha ao excluir meta");

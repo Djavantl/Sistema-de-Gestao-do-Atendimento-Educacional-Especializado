@@ -15,7 +15,7 @@ public class RecursosComunicacaoEInformacaoDAO {
 
     // --------------------- CRIAÇÃO ---------------------
 
-    public void inserir(RecursosComunicacaoEInformacao recurso) throws SQLException {
+    public void insert(RecursosComunicacaoEInformacao recurso) throws SQLException {
         String sql = "INSERT INTO RecursosComunicacaoEInformacao (" +
                 "comunicacaoAlternativa, tradutorInterprete, leitorTranscritor, " +
                 "interpreteOralizador, guiaInterprete, materialDidaticoBraille, " +
@@ -54,7 +54,7 @@ public class RecursosComunicacaoEInformacaoDAO {
 
     // --------------------- LEITURA ---------------------
 
-    public RecursosComunicacaoEInformacao buscarPorId(int id) throws SQLException {
+    public RecursosComunicacaoEInformacao find(int id) throws SQLException {
         String sql = "SELECT * FROM RecursosComunicacaoEInformacao WHERE id = ?";
         RecursosComunicacaoEInformacao recurso = null;
 
@@ -82,7 +82,7 @@ public class RecursosComunicacaoEInformacaoDAO {
 
     // --------------------- ATUALIZAÇÃO ---------------------
 
-    public void atualizar(RecursosComunicacaoEInformacao recurso) throws SQLException {
+    public void update(RecursosComunicacaoEInformacao recurso) throws SQLException {
         String sql = """
         UPDATE RecursosComunicacaoEInformacao 
         SET comunicacaoAlternativa = ?,
@@ -116,7 +116,7 @@ public class RecursosComunicacaoEInformacaoDAO {
 
     // --------------------- EXCLUSÃO ---------------------
 
-    public boolean excluirCI(int id) throws SQLException {
+    public boolean delete(int id) throws SQLException {
         String sql = "DELETE FROM RecursosComunicacaoEInformacao WHERE id = ?";
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, id);
