@@ -112,31 +112,53 @@ Acesse o código completo em:
    ```bash
    docker-compose up --build
    ```
-   
-4. **Acesse o sistema** 
 
-Após executar, e o docker já estiver rodando:
-Digite no navegador: http://localhost:8080/templates/usuarios/SobreNos.jsp, escolha no final da página as opções de login ou cadastro, para suas respectivas funções.
+4. **Acesse o sistema**
 
-5. **Credenciais de Acesso (Pre-definidas)**
+Após executar, e o Docker já estiver rodando:
 
-Dados pre-definidos já foram inseridos para realizar o teste, para:
+Acesse no navegador:  
+[http://localhost:8080/templates/usuarios/SobreNos.jsp](http://localhost:8080/templates/usuarios/SobreNos.jsp)
 
-Aluno utilize alguma dessas matriculas:
-ADS20230001, ADS20230002, ADS20230003, ADS20230004
+Na parte inferior da página, escolha entre as opções de **login** ou **cadastro**, conforme sua função.
 
-Professor utilize algum desses siapes:
-SP987654321, PE876543210, BA765432109, DF654321098
+5. **Credenciais de Acesso (Pré-definidas)**
 
-ProfessorAEE utilize o siape:
-SC543210987
+Dados pré-definidos já foram inseridos para testes.
 
-A senha deverá ser criada. Faça isso na página de cadastro, caso ainda não tenha cadastrado os usuários.
-Após cadastrar, realize o login com os dados.
-Agora só utilizar o sistema!!
+### 👨‍🎓 Aluno
+Utilize uma das seguintes matrículas:
+- `ADS20230001`
+- `ADS20230002`
+- `ADS20230003`
+- `ADS20230004`
+
+### 👨‍🏫 Professor
+Utilize um dos seguintes SIAPEs:
+- `SP987654321`
+- `PE876543210`
+- `BA765432109`
+- `DF654321098`
+
+### 🧑‍🏫 Professor AEE
+Utilize o SIAPE:
+- `SC543210987`
+
+> ⚠️ A senha deverá ser criada na página de **cadastro**, caso ainda não tenha sido cadastrada. Após o cadastro, realize o login com os dados fornecidos.
+
+Agora é só utilizar o sistema! ✅
 
 ---
 
-## Autor
+## 👨‍💻 Autor
 
-Projeto realizado como atividade avaliativa da disciplina **Linguagem de Programação Orientada a Objetos**. Desenvolvido por **Aparecida, Djavan Teixeira Lopes, Gabriel Rocha Gomes, Marley Teixeira Meira e Pablo Henrique Azevedo Gomes da Silva**, sob orientação do professor **Woquiton Lima Fernandes**.
+Projeto realizado como **atividade avaliativa** da disciplina _Linguagem de Programação Orientada a Objetos_.
+
+Desenvolvido por:
+- Aparecida
+- Djavan Teixeira Lopes
+- Gabriel Rocha Gomes
+- Marley Teixeira Meira
+- Pablo Henrique Azevedo Gomes da Silva
+
+**Orientação:** Prof. Woquiton Lima Fernandes
