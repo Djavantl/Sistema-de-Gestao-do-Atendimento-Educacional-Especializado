@@ -162,3 +162,20 @@ Desenvolvido por:
 - Pablo Henrique Azevedo Gomes da Silva
 
 **Orientação:** Prof. Woquiton Lima Fernandes
+
+## 📸 Demonstração Visual
+
+### Tela de Login
+![Tela de Login](docs/prints/tela_de_login.png)
+
+### Cadastro e Gestão de Alunos
+![Cadastro de Aluno](docs/prints/cadastro_aluno.png)
+![Gestão de Alunos](docs/prints/gestao_alunos.png)
+
+### Planos de AEE
+![Criar Plano AEE](docs/prints/criar_plano_aee.png)
+![Detalhes do Plano AEE](docs/prints/detalhes_plano_aee.png)
+![Listagem de Planos AEE](docs/prints/planos_aee.png)
+
+### Sessões de Atendimento
+![Sessões de Atendimento](docs/prints/sessoes_atendimento.png)
